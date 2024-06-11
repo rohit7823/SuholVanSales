@@ -1,5 +1,5 @@
 enum Routes {
-  features("/features");
+  home("/home");
 
   final String name;
   const Routes(this.name);

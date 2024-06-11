@@ -1,9 +1,8 @@
-import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:suhol_van_sales/presentation/features/features_screen/features_screen_binding.dart';
-import 'package:suhol_van_sales/presentation/features/features_screen/features_screen_view.dart';
-
-import 'routes.dart';
+import 'package:suhol_van_sales/presentation/features/home_screen/home_screen_binding.dart';
+import 'package:suhol_van_sales/presentation/features/home_screen/home_screen_view.dart';
+import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 
 class MainGraph {
   MainGraph._();
@@ -12,9 +11,9 @@ class MainGraph {
 
   List<GetPage> routes() => [
         GetPage<Routes>(
-            name: Routes.features.name,
-            page: () => const FeaturesScreen(),
-            binding: FeaturesScreenBinding(),
+            name: Routes.home.name,
+            page: () => const HomeScreen(),
+            binding: HomeScreenBinding(),
             maintainState: true,
             popGesture: true,
             preventDuplicates: true,

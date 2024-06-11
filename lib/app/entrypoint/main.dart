@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
 import 'package:suhol_van_sales/domain/di/service_binding.dart';
 import 'package:suhol_van_sales/presentation/navigation/main_graph.dart';
@@ -29,15 +30,15 @@ class SuholVanSales extends StatelessWidget {
       title: Constants.appName,
       theme: ThemeData(
         typography: Typography.material2021(),
-        useMaterial3: true,
-        colorSchemeSeed: Colors.green,
-        fontFamily: Fonts.joseFinSans,
+        useMaterial3: false,
+        colorScheme: AppColors.mainColorScheme,
+        fontFamily: Fonts.poppinsRegular,
         brightness: Brightness.light,
       ),
       initialBinding: ServiceBindings(),
       getPages: MainGraph.instance.routes(),
       useInheritedMediaQuery: false,
-      initialRoute: Routes.features.name,
+      initialRoute: Routes.home.name,
       debugShowCheckedModeBanner: false,
       scrollBehavior: const MaterialScrollBehavior(),
     );

@@ -47,9 +47,24 @@ flutter:
    - assets/images/
 
   fonts:
-    - family: JosefinSans
+    - family: DMSan-Bold
       fonts:
-        - asset: assets/fonts/JosefinSans.ttf
-    - family: JosefinSansBold
+        - asset: assets/fonts/DMSan-Bold.ttf
+    - family: DMSans-Regular
       fonts:
-        - asset: assets/fonts/JosefinSans-Bold.ttf
+        - asset: assets/fonts/DMSans-Regular.ttf
+    - family: DMSans-SemiBold
+      fonts:
+        - asset: assets/fonts/DMSans-SemiBold.ttf
+    - family: Poppins-SemiBold
+      fonts:
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+    - family: Poppins-Bold
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
+    - family: Poppins-Medium
+      fonts:
+        - asset: assets/fonts/Poppins-Medium.ttf
+    - family: Poppins-Regular
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
