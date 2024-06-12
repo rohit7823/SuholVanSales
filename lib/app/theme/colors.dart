@@ -9,10 +9,9 @@ class AppColors {
 
   static const bottomMenuLabelColor = Color(0xFF7047C4);
 
-  static const mainColorScheme = ColorScheme(
-      brightness: Brightness.light,
+  static const mainColorScheme = ColorScheme.light(
       primary: primary,
-      onPrimary: Colors.white,
+      onPrimary: background,
       secondary: secondary,
       onSecondary: Colors.white,
       error: Colors.redAccent,

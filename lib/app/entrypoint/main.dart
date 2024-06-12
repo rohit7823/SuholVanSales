@@ -29,11 +29,9 @@ class SuholVanSales extends StatelessWidget {
     return GetMaterialApp(
       title: Constants.appName,
       theme: ThemeData(
-        typography: Typography.material2021(),
         useMaterial3: false,
         colorScheme: AppColors.mainColorScheme,
         fontFamily: Fonts.poppinsRegular,
-        brightness: Brightness.light,
       ),
       initialBinding: ServiceBindings(),
       getPages: MainGraph.instance.routes(),

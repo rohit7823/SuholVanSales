@@ -20,5 +20,10 @@ class HomeScreenController extends GetxController {
     super.onClose();
   }
 
-  void onSelectBottomMenu(int value) {}
+  void onSelectBottomMenu(int value) {
+    selectedBottomMenu.value = BottomMenus.values.firstWhere(
+      (element) => element.index == value,
+      orElse: () => BottomMenus.home,
+    );
+  }
 }

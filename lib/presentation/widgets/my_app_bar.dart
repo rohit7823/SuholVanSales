@@ -11,7 +11,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.actions = const [],
       this.isTitleCenter = true,
       this.leading,
-      this.icon});
+      this.icon, this.leadingWidth});
   final Function? onPop;
   final bool isPop;
   final Color bgColor;
@@ -20,6 +20,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? leading;
   final bool isTitleCenter;
   final IconData? icon;
+  final double? leadingWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: title,
       centerTitle: isTitleCenter,
       actions: actions,
-      leadingWidth: 30,
+      leadingWidth: leadingWidth ?? 30,
       titleSpacing: 0,
     );
   }

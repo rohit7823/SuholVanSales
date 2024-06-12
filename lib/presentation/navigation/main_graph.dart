@@ -18,6 +18,7 @@ class MainGraph {
             popGesture: true,
             preventDuplicates: true,
             transition: Transition.leftToRightWithFade,
-            curve: Curves.slowMiddle)
+            curve: Curves.slowMiddle
+        )
       ];
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
-import 'package:suhol_van_sales/app/theme/images.dart';
+import 'package:suhol_van_sales/presentation/navigation/home_graph.dart';
 import 'package:suhol_van_sales/presentation/utils/bottom_menus.dart';
 import 'package:suhol_van_sales/presentation/widgets/my_app_bar.dart';
 import 'package:suhol_van_sales/presentation/widgets/user_info.dart';
@@ -21,42 +21,45 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Get.theme.colorScheme.primary,
       appBar: MyAppBar(
-        leading: Image.asset(Images.menu),
+        leading: const Icon(
+          Icons.menu_rounded,
+          color: Colors.black,
+        ),
+        leadingWidth: Get.width * .15,
         title: UserInfo(
             userName: controller.userName, shopName: controller.shopName),
       ),
-      body: SafeArea(
-          child: Column(
-        children: [],
-      )),
+      body: GetNavigator(
+        key: Get.nestedKey(HomeGraph.instance.navKey),
+        pages: HomeGraph.instance.pages(),
+
+      ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
-            elevation: 6,
+            elevation: 7,
             onTap: controller.onSelectBottomMenu,
             currentIndex: controller.selectedBottomMenu.value.index,
-            type: BottomNavigationBarType.shifting,
-            selectedItemColor: AppColors.primary,
+            showUnselectedLabels: true,
             showSelectedLabels: true,
-            selectedLabelStyle: Get
-                .theme.bottomNavigationBarTheme.selectedLabelStyle!
-                .copyWith(color: AppColors.bottomMenuLabelColor),
-            unselectedLabelStyle:
-                Get.theme.bottomNavigationBarTheme.selectedLabelStyle,
-            selectedIconTheme: const IconThemeData(
-              color: AppColors.bottomMenuLabelColor,
-            ),
-            unselectedIconTheme: IconThemeData(
-              color: Colors.grey.shade400,
-            ),
+            type: BottomNavigationBarType.shifting,
+            selectedItemColor: AppColors.bottomMenuLabelColor,
+            unselectedItemColor: Colors.grey.shade400,
             items: BottomMenus.values
                 .map(
                   (menu) => BottomNavigationBarItem(
-                      icon: Image.asset(menu.image),
+                      icon: Image.asset(
+                        menu.image,
+                        color: Colors.grey.shade400,
+                      ),
                       label: menu.name,
+                      tooltip: menu.name,
                       activeIcon: Image.asset(
                         menu.image,
-                      )),
+                        color: AppColors.bottomMenuLabelColor,
+                      )
+                  ),
                 )
                 .toList()),
       ),
