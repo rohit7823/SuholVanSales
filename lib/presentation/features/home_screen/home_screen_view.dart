@@ -34,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: GetNavigator(
         key: Get.nestedKey(HomeGraph.instance.navKey),
         pages: HomeGraph.instance.pages(),
-
       ),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
@@ -58,8 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       activeIcon: Image.asset(
                         menu.image,
                         color: AppColors.bottomMenuLabelColor,
-                      )
-                  ),
+                      )),
                 )
                 .toList()),
       ),
