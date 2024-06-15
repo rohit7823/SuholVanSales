@@ -144,8 +144,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               childAspectRatio: 1 / 1,
-              crossAxisSpacing: 5,
-              mainAxisSpacing: 5),
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 2),
           itemBuilder: (context, index, animation) {
             var service = ServiceOne.values[index];
 

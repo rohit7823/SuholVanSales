@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 class ServiceContainer extends StatelessWidget {
   const ServiceContainer(
@@ -16,30 +18,32 @@ class ServiceContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      height: animation,
-      padding: EdgeInsets.zero,
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: InkWell(
+        borderRadius: BorderRadius.circular(8),
         onTap: onClick,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             image is String
-                ? Image.asset(
-                    image,
-                    width: 45,
-                  )
+                ? image.endsWith(".svg")
+                    ? SvgPicture.asset(
+                        image,
+                      )
+                    : Image.asset(
+                        image,
+                      )
                 : Icon(
                     image,
-                    size: 45,
                   ),
             Text(
               name,
               style: Get.textTheme.titleMedium?.copyWith(color: Colors.black),
               textAlign: TextAlign.center,
-            )
+            ).paddings(horizontal: 3)
           ],
         ),
       ),

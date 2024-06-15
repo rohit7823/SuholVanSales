@@ -11,14 +11,14 @@ class MainGraph {
 
   List<GetPage> routes() => [
         GetPage<Routes>(
-            name: Routes.home.name,
-            page: () => const HomeScreen(),
-            binding: HomeScreenBinding(),
-            maintainState: true,
-            popGesture: true,
-            preventDuplicates: true,
-            transition: Transition.leftToRightWithFade,
-            curve: Curves.slowMiddle
+          name: Routes.home.name,
+          page: () => const HomeScreen(),
+          binding: HomeScreenBinding(),
+          maintainState: true,
+          popGesture: true,
+          preventDuplicates: true,
+          transition: Transition.leftToRightWithFade,
+          curve: Curves.slowMiddle,
         )
       ];
 }

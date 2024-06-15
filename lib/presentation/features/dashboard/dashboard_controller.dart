@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/presentation/navigation/home_graph.dart';
+import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/service_one.dart';
 
 class DashboardController extends GetxController {
@@ -25,5 +27,28 @@ class DashboardController extends GetxController {
     super.onClose();
   }
 
-  void onTapServiceOne(ServiceOne service) {}
+  void onTapServiceOne(ServiceOne service) {
+    switch (service) {
+      case ServiceOne.cashSales:
+        Get.toNamed(Routes.cashSalesOrder.name,
+            id: HomeGraph.instance.navKey);
+      case ServiceOne.creditSales:
+        Get.toNamed(Routes.creditSalesOrder.name,
+            id: HomeGraph.instance.navKey);
+      case ServiceOne.preOrder:
+      // TODO: Handle this case.
+      case ServiceOne.remotePrint:
+      // TODO: Handle this case.
+      case ServiceOne.stocks:
+      // TODO: Handle this case.
+      case ServiceOne.collection:
+      // TODO: Handle this case.
+      case ServiceOne.purchaseOrder:
+      // TODO: Handle this case.
+      case ServiceOne.myOrder:
+      // TODO: Handle this case.
+      case ServiceOne.allService:
+      // TODO: Handle this case.
+    }
+  }
 }

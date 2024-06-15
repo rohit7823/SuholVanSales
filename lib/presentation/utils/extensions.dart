@@ -11,6 +11,31 @@ extension DateTimeUtils on DateTime {
   }
 }
 
+extension FixedBoxShadow on Object {
+  List<BoxShadow> allShadow({double radius = 8.0}) {
+    return [
+      BoxShadow(
+        color: const Color(0xFFEFEFEF),
+        blurRadius: radius, // soften the shadow
+        spreadRadius: 0.0, //extend the shadow
+        offset: const Offset(
+          5.0, // Move to right 10  horizontally
+          2.0, // Move to bottom 10 Vertically
+        ),
+      ),
+      BoxShadow(
+        color: const Color(0xFFEFEFEF),
+        blurRadius: radius, // soften the shadow
+        spreadRadius: 0.0, //extend the shadow
+        offset: const Offset(
+          -5.0, // Move to right 10  horizontally
+          -2.0, // Move to bottom 10 Vertically
+        ),
+      ),
+    ];
+  }
+}
+
 extension WidgetUitilities on Widget {
   Widget paddings({
     double all = 0.0,
