@@ -21,53 +21,54 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: controller.backPress,
-      child: Scaffold(
-        backgroundColor: Get.theme.colorScheme.primary,
-        appBar: MyAppBar(
-          leading: const Icon(
-            Icons.menu_rounded,
-            color: Colors.black,
-          ),
-          leadingWidth: Get.width * .15,
-          title: UserInfo(
-              userName: controller.userName, shopName: controller.shopName),
+    return Scaffold(
+      backgroundColor: Get.theme.colorScheme.primary,
+      appBar: MyAppBar(
+        leading: const Icon(
+          Icons.menu_rounded,
+          color: Colors.black,
         ),
-        body: Navigator(
+        leadingWidth: Get.width * .15,
+        title: UserInfo(
+            userName: controller.userName, shopName: controller.shopName),
+      ),
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: controller.backPress,
+        child: Navigator(
+          requestFocus: true,
           key: Get.nestedKey(HomeGraph.instance.navKey),
           initialRoute: Routes.dashboard.name,
           onGenerateRoute: HomeGraph.instance.routes,
           onPopPage: controller.onChildPop,
           reportsRouteUpdateToEngine: true,
         ),
-        bottomNavigationBar: Obx(
-          () => BottomNavigationBar(
-              elevation: 7,
-              onTap: controller.onSelectBottomMenu,
-              currentIndex: controller.selectedBottomMenu.value.index,
-              showUnselectedLabels: true,
-              showSelectedLabels: true,
-              type: BottomNavigationBarType.shifting,
-              selectedItemColor: AppColors.bottomMenuLabelColor,
-              unselectedItemColor: Colors.grey.shade400,
-              items: BottomMenus.values
-                  .map(
-                    (menu) => BottomNavigationBarItem(
-                        icon: Image.asset(
-                          menu.image,
-                          color: Colors.grey.shade400,
-                        ),
-                        label: menu.name,
-                        tooltip: menu.name,
-                        activeIcon: Image.asset(
-                          menu.image,
-                          color: AppColors.bottomMenuLabelColor,
-                        )),
-                  )
-                  .toList()),
-        ),
+      ),
+      bottomNavigationBar: Obx(
+        () => BottomNavigationBar(
+            elevation: 7,
+            onTap: controller.onSelectBottomMenu,
+            currentIndex: controller.selectedBottomMenu.value.index,
+            showUnselectedLabels: true,
+            showSelectedLabels: true,
+            type: BottomNavigationBarType.shifting,
+            selectedItemColor: AppColors.bottomMenuLabelColor,
+            unselectedItemColor: Colors.grey.shade400,
+            items: BottomMenus.values
+                .map(
+                  (menu) => BottomNavigationBarItem(
+                      icon: Image.asset(
+                        menu.image,
+                        color: Colors.grey.shade400,
+                      ),
+                      label: menu.name,
+                      tooltip: menu.name,
+                      activeIcon: Image.asset(
+                        menu.image,
+                        color: AppColors.bottomMenuLabelColor,
+                      )),
+                )
+                .toList()),
       ),
     );
   }

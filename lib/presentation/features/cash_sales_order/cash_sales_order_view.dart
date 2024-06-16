@@ -23,6 +23,7 @@ class _CashSalesOrderState extends State<CashSalesOrder> {
     return Scaffold(
       backgroundColor: Get.theme.colorScheme.primary,
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverPadding(
             padding: const EdgeInsets.symmetric(vertical: 12),

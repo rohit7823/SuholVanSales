@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/presentation/navigation/home_graph.dart';
+import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/cash_order_history_types.dart';
 
 class CashSalesOrderController extends GetxController {
@@ -19,5 +20,14 @@ class CashSalesOrderController extends GetxController {
     HomeGraph.instance.pop();
   }
 
-  void onTapCashHistory(CashOrderHistoryTypes type) {}
+  void onTapCashHistory(CashOrderHistoryTypes type) {
+    switch (type) {
+      case CashOrderHistoryTypes.cashSalesOrder:
+        Get.toNamed(Routes.createCashOrder.name);
+      case CashOrderHistoryTypes.cashSalesOrderList:
+      // TODO: Handle this case.
+      case CashOrderHistoryTypes.cashApprovedOrder:
+      // TODO: Handle this case.
+    }
+  }
 }

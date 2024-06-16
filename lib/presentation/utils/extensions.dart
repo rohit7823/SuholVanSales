@@ -36,6 +36,18 @@ extension FixedBoxShadow on Object {
   }
 }
 
+extension MyText on String {
+  Widget text(
+      [TextStyle? textStyle, TextOverflow? textOverflow, TextAlign? align]) {
+    return Text(
+      this,
+      style: textStyle,
+      overflow: textOverflow,
+      textAlign: align,
+    );
+  }
+}
+
 extension WidgetUitilities on Widget {
   Widget paddings({
     double all = 0.0,

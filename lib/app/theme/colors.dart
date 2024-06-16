@@ -13,6 +13,9 @@ class AppColors {
   static const previousCashSaleColor = Color(0xFFE5F2FF);
   static const previousCashOrderColor = Color(0xFFEBF7FB);
 
+  static const buttonColor = Color(0xFF74B973);
+  static const buttonColorAlternate = Color(0xFF4F6C8D);
+
   static const mainColorScheme = ColorScheme.light(
       primary: primary,
       onPrimary: background,

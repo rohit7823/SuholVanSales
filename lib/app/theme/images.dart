@@ -27,4 +27,5 @@ class Images {
   static const creditApproved = "$_path/credit_approved.png";
   static const creditSalesOrder = "$_path/credit_sales_order.png";
   static const creditSalesOrderList = "$_path/credit_sales_order_list.png";
+  static const buttonSend = "$_path/button_send.png";
 }
