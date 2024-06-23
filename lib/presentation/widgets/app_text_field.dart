@@ -16,7 +16,15 @@ class AppTextField extends StatelessWidget {
       this.inputAction,
       this.autoFocus = true,
       this.width,
-      this.isReadOnly});
+      this.isReadOnly,
+      this.changeStyle = false,
+      this.enabled = true,
+      this.textAlign,
+      this.error,
+      this.labelStyle,
+      this.label,
+      this.isObscure = false,
+      this.borderColor});
 
   final String? hint;
 
@@ -40,6 +48,22 @@ class AppTextField extends StatelessWidget {
 
   final bool? isReadOnly;
 
+  final bool changeStyle;
+
+  final bool enabled;
+
+  final TextAlign? textAlign;
+
+  final String? error;
+
+  final TextStyle? labelStyle;
+
+  final String? label;
+
+  final bool isObscure;
+
+  final Color? borderColor;
+
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -48,22 +72,55 @@ class AppTextField extends StatelessWidget {
       enableSuggestions: true,
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.lightBlueAccent)),
+          border: changeStyle
+              ? UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent))
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent)),
           constraints: BoxConstraints.expand(
               width: width ?? Get.width * .90, height: 45),
           fillColor: Colors.white,
           filled: true,
           hintText: hint,
+          errorText: error,
+          errorStyle: Get.textTheme.titleLarge
+              ?.copyWith(color: Colors.red, fontFamily: Fonts.dmSansSemiBold),
           hintStyle: Get.textTheme.titleLarge?.copyWith(
               color: Colors.grey.shade400, fontFamily: Fonts.dmSansSemiBold),
-          enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade200)),
-          focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.lightBlueAccent))),
+          labelStyle: labelStyle ??
+              Get.textTheme.titleMedium?.copyWith(
+                  color: borderColor ?? Colors.lightBlueAccent,
+                  fontFamily: Fonts.poppinsSemiBold),
+          labelText: label,
+          enabledBorder: changeStyle
+              ? UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent))
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.grey.shade200)),
+          focusedBorder: changeStyle
+              ? UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent))
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent)),
+          errorBorder: changeStyle
+              ? UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.redAccent))
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.redAccent))),
       cursorColor: Colors.black,
       autocorrect: true,
       autofocus: autoFocus ?? false,
@@ -77,6 +134,10 @@ class AppTextField extends StatelessWidget {
       textCapitalization: capitalization ?? TextCapitalization.none,
       textInputAction: inputAction,
       readOnly: isReadOnly ?? false,
+      enabled: enabled,
+      enableIMEPersonalizedLearning: enabled,
+      textAlign: textAlign ?? TextAlign.start,
+      obscureText: isObscure,
     );
   }
 }

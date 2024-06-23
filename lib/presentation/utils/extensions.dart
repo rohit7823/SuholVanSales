@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 extension DateTimeUtils on DateTime {
@@ -9,6 +10,10 @@ extension DateTimeUtils on DateTime {
     );
     return fomatter.format(date);
   }
+}
+
+extension ExtsOnContext on BuildContext {
+  bool get isKeyboardVisible => MediaQuery.of(this).viewInsets.bottom > 0;
 }
 
 extension FixedBoxShadow on Object {
@@ -46,6 +51,9 @@ extension MyText on String {
       textAlign: align,
     );
   }
+
+  bool get isPassword =>
+      (length == 8 && !(isAlphabetOnly || isNumericOnly || isBlank == true));
 }
 
 extension WidgetUitilities on Widget {

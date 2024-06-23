@@ -11,8 +11,9 @@ import 'package:suhol_van_sales/presentation/utils/constants.dart';
 
 void main() {
   runZonedGuarded(
-    () {
+    () async {
       WidgetsFlutterBinding.ensureInitialized();
+      await ServiceBindings().dependencies();
       runApp(const SuholVanSales());
     },
     (error, stack) {
@@ -33,10 +34,9 @@ class SuholVanSales extends StatelessWidget {
         colorScheme: AppColors.mainColorScheme,
         fontFamily: Fonts.poppinsRegular,
       ),
-      initialBinding: ServiceBindings(),
       getPages: MainGraph.instance.routes(),
       useInheritedMediaQuery: false,
-      initialRoute: Routes.home.name,
+      initialRoute: Routes.signup.name,
       debugShowCheckedModeBanner: false,
       scrollBehavior: const MaterialScrollBehavior(),
     );

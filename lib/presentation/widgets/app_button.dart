@@ -71,12 +71,11 @@ class AppButton extends StatelessWidget {
           : child ??
               label
                   ?.text(labelColor != null
-                      ? Theme.of(context).primaryTextTheme.labelLarge?.copyWith(
-                          fontFamily: Fonts.dmSansSemiBold, color: labelColor)
-                      : Theme.of(context)
-                          .primaryTextTheme
-                          .labelLarge
-                          ?.copyWith(fontFamily: Fonts.dmSansSemiBold))
+                      ? Get.textTheme.titleLarge?.copyWith(
+                          fontFamily: Fonts.poppinsSemiBold, color: labelColor)
+                      : Get.textTheme.titleLarge?.copyWith(
+                          fontFamily: Fonts.poppinsSemiBold,
+                          color: Colors.white))
                   .fitBox(),
     );
   }
