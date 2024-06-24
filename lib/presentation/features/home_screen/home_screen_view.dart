@@ -31,6 +31,20 @@ class _HomeScreenState extends State<HomeScreen> {
         leadingWidth: Get.width * .15,
         title: UserInfo(
             userName: controller.userName, shopName: controller.shopName),
+        actions: [
+          Obx(() => !controller.isLoggedIn.value
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: IconButton(
+                      onPressed: controller.login,
+                      icon: const Icon(
+                        Icons.login,
+                        color: AppColors.buttonColorAlternate,
+                        size: 40,
+                      )),
+                )
+              : const SizedBox.shrink())
+        ],
       ),
       body: PopScope(
         canPop: false,
@@ -66,8 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       activeIcon: Image.asset(
                         menu.image,
                         color: AppColors.bottomMenuLabelColor,
-                      )
-                  ),
+                      )),
                 )
                 .toList()),
       ),

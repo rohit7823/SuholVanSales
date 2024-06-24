@@ -10,6 +10,8 @@ import 'package:suhol_van_sales/presentation/utils/bottom_menus.dart';
 class HomeScreenController extends GetxController {
   final _prefs = Get.find<PreferenceService>();
 
+  var isLoggedIn = false.obs;
+
   var userName = "Marcel".obs;
 
   var shopName = "Shop 01".obs;
@@ -20,6 +22,8 @@ class HomeScreenController extends GetxController {
   void onReady() {
     // TODO: implement onReady
     super.onReady();
+
+    isLoggedIn.value = _prefs.userID.isBlank == false;
   }
 
   @override
@@ -83,5 +87,9 @@ class HomeScreenController extends GetxController {
     } else {
       Get.back();
     }
+  }
+
+  void login() {
+    Get.offAndToNamed(Routes.signup.name);
   }
 }
