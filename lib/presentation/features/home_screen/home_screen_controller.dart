@@ -50,7 +50,7 @@ class HomeScreenController extends GetxController {
             TextButton(
                 onPressed: () {
                   _prefs.userId('');
-                  Get.offAndToNamed(Routes.signup.name);
+                  Get.offAllNamed(Routes.signup.name);
                 },
                 child: Text(
                   "Yes",
