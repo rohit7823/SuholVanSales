@@ -24,7 +24,7 @@ class AppTextField extends StatelessWidget {
       this.labelStyle,
       this.label,
       this.isObscure = false,
-      this.borderColor});
+      this.borderColor, this.suffixIcon});
 
   final String? hint;
 
@@ -63,6 +63,8 @@ class AppTextField extends StatelessWidget {
   final bool isObscure;
 
   final Color? borderColor;
+
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +122,9 @@ class AppTextField extends StatelessWidget {
                   borderSide: const BorderSide(color: Colors.redAccent))
               : OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Colors.redAccent))),
+                  borderSide: const BorderSide(color: Colors.redAccent)),
+          suffixIcon: suffixIcon,
+      ),
       cursorColor: Colors.black,
       autocorrect: true,
       autofocus: autoFocus ?? false,

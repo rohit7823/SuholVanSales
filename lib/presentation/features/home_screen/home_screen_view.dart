@@ -66,7 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       activeIcon: Image.asset(
                         menu.image,
                         color: AppColors.bottomMenuLabelColor,
-                      )),
+                      )
+                  ),
                 )
                 .toList()),
       ),

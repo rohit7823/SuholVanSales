@@ -6,6 +6,7 @@ import 'package:suhol_van_sales/presentation/features/create_credit_order_screen
 import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_screen_view.dart';
 import 'package:suhol_van_sales/presentation/features/home_screen/home_screen_binding.dart';
 import 'package:suhol_van_sales/presentation/features/home_screen/home_screen_view.dart';
+import 'package:suhol_van_sales/presentation/features/signup_screen/auth_middleware.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/signup_screen_binding.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/signup_screen_view.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
@@ -59,9 +60,12 @@ class MainGraph {
           popGesture: false,
           preventDuplicates: true,
           fullscreenDialog: true,
-          transition: Transition.native,
+          transition: Transition.fade,
           alignment: Alignment.center,
           participatesInRootNavigator: true,
+          middlewares: [
+            AuthMiddleware()
+          ]
         ),
       ];
 }

@@ -14,7 +14,7 @@ class KeyboardAwareWidget extends StatelessWidget {
     return Padding(
       padding: context.isKeyboardVisible
           ? EdgeInsets.only(
-              bottom: Get.mediaQuery.viewInsets.bottom / (paddingDecreser ?? 2))
+              bottom: Get.mediaQuery.viewInsets.bottom / (paddingDecreser ?? 1))
           : EdgeInsets.zero,
       child: child,
     );

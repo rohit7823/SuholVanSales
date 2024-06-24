@@ -7,9 +7,9 @@ class FieldsCard extends StatelessWidget {
   const FieldsCard(
       {super.key, required this.fields, required this.button, this.optional});
 
-  final List<AppTextField> fields;
+  final List<Widget> fields;
   final AppButton button;
-  final Widget Function(BuildContext context, StateSetter setState)? optional;
+  final Widget Function(BuildContext context)? optional;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +19,7 @@ class FieldsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       elevation: 7,
+
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: Get.width * .05),
         child: AnimatedSize(
@@ -31,23 +32,23 @@ class FieldsCard extends StatelessWidget {
             children: [
               ..._addWithSeperators(fields),
               SizedBox(
-                height: Get.height * .08,
+                height: Get.height * .06,
               ),
-              StatefulBuilder(
-                  builder: optional ??
-                      (context, setState) => const SizedBox.shrink()),
+              Builder(
+                  builder: optional ?? (context) => const SizedBox.shrink()),
+              optional != null ? const SizedBox(height: 5,) : null,
               button,
               SizedBox(
                 height: Get.height * .03,
               ),
-            ],
+            ].whereType<Widget>().toList(),
           ),
         ),
       ),
     );
   }
 
-  List<Widget> _addWithSeperators(List<AppTextField> fields) {
+  List<Widget> _addWithSeperators(List<Widget> fields) {
     List<Widget> tmp = [];
 
     for (var field in fields) {

@@ -53,7 +53,7 @@ extension MyText on String {
   }
 
   bool get isPassword =>
-      (length == 8 && !(isAlphabetOnly || isNumericOnly || isBlank == true));
+      (length >= 8 && !(isAlphabetOnly || isNumericOnly || isBlank == true));
 }
 
 extension WidgetUitilities on Widget {
@@ -179,13 +179,6 @@ extension WidgetUitilities on Widget {
       child: this,
     );
   }
-
-  /*Widget padding(EdgeInsetsGeometry padding) {
-    return Padding(
-      padding: padding,
-      child: this,
-    );
-  }*/
 
   Widget align({Alignment alignment = Alignment.center}) {
     return Align(

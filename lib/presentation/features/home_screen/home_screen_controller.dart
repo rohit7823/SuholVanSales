@@ -1,9 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/app/theme/fonts.dart';
+import 'package:suhol_van_sales/domain/di/preference_service.dart';
 import 'package:suhol_van_sales/presentation/navigation/home_graph.dart';
+import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/bottom_menus.dart';
 
 class HomeScreenController extends GetxController {
+  final _prefs = Get.find<PreferenceService>();
+
   var userName = "Marcel".obs;
 
   var shopName = "Shop 01".obs;
@@ -27,6 +33,41 @@ class HomeScreenController extends GetxController {
       (element) => element.index == value,
       orElse: () => BottomMenus.home,
     );
+
+    if (selectedBottomMenu.value case BottomMenus.signOut) {
+      Get.defaultDialog(
+          title: "Logout",
+          content: Text(
+            "Are you sure to logout?",
+            style: Get.textTheme.titleMedium?.copyWith(
+                color: Colors.black, fontFamily: Fonts.poppinsSemiBold),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  _prefs.userId('');
+                  Get.offAndToNamed(Routes.signup.name);
+                },
+                child: Text(
+                  "Yes",
+                  style: Get.textTheme.titleSmall?.copyWith(
+                      color: Colors.black54,
+                      fontFamily: Fonts.poppinsSemiBold),
+                )),
+            TextButton(
+                onPressed: () {
+                  if (Get.isDialogOpen == true) {
+                    Navigator.of(Get.overlayContext!).pop();
+                  }
+                },
+                child: Text(
+                  "No",
+                  style: Get.textTheme.titleSmall?.copyWith(
+                      color: Colors.black54,
+                      fontFamily: Fonts.poppinsSemiBold),
+                ))
+          ]);
+    }
   }
 
   bool onChildPop(Route route, result) {

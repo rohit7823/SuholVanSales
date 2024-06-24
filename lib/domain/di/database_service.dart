@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
-import 'package:objectbox/objectbox.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
+import '../../objectbox.g.dart';
 
 class DatabaseService extends GetxService {
   Store? _dbInstance;
@@ -7,14 +9,14 @@ class DatabaseService extends GetxService {
   Store? get db => _dbInstance;
 
   Future<DatabaseService> init() async {
-    //_dbInstance = await create();
+    _dbInstance = await create();
     return this;
   }
 
-  // Future<Store> create() async {
-  //   final docsDir = await getApplicationDocumentsDirectory();
-  //   return await openStore(directory: p.join(docsDir.path, "suhol-sales-db"));
-  // }
+  Future<Store> create() async {
+    final docsDir = await getApplicationDocumentsDirectory();
+    return await openStore(directory: p.join(docsDir.path, "suhol-sales-db"));
+  }
 
   @override
   void onClose() {
