@@ -24,6 +24,7 @@ class HomeScreenController extends GetxController {
     super.onReady();
 
     isLoggedIn.value = _prefs.userID.isBlank == false;
+    userName.value = _prefs.userName?.split(" ").first ?? "Welcome";
   }
 
   @override
@@ -49,14 +50,13 @@ class HomeScreenController extends GetxController {
           actions: [
             TextButton(
                 onPressed: () {
-                  _prefs.userId('');
+                  _prefs.logout();
                   Get.offAllNamed(Routes.signup.name);
                 },
                 child: Text(
                   "Yes",
                   style: Get.textTheme.titleSmall?.copyWith(
-                      color: Colors.black54,
-                      fontFamily: Fonts.poppinsSemiBold),
+                      color: Colors.black54, fontFamily: Fonts.poppinsSemiBold),
                 )),
             TextButton(
                 onPressed: () {
@@ -67,8 +67,7 @@ class HomeScreenController extends GetxController {
                 child: Text(
                   "No",
                   style: Get.textTheme.titleSmall?.copyWith(
-                      color: Colors.black54,
-                      fontFamily: Fonts.poppinsSemiBold),
+                      color: Colors.black54, fontFamily: Fonts.poppinsSemiBold),
                 ))
           ]);
     }

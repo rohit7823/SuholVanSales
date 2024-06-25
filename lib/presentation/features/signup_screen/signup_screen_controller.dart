@@ -64,6 +64,7 @@ class SignupScreenController extends GetxController {
     loading.value = false;
     if (result != null) {
       _pref.userId("${result.email}_${result.password}");
+      _pref.setUserName(result.name);
       Get.offNamed(Routes.home.name);
     } else {
       Get.showSnackbar(const GetSnackBar(

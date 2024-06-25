@@ -71,14 +71,14 @@ class _HomeScreenState extends State<HomeScreen> {
             items: BottomMenus.values
                 .map(
                   (menu) => BottomNavigationBarItem(
-                      icon: Image.asset(
-                        menu.image,
+                      icon: Icon(
+                        menu.icon,
                         color: Colors.grey.shade400,
                       ),
                       label: menu.name,
                       tooltip: menu.name,
-                      activeIcon: Image.asset(
-                        menu.image,
+                      activeIcon: Icon(
+                        menu.icon,
                         color: AppColors.bottomMenuLabelColor,
                       )),
                 )

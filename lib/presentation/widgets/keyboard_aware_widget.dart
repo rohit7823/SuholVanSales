@@ -9,12 +9,14 @@ class KeyboardAwareWidget extends StatelessWidget {
   final Widget child;
   final double? paddingDecreser;
 
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: context.isKeyboardVisible
           ? EdgeInsets.only(
-              bottom: Get.mediaQuery.viewInsets.bottom / (paddingDecreser ?? 1))
+              bottom: Get.mediaQuery.viewInsets.bottom / (paddingDecreser ?? 1)
+          )
           : EdgeInsets.zero,
       child: child,
     );

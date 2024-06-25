@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/images.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
+import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.dart';
 
 import '../../../app/theme/colors.dart';
 import '../../../app/theme/fonts.dart';
@@ -26,6 +27,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: MyAppBar(
         leadingWidth: 12,
@@ -68,174 +70,208 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: Get.width * .95,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: AppTextField(
-                          hint: "Customer email",
-                          controller: controller.email!,
-                          capitalization: TextCapitalization.words,
-                          keyboardType: TextInputType.emailAddress,
-                          inputAction: TextInputAction.next,
-                        ),
+                KeyboardAwareWidgetTwo(child: (context, height, isHeightInfinite) => Column(
+                  children: [
+                    SizedBox(
+                      width: Get.width * .95,
+                      height: isHeightInfinite ? null : height * .07,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: AppTextField(
+                              hint: "Customer email",
+                              controller: controller.email!,
+                              capitalization: TextCapitalization.words,
+                              keyboardType: TextInputType.emailAddress,
+                              inputAction: TextInputAction.next,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: ColoredBox(
+                                color: AppColors.buttonColorAlternate,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5),
+                                  child: InkWell(
+                                      onTap: controller
+                                          .onClickSendEmail,
+                                      child: const Icon(
+                                        Icons.arrow_forward,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                      IconButton(
-                          onPressed: controller.onClickSendEmail,
-                          icon: Image.asset(
-                            Images.buttonSend,
-                          ))
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: Get.width * .95,
-                  child: AppTextField(
-                    hint: "Customer Name",
-                    controller: controller.customerName!,
-                    capitalization: TextCapitalization.words,
-                    inputAction: TextInputAction.next,
-                  ),
-                ).paddings(top: Get.height * .02),
-                SizedBox(
-                  width: Get.width * .95,
-                  child: Row(
-                    children: [
-                      AppTextField(
-                        width: Get.width * .45,
-                        hint: "Vehicle Number",
-                        controller: controller.vehicleNumber!,
+                    ),
+                    SizedBox(height: isHeightInfinite ? Get.height * .02 : height * .02,),
+                    SizedBox(
+                      width: Get.width * .95,
+                      height: isHeightInfinite ? null : height * .07,
+                      child: AppTextField(
+                        hint: "Customer Name",
+                        controller: controller.customerName!,
                         capitalization: TextCapitalization.words,
                         inputAction: TextInputAction.next,
-                        keyboardType: TextInputType.streetAddress,
                       ),
-                      SizedBox(
-                        width: Get.width * .03,
+                    ),
+                    SizedBox(height: isHeightInfinite ? Get.height * .02 : height * .02,),
+                    SizedBox(
+                      width: Get.width * .95,
+                      height: isHeightInfinite ? null : height * .07,
+                      child: Row(
+                        children: [
+                          AppTextField(
+                            width: Get.width * .45,
+                            hint: "Vehicle Number",
+                            controller: controller.vehicleNumber!,
+                            capitalization: TextCapitalization.words,
+                            inputAction: TextInputAction.next,
+                            keyboardType: TextInputType.streetAddress,
+                          ),
+                          SizedBox(
+                            width: Get.width * .03,
+                          ),
+                          AppTextField(
+                            hint: "Mobile Number",
+                            width: Get.width * .45,
+                            controller: controller.mobileNumber!,
+                            capitalization: TextCapitalization.words,
+                            inputAction: TextInputAction.next,
+                            keyboardType: TextInputType.visiblePassword,
+                            inputFormatters: [NumberTextInputFormatter()],
+                          )
+                        ],
                       ),
-                      AppTextField(
-                        hint: "Mobile Number",
-                        width: Get.width * .45,
-                        controller: controller.mobileNumber!,
+                    ),
+                    SizedBox(height: isHeightInfinite ? Get.height * .02 : height * .02,),
+                    SizedBox(
+                      height: isHeightInfinite ? null : height * .07,
+                      child: AppTextField(
+                        hint: "Product Name",
+                        width: Get.width * .95,
+                        controller: controller.productName!,
                         capitalization: TextCapitalization.words,
                         inputAction: TextInputAction.next,
-                        keyboardType: TextInputType.visiblePassword,
-                        inputFormatters: [NumberTextInputFormatter()],
-                      )
-                    ],
-                  ),
-                ).paddings(vertical: Get.height * .02),
-                Padding(
-                  padding: EdgeInsets.only(bottom: Get.height * .02),
-                  child: AppTextField(
-                    hint: "Product Name",
-                    width: Get.width * .94,
-                    controller: controller.productName!,
-                    capitalization: TextCapitalization.words,
-                    inputAction: TextInputAction.next,
-                  ),
-                ),
-                SizedBox(
-                  width: Get.width * .95,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: AppTextField(
-                          hint: "Packing",
-                          controller: controller.packing!,
-                          capitalization: TextCapitalization.words,
-                          inputAction: TextInputAction.next,
-                        ),
                       ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Expanded(
-                        child: AppTextField(
-                          hint: "Unit",
-                          controller: controller.unit!,
-                          inputAction: TextInputAction.next,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Expanded(
-                        child: AppTextField(
-                          hint: "Qty",
-                          controller: controller.qty!,
-                          inputAction: TextInputAction.next,
-                          keyboardType: TextInputType.number,
-                        ),
-                      )
-                    ],
-                  ),
-                ).paddings(bottom: Get.height * .02),
-                SizedBox(
-                  width: Get.width * .95,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: AppTextField(
-                          hint: "Price",
-                          controller: controller.price!,
-                          inputAction: TextInputAction.next,
-                          keyboardType: TextInputType.visiblePassword,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        flex: 2,
-                        child: AppTextField(
-                          hint: "Remarks",
-                          controller: controller.remarks!,
-                          inputAction: TextInputAction.done,
-                          keyboardType: TextInputType.text,
-                          capitalization: TextCapitalization.words,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: AppButton(
-                          onClick: controller.onSubmitOrder,
-                          height: 40,
-                          btnColor: AppColors.buttonColor,
-                          border: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Text(
-                            "Submit Order",
-                            style: Get.textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                                fontFamily: Fonts.poppinsMedium),
+                    ),
+                    SizedBox(height: isHeightInfinite ? Get.height * .02 : height * .02,),
+                    SizedBox(
+                      width: Get.width * .95,
+                      height: isHeightInfinite ? null : height * .07,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: AppTextField(
+                              hint: "Packing",
+                              controller: controller.packing!,
+                              capitalization: TextCapitalization.words,
+                              inputAction: TextInputAction.next,
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: AppButton(
-                          onClick: controller.onAddItem,
-                          height: 40,
-                          btnColor: AppColors.buttonColorAlternate,
-                          border: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Text(
-                            "Add Item",
-                            style: Get.textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                                fontFamily: Fonts.poppinsMedium),
+                          const SizedBox(
+                            width: 12,
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
+                          Expanded(
+                            child: AppTextField(
+                              hint: "Unit",
+                              controller: controller.unit!,
+                              inputAction: TextInputAction.next,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 12,
+                          ),
+                          Expanded(
+                            child: AppTextField(
+                              hint: "Qty",
+                              controller: controller.qty!,
+                              inputAction: TextInputAction.next,
+                              keyboardType: TextInputType.number,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: isHeightInfinite ? Get.height * .02 : height * .02,),
+                    SizedBox(
+                      width: Get.width * .95,
+                      height: isHeightInfinite ? null : height * .07,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: AppTextField(
+                              hint: "Price",
+                              controller: controller.price!,
+                              inputAction: TextInputAction.next,
+                              keyboardType: TextInputType.visiblePassword,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            flex: 2,
+                            child: AppTextField(
+                              hint: "Remarks",
+                              controller: controller.remarks!,
+                              inputAction: TextInputAction.done,
+                              keyboardType: TextInputType.text,
+                              capitalization: TextCapitalization.words,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: isHeightInfinite ? Get.height * .02 : height * .02,),
+                    SizedBox(
+                      width: Get.width * .95,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: AppButton(
+                              onClick: controller.onSubmitOrder,
+                              height: isHeightInfinite
+                                  ? 40
+                                  : height * .07,
+                              btnColor: AppColors.buttonColor,
+                              border: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Text(
+                                "Submit Order",
+                                style: Get.textTheme.titleLarge?.copyWith(
+                                    color: Colors.white,
+                                    fontFamily: Fonts.poppinsMedium),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: AppButton(
+                              onClick: controller.onAddItem,
+                              height: isHeightInfinite
+                                  ? 40
+                                  : height * .07,
+                              btnColor: AppColors.buttonColorAlternate,
+                              border: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Text(
+                                "Add Item",
+                                style: Get.textTheme.titleLarge?.copyWith(
+                                    color: Colors.white,
+                                    fontFamily: Fonts.poppinsMedium),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )),
               ],
             ),
           )),

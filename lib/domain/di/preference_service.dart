@@ -7,6 +7,7 @@ class PreferenceService extends GetxService {
   static const _baseUrlKey = 'BASE_URL';
   static const _userId = "USER_ID";
   static const _loginStatus = "LOGIN_STATUS";
+  static const _userName = "USER_NAME";
 
   Future<PreferenceService> init() async {
     _preferences = await SharedPreferences.getInstance();
@@ -37,5 +38,18 @@ class PreferenceService extends GetxService {
   void onClose() {
     _preferences = null;
     super.onClose();
+  }
+
+  Future<bool> setUserName(String? name) async {
+    if (name == null) return false;
+
+    return _preferences!.setString(_userName, name);
+  }
+
+  String? get userName => _preferences?.getString(_userName);
+
+  Future<void> logout() async {
+    await setUserName("");
+    await userId("");
   }
 }

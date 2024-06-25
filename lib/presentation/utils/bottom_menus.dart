@@ -1,13 +1,15 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:suhol_van_sales/app/theme/images.dart';
 
 enum BottomMenus {
-  home(Images.home, "Home"),
-  notification(Images.bell, "Notification"),
-  settings(Images.user, "Settings"),
-  signOut(Images.exit, "Sign Out");
+  home(Icons.home_filled, "Home"),
+  notification(Icons.notifications, "Notification"),
+  settings(Icons.person, "Settings"),
+  signOut(Icons.logout, "Sign Out");
 
-  final String image;
+  final IconData icon;
   final String name;
 
-  const BottomMenus(this.image, this.name);
+  const BottomMenus(this.icon, this.name);
 }

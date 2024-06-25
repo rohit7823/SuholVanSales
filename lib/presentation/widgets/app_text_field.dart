@@ -102,7 +102,8 @@ class AppTextField extends StatelessWidget {
               ? UnderlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide:
-                      BorderSide(color: borderColor ?? Colors.lightBlueAccent))
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent),
+              )
               : OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide:
