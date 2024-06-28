@@ -5,7 +5,10 @@ class KeyboardAwareWidgetTwo extends StatelessWidget {
   const KeyboardAwareWidgetTwo({super.key, required this.child});
 
   final Widget Function(
-      BuildContext context, double height, bool isHeightInfinite) child;
+      BuildContext context,
+      double height,
+      bool isHeightInfinite
+  ) child;
 
   @override
   Widget build(BuildContext context) {

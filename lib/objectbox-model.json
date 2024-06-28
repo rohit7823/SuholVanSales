@@ -38,10 +38,150 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "2:6131967375078645504",
+      "lastPropertyId": "11:627490010596632961",
+      "name": "CustomerDB",
+      "properties": [
+        {
+          "id": "1:3388843248533614679",
+          "name": "dbId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5379432188985337398",
+          "name": "id",
+          "type": 6
+        },
+        {
+          "id": "3:464977096738435218",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "4:363815866886794073",
+          "name": "customerCode",
+          "type": 9,
+          "flags": 34848,
+          "indexId": "2:5305971489603994781"
+        },
+        {
+          "id": "5:4880848964137733132",
+          "name": "address",
+          "type": 9
+        },
+        {
+          "id": "6:3813630779558720209",
+          "name": "location",
+          "type": 9
+        },
+        {
+          "id": "7:659075066386520487",
+          "name": "mobileNumber",
+          "type": 9
+        },
+        {
+          "id": "8:7885872711388023320",
+          "name": "email",
+          "type": 9
+        },
+        {
+          "id": "9:5282529735638178440",
+          "name": "contactPerson",
+          "type": 9
+        },
+        {
+          "id": "10:8911894758372651432",
+          "name": "status",
+          "type": 6
+        },
+        {
+          "id": "11:627490010596632961",
+          "name": "productLastUpdate",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:233472042212897484",
+      "lastPropertyId": "12:5267495067861839092",
+      "name": "LocationDB",
+      "properties": [
+        {
+          "id": "1:1008075127447574168",
+          "name": "dbId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5229870451099884409",
+          "name": "id",
+          "type": 6,
+          "flags": 32808,
+          "indexId": "3:7161433149071085946"
+        },
+        {
+          "id": "3:6010496149995391873",
+          "name": "location",
+          "type": 9
+        },
+        {
+          "id": "4:1102073677338724232",
+          "name": "companyName",
+          "type": 9
+        },
+        {
+          "id": "5:9190247011588409803",
+          "name": "addressOne",
+          "type": 9
+        },
+        {
+          "id": "6:6106021439434567653",
+          "name": "addressTwo",
+          "type": 9
+        },
+        {
+          "id": "7:8214121007520038174",
+          "name": "phoneNo",
+          "type": 9
+        },
+        {
+          "id": "8:3719461189916877829",
+          "name": "vatIdentificationNumbers",
+          "type": 9
+        },
+        {
+          "id": "9:6446416009597254274",
+          "name": "productLastUpdate",
+          "type": 6
+        },
+        {
+          "id": "10:6415828049400270089",
+          "name": "productLink",
+          "type": 9
+        },
+        {
+          "id": "11:1386037284121318976",
+          "name": "taxPercentage",
+          "type": 9
+        },
+        {
+          "id": "12:5267495067861839092",
+          "name": "customerId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "4:2245628043200504319",
+          "relationTarget": "CustomerDB"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "1:5041284436545111150",
-  "lastIndexId": "1:8925096414687129722",
+  "lastEntityId": "3:233472042212897484",
+  "lastIndexId": "4:2245628043200504319",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

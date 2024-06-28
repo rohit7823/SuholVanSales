@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/domain/data_source/local/customers/database/dao/customer_dao.dart';
 
-class CreateCreditOrderScreenController extends GetxController {
+class CreateCreditOrderScreenController extends GetxController with CustomerDao{
+
   var userName = 'Marcel'.obs;
 
   var shopName = 'Shop 01'.obs;
@@ -38,6 +40,10 @@ class CreateCreditOrderScreenController extends GetxController {
 
     qty?.addListener(_onQtyChange);
     price?.addListener(_calculatePrice);
+
+    findByName("10 STAR TRADING LLC").then((value) {
+      debugPrint("value ${value.toString()}");
+    },);
   }
 
   void _calculatePrice() {

@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
-import 'package:suhol_van_sales/app/theme/images.dart';
-import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 import 'package:suhol_van_sales/presentation/widgets/budget_widget.dart';
-import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget.dart';
 import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.dart';
 
 import '../../widgets/my_app_bar.dart';
@@ -340,7 +337,8 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 ),
                               ),
                             ],
-                          )),
+                          )
+                  ),
                 ],
               ),
             ),
