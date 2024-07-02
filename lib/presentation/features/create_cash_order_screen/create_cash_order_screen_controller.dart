@@ -1,7 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'dart:async';
 
-class CreateCashOrderScreenController extends GetxController {
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:suhol_van_sales/domain/data_source/local/customers/database/dao/customer_dao.dart';
+import 'package:suhol_van_sales/domain/models/customer_details.dart';
+
+class CreateCashOrderScreenController extends GetxController with CustomerDao {
+
   var userName = 'Marcel'.obs;
 
   var shopName = 'Shop 01'.obs;
@@ -12,7 +17,7 @@ class CreateCashOrderScreenController extends GetxController {
 
   var total = "OMR 0.000".obs;
 
-  TextEditingController? customerName = TextEditingController();
+  SearchController? customerName = SearchController();
 
   TextEditingController? email = TextEditingController();
 
@@ -85,4 +90,17 @@ class CreateCashOrderScreenController extends GetxController {
   void onSubmitOrder() {}
 
   void onAddItem() {}
+
+  FutureOr<Iterable<Customer>> findCustomerName(SearchController searchController) async {
+    debugPrint("query ${searchController.text}");
+
+    var values = await findByName(searchController.text);
+    return values ?? [];
+
+  }
+
+  void onSelectCustomer(Customer result, SearchController controller) {
+
+
+  }
 }

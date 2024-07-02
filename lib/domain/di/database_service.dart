@@ -13,6 +13,7 @@ class DatabaseService extends GetxService {
     return this;
   }
 
+
   Future<Store> create() async {
     final docsDir = await getApplicationDocumentsDirectory();
     return await openStore(directory: p.join(docsDir.path, "suhol-sales-db"));

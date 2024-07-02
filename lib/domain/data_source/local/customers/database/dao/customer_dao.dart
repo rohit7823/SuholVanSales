@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/data/utils/extensions.dart';
 import 'package:suhol_van_sales/domain/data_source/local/customers/database/entities/customer_db.dart';
 import 'package:suhol_van_sales/domain/di/database_service.dart';
 import 'package:suhol_van_sales/domain/models/customer_details.dart';
@@ -9,45 +9,65 @@ import 'package:suhol_van_sales/domain/utils/extenstions.dart';
 import 'package:suhol_van_sales/objectbox.g.dart';
 
 mixin CustomerDao {
-  final _customerDB = Get.find<DatabaseService>().db?.box<CustomerDB>();
+  final _dbInstance = Get.find<DatabaseService>().db;
+
+  Box<CustomerDB>? get _customerDB => _dbInstance?.box<CustomerDB>();
 
   int? get dataCount => _customerDB?.count();
 
-  Future<List<CustomerDB>?> findByLocation(String locationQuery) async {
+  Future<List<Customer>?> findByLocation(String locationQuery) async {
     return await _customerDB
-        ?.query(CustomerDB_.location.contains(locationQuery))
+        ?.query(CustomerDB_.location.contains(locationQuery, caseSensitive: false))
         .build()
-        .findAsync();
+        .findAsync()
+        .then(
+          (value) => value
+              .map(
+                (e) => e.toData,
+              )
+              .toList(),
+        );
   }
 
-  Future<List<CustomerDB>?> findByName(String nameQuery) async {
+  Future<List<Customer>?> findByName(String nameQuery) async {
     return await _customerDB
-        ?.query(CustomerDB_.name.contains(nameQuery))
+        ?.query(CustomerDB_.name.contains(nameQuery, caseSensitive: false))
         .build()
-        .findAsync();
+        .findAsync()
+        .then(
+          (value) => value
+              .map(
+                (e) => e.toData,
+              )
+              .toList(),
+        );
   }
 
   Future<List<CustomerDB>?> findByEmail(String emailQuery) async {
     return await _customerDB
-        ?.query(CustomerDB_.email.contains(emailQuery))
+        ?.query(CustomerDB_.email.contains(emailQuery, caseSensitive: false))
         .build()
         .findAsync();
   }
 
-  int? insert(Customer customer) {
+  Future<int?> insert(Customer customer) async {
     var cDB = customer.toDB;
     cDB.locations.addAll(customer.locations?.map((e) => e.toDB) ?? []);
-    return _customerDB?.putQueued(cDB);
+    return await _customerDB?.putAsync(cDB);
   }
 
-  bool insertAll(List<Customer> customers) {
-    var isSuccess = customers
-        .map(
-          (e) => insert(e),
-        )
-        .every(
-          (id) => id != null,
-        );
+  Future<bool?> insertAll(List<Customer> customers) async {
+    var isSuccess = await _dbInstance?.runInTransactionAsync(TxMode.write,
+        (store, customers) {
+      var tmp = customers
+          .map(
+            (e) => e.toDB,
+          )
+          .toList();
+      var db = store.box<CustomerDB>();
+      var ids = db.putMany(tmp);
+      return ids.every((id) => id != 0);
+    }, customers);
     return isSuccess;
   }
 

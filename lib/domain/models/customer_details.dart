@@ -29,12 +29,12 @@ class CustomerDetails {
 
   factory CustomerDetails.fromJson(Map<String, dynamic> json) => CustomerDetails(
     success: json["success"],
-    customers: json["customers"] == null ? [] : List<Customer>.from(json["customers"]!.map((x) => Customer.fromJson(x))),
+    customers: json["data"] == null ? [] : List<Customer>.from(json["data"]!.map((x) => Customer.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "success": success,
-    "customers": customers == null ? [] : List<dynamic>.from(customers!.map((x) => x.toJson())),
+    "data": customers == null ? [] : List<dynamic>.from(customers!.map((x) => x.toJson())),
   };
 }
 
