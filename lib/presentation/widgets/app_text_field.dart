@@ -152,6 +152,8 @@ class AppTextField<T extends Object> extends StatelessWidget {
                 BoxConstraints(maxWidth: context.width),
             dividerColor: Colors.grey,
             viewHintText: hint,
+            headerHintStyle:  Get.textTheme.titleLarge?.copyWith(
+                color: Colors.grey.shade500, fontFamily: Fonts.dmSansSemiBold),
             viewBuilder: viewBuilder,
             searchController: searchController,
             headerTextStyle: Get.textTheme.titleLarge?.copyWith(
@@ -337,7 +339,7 @@ class MyTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
       ),
       onTap: onTap,
-      cursorColor: Colors.black,
+      cursorColor: Colors.lightBlueAccent,
       autocorrect: true,
       autofocus: autoFocus ?? false,
       controller: controller,

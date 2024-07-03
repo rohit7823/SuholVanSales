@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 class ServiceContainer extends StatelessWidget {
@@ -32,9 +33,14 @@ class ServiceContainer extends StatelessWidget {
                 ? image.endsWith(".svg")
                     ? SvgPicture.asset(
                         image,
+                        width: 35,
+                        height: 35,
+                        color: AppColors.buttonColorAlternate,
                       )
                     : Image.asset(
                         image,
+                        width: 35,
+                        height: 35,
                       )
                 : Icon(
                     image,

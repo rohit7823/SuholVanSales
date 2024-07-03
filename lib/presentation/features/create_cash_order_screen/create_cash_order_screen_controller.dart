@@ -17,9 +17,11 @@ class CreateCashOrderScreenController extends GetxController with CustomerDao {
 
   var total = "OMR 0.000".obs;
 
+  Customer? _selectedCustomer;
+
   SearchController? customerName = SearchController();
 
-  TextEditingController? email = TextEditingController();
+  SearchController? email = SearchController();
 
   TextEditingController? vehicleNumber = TextEditingController();
 
@@ -85,7 +87,9 @@ class CreateCashOrderScreenController extends GetxController with CustomerDao {
     Get.back();
   }
 
-  void onClickSendEmail() {}
+  void onClickSendEmail() {
+    email?.openView();
+  }
 
   void onSubmitOrder() {}
 
@@ -93,14 +97,25 @@ class CreateCashOrderScreenController extends GetxController with CustomerDao {
 
   FutureOr<Iterable<Customer>> findCustomerName(SearchController searchController) async {
     debugPrint("query ${searchController.text}");
-
     var values = await findByName(searchController.text);
     return values ?? [];
 
   }
 
   void onSelectCustomer(Customer result, SearchController controller) {
+    if(result.name == null) return;
+    controller.text = result.name!;
+    _selectedCustomer = result;
+  }
 
+  FutureOr<Iterable<Customer>> findCustomerEmail(SearchController searchController) async {
 
+    var values = await findByEmail(searchController.text);
+    return values ?? [];
+  }
+
+  void onSelectCustomerEmail(Customer result, SearchController controller) {
+    if(result.email == null) return;
+    controller.text = result.email!;
   }
 }

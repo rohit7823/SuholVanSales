@@ -17,7 +17,8 @@ mixin CustomerDao {
 
   Future<List<Customer>?> findByLocation(String locationQuery) async {
     return await _customerDB
-        ?.query(CustomerDB_.location.contains(locationQuery, caseSensitive: false))
+        ?.query(
+            CustomerDB_.location.contains(locationQuery, caseSensitive: false))
         .build()
         .findAsync()
         .then(
@@ -43,11 +44,18 @@ mixin CustomerDao {
         );
   }
 
-  Future<List<CustomerDB>?> findByEmail(String emailQuery) async {
+  Future<List<Customer>?> findByEmail(String emailQuery) async {
     return await _customerDB
         ?.query(CustomerDB_.email.contains(emailQuery, caseSensitive: false))
         .build()
-        .findAsync();
+        .findAsync()
+        .then(
+          (value) => value
+              .map(
+                (e) => e.toData,
+              )
+              .toList(),
+        );
   }
 
   Future<int?> insert(Customer customer) async {

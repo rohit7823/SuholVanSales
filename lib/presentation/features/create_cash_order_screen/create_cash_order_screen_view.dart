@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:suhol_van_sales/domain/models/customer_details.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.dart';
 
@@ -81,10 +80,20 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                     flex: 3,
                                     child: AppTextField(
                                       hint: "Customer email",
-                                      controller: controller.email!,
+                                      width: Get.width * .45,
+                                      isFullScreen: true,
+                                      fieldType: FieldType.autocomplete,
+                                      searchController: controller.email!,
                                       capitalization: TextCapitalization.words,
                                       keyboardType: TextInputType.emailAddress,
                                       inputAction: TextInputAction.next,
+                                      suggestionsBuilder: controller.findCustomerEmail,
+                                      onSelectResult: controller.onSelectCustomerEmail,
+                                      suggestionDisplayOption: (customer) =>
+                                      customer.email ?? "",
+                                      suggestionConstraints: BoxConstraints(
+                                          maxHeight: (height * .35)
+                                      ),
                                     ),
                                   ),
                                   Padding(

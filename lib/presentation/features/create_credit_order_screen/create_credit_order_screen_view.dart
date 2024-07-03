@@ -82,10 +82,16 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                       flex: 3,
                                       child: AppTextField(
                                         hint: "Customer Name",
-                                        controller: controller.customerName!,
-                                        capitalization:
-                                            TextCapitalization.words,
+                                        width: Get.width * .45,
+                                        isFullScreen: true,
+                                        fieldType: FieldType.autocomplete,
+                                        searchController: controller.customerName!,
+                                        capitalization: TextCapitalization.words,
                                         inputAction: TextInputAction.next,
+                                        suggestionsBuilder: controller.findCustomerName,
+                                        onSelectResult: controller.onSelectCustomer,
+                                        suggestionDisplayOption: (customer) =>
+                                        customer.name ?? "",
                                       ),
                                     ),
                                     Padding(
@@ -125,11 +131,18 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                       flex: 3,
                                       child: AppTextField(
                                         hint: "Customer Location",
-                                        controller:
+                                        searchController:
                                             controller.customerLocation!,
                                         capitalization:
                                             TextCapitalization.words,
                                         inputAction: TextInputAction.next,
+                                        width: Get.width * .45,
+                                        isFullScreen: true,
+                                        fieldType: FieldType.autocomplete,
+                                        suggestionsBuilder: controller.findCustomerLocation,
+                                        onSelectResult: controller.onSelectCustomerLocation,
+                                        suggestionDisplayOption: (customer) =>
+                                        customer.location ?? "",
                                       ),
                                     ),
                                     Padding(

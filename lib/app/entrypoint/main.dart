@@ -36,6 +36,9 @@ class SuholVanSales extends StatelessWidget {
         useMaterial3: false,
         colorScheme: AppColors.mainColorScheme,
         fontFamily: Fonts.poppinsRegular,
+        textSelectionTheme: Get.theme.textSelectionTheme.copyWith(
+          cursorColor: Colors.black
+        )
       ),
       getPages: MainGraph.instance.routes(),
       useInheritedMediaQuery: false,

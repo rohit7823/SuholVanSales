@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/domain/data_source/local/customers/database/dao/customer_dao.dart';
+
+import '../../../domain/models/customer_details.dart';
 
 class CreateCreditOrderScreenController extends GetxController with CustomerDao{
 
@@ -8,9 +13,9 @@ class CreateCreditOrderScreenController extends GetxController with CustomerDao{
 
   var shopName = 'Shop 01'.obs;
 
-  TextEditingController? customerName = TextEditingController();
+  SearchController? customerName = SearchController();
 
-  TextEditingController? customerLocation = TextEditingController();
+  SearchController? customerLocation = SearchController();
 
   TextEditingController? vehicleNumber = TextEditingController();
 
@@ -34,16 +39,14 @@ class CreateCreditOrderScreenController extends GetxController with CustomerDao{
 
   var total = "OMR 0.000".obs;
 
+  Customer? _selectedCustomer;
+
   @override
   void onReady() {
     super.onReady();
 
     qty?.addListener(_onQtyChange);
     price?.addListener(_calculatePrice);
-
-    findByName("10 STAR TRADING LLC").then((value) {
-      debugPrint("value ${value.toString()}");
-    },);
   }
 
   void _calculatePrice() {
@@ -88,11 +91,38 @@ class CreateCreditOrderScreenController extends GetxController with CustomerDao{
     Get.back();
   }
 
-  void onClickSendCustomerName() {}
+  void onClickSendCustomerName() {
+    customerName?.openView();
+  }
 
-  void onClickSendCustomerLocation() {}
+  void onClickSendCustomerLocation() {
+    customerLocation?.openView();
+  }
 
   void onSubmitOrder() {}
 
   void onAddItem() {}
+
+  FutureOr<Iterable<Customer>> findCustomerName(SearchController searchController) async {
+    debugPrint("query ${searchController.text}");
+    var values = await findByName(searchController.text);
+    return values ?? [];
+
+  }
+
+  void onSelectCustomer(Customer result, SearchController controller) {
+    if(result.name == null) return;
+    controller.text = result.name!;
+    _selectedCustomer = result;
+  }
+
+  FutureOr<Iterable<Customer>> findCustomerLocation(SearchController searchController) async {
+    var values = await findByLocation(searchController.text);
+    return values ?? [];
+  }
+
+  void onSelectCustomerLocation(Customer result, SearchController controller) {
+    if(result.location == null) return;
+    controller.text = result.location!;
+  }
 }
