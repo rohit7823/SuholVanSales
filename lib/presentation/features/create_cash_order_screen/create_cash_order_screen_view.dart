@@ -87,12 +87,17 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                       capitalization: TextCapitalization.words,
                                       keyboardType: TextInputType.emailAddress,
                                       inputAction: TextInputAction.next,
-                                      suggestionsBuilder: controller.findCustomerEmail,
-                                      onSelectResult: controller.onSelectCustomerEmail,
+                                      suggestionsBuilder:
+                                          controller.findCustomerEmail,
+                                      onSelectResult:
+                                          controller.onSelectCustomerEmail,
                                       suggestionDisplayOption: (customer) =>
-                                      customer.email ?? "",
+                                          customer.email ?? "",
                                       suggestionConstraints: BoxConstraints(
-                                          maxHeight: (height * .35)
+                                          maxHeight: (height * .35)),
+                                      prefixIcon: const Icon(
+                                        Icons.email,
+                                        color: Colors.grey,
                                       ),
                                     ),
                                   ),
@@ -128,20 +133,23 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               width: Get.width * .95,
                               height: isHeightInfinite ? null : height * .07,
                               child: AppTextField(
-                                  hint: "Customer Name",
-                                  width: Get.width * .45,
-                                  isFullScreen: true,
-                                  fieldType: FieldType.autocomplete,
-                                  searchController: controller.customerName!,
-                                  capitalization: TextCapitalization.words,
-                                  inputAction: TextInputAction.next,
-                                  suggestionsBuilder: controller.findCustomerName,
-                                  onSelectResult: controller.onSelectCustomer,
-                                  suggestionDisplayOption: (customer) =>
-                                      customer.name ?? "",
-                                  suggestionConstraints: BoxConstraints(
-                                    maxHeight: (height * .35)
-                                  ),
+                                hint: "Customer Name",
+                                width: Get.width * .45,
+                                isFullScreen: true,
+                                fieldType: FieldType.autocomplete,
+                                searchController: controller.customerName!,
+                                capitalization: TextCapitalization.words,
+                                inputAction: TextInputAction.next,
+                                suggestionsBuilder: controller.findCustomerName,
+                                onSelectResult: controller.onSelectCustomer,
+                                suggestionDisplayOption: (customer) =>
+                                    customer.name ?? "",
+                                suggestionConstraints:
+                                    BoxConstraints(maxHeight: (height * .35)),
+                                prefixIcon: const Icon(
+                                  Icons.person_2,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -161,6 +169,10 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                     capitalization: TextCapitalization.words,
                                     inputAction: TextInputAction.next,
                                     keyboardType: TextInputType.streetAddress,
+                                    prefixIcon: const Icon(
+                                      Icons.numbers,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                   SizedBox(
                                     width: Get.width * .03,
@@ -175,6 +187,10 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                     inputFormatters: [
                                       NumberTextInputFormatter()
                                     ],
+                                    prefixIcon: const Icon(
+                                      Icons.phone_android,
+                                      color: Colors.grey,
+                                    ),
                                   )
                                 ],
                               ),
@@ -192,6 +208,10 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                 controller: controller.productName!,
                                 capitalization: TextCapitalization.words,
                                 inputAction: TextInputAction.next,
+                                prefixIcon: const Icon(
+                                  Icons.production_quantity_limits,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -210,6 +230,10 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                       controller: controller.packing!,
                                       capitalization: TextCapitalization.words,
                                       inputAction: TextInputAction.next,
+                                      prefixIcon: const Icon(
+                                        Icons.backpack,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(
@@ -220,6 +244,10 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                       hint: "Unit",
                                       controller: controller.unit!,
                                       inputAction: TextInputAction.next,
+                                      prefixIcon: const Icon(
+                                        Icons.ad_units,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(
@@ -231,6 +259,10 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                       controller: controller.qty!,
                                       inputAction: TextInputAction.next,
                                       keyboardType: TextInputType.number,
+                                      prefixIcon: const Icon(
+                                        Icons.confirmation_number,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   )
                                 ],
@@ -253,17 +285,24 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                       inputAction: TextInputAction.next,
                                       keyboardType:
                                           TextInputType.visiblePassword,
+                                      prefixIcon: const Icon(
+                                        Icons.price_change,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
-                                    flex: 2,
                                     child: AppTextField(
                                       hint: "Remarks",
                                       controller: controller.remarks!,
                                       inputAction: TextInputAction.done,
                                       keyboardType: TextInputType.text,
                                       capitalization: TextCapitalization.words,
+                                      prefixIcon: const Icon(
+                                        Icons.note_alt_rounded,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   )
                                 ],

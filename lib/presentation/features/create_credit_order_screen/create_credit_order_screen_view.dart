@@ -92,6 +92,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         onSelectResult: controller.onSelectCustomer,
                                         suggestionDisplayOption: (customer) =>
                                         customer.name ?? "",
+                                        prefixIcon: const Icon(
+                                          Icons.person_2,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                     Padding(
@@ -143,6 +147,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         onSelectResult: controller.onSelectCustomerLocation,
                                         suggestionDisplayOption: (customer) =>
                                         customer.location ?? "",
+                                        prefixIcon: const Icon(
+                                          Icons.pin_drop,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                     Padding(
@@ -185,6 +193,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                       capitalization: TextCapitalization.words,
                                       inputAction: TextInputAction.next,
                                       keyboardType: TextInputType.streetAddress,
+                                      prefixIcon: const Icon(
+                                        Icons.numbers,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                     SizedBox(
                                       width: Get.width * .03,
@@ -200,6 +212,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                       inputFormatters: [
                                         NumberTextInputFormatter()
                                       ],
+                                      prefixIcon: const Icon(
+                                        Icons.phone_android,
+                                        color: Colors.grey,
+                                      ),
                                     )
                                   ],
                                 ),
@@ -217,6 +233,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                   controller: controller.productName!,
                                   capitalization: TextCapitalization.words,
                                   inputAction: TextInputAction.next,
+                                  prefixIcon: const Icon(
+                                    Icons.production_quantity_limits,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
                               SizedBox(
@@ -236,6 +256,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         capitalization:
                                             TextCapitalization.words,
                                         inputAction: TextInputAction.next,
+                                        prefixIcon: const Icon(
+                                          Icons.backpack,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(
@@ -246,6 +270,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         hint: "Unit",
                                         controller: controller.unit!,
                                         inputAction: TextInputAction.next,
+                                        prefixIcon: const Icon(
+                                          Icons.ad_units,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(
@@ -257,6 +285,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         controller: controller.qty!,
                                         inputAction: TextInputAction.next,
                                         keyboardType: TextInputType.number,
+                                        prefixIcon: const Icon(
+                                          Icons.confirmation_number,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     )
                                   ],
@@ -279,11 +311,15 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         inputAction: TextInputAction.next,
                                         keyboardType:
                                             TextInputType.visiblePassword,
+                                        prefixIcon: const Icon(
+                                          Icons.price_change,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(
-                                      flex: 2,
+
                                       child: AppTextField(
                                         hint: "Remarks",
                                         controller: controller.remarks!,
@@ -291,6 +327,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         keyboardType: TextInputType.text,
                                         capitalization:
                                             TextCapitalization.words,
+                                        prefixIcon: const Icon(
+                                          Icons.note_alt_rounded,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     )
                                   ],

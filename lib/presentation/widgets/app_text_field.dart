@@ -38,7 +38,7 @@ class AppTextField<T extends Object> extends StatelessWidget {
       this.suggestionConstraints,
       this.searchController,
       this.viewBuilder,
-      this.focusNode});
+      this.focusNode, this.prefixIcon});
 
   final FieldType fieldType;
 
@@ -81,6 +81,8 @@ class AppTextField<T extends Object> extends StatelessWidget {
   final Color? borderColor;
 
   final Widget? suffixIcon;
+
+  final Widget? prefixIcon;
 
   final FutureOr<Iterable<T>> Function(SearchController searchController)?
       suggestionsBuilder;
@@ -127,6 +129,7 @@ class AppTextField<T extends Object> extends StatelessWidget {
               suffixIcon: suffixIcon,
               textAlign: textAlign,
               focusNode: focusNode,
+              prefixIcon: prefixIcon,
             ),
             isFullScreen: isFullScreen,
             suggestionsBuilder:
@@ -152,7 +155,7 @@ class AppTextField<T extends Object> extends StatelessWidget {
                 BoxConstraints(maxWidth: context.width),
             dividerColor: Colors.grey,
             viewHintText: hint,
-            headerHintStyle:  Get.textTheme.titleLarge?.copyWith(
+            headerHintStyle: Get.textTheme.titleLarge?.copyWith(
                 color: Colors.grey.shade500, fontFamily: Fonts.dmSansSemiBold),
             viewBuilder: viewBuilder,
             searchController: searchController,
@@ -203,6 +206,7 @@ class AppTextField<T extends Object> extends StatelessWidget {
             suffixIcon: suffixIcon,
             textAlign: textAlign,
             focusNode: focusNode,
+          prefixIcon: prefixIcon,
           );
   }
 }
@@ -231,7 +235,8 @@ class MyTextField extends StatelessWidget {
       this.borderColor,
       this.suffixIcon,
       this.focusNode,
-      this.onTap});
+      this.onTap,
+      this.prefixIcon});
 
   final String? hint;
 
@@ -273,6 +278,8 @@ class MyTextField extends StatelessWidget {
 
   final Widget? suffixIcon;
 
+  final Widget? prefixIcon;
+
   final FocusNode? focusNode;
 
   final void Function()? onTap;
@@ -280,64 +287,64 @@ class MyTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      style: Get.textTheme.titleLarge
+      style: Get.textTheme.titleMedium
           ?.copyWith(color: Colors.black, fontFamily: Fonts.dmSansSemiBold),
       focusNode: focusNode,
       enableSuggestions: true,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-        border: changeStyle
-            ? UnderlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide:
-                    BorderSide(color: borderColor ?? Colors.lightBlueAccent))
-            : OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide:
-                    BorderSide(color: borderColor ?? Colors.lightBlueAccent)),
-        constraints:
-            BoxConstraints.expand(width: width ?? Get.width * .90, height: 45),
-        fillColor: Colors.white,
-        filled: true,
-        hintText: hint,
-        errorText: error,
-        errorStyle: Get.textTheme.titleLarge
-            ?.copyWith(color: Colors.red, fontFamily: Fonts.dmSansSemiBold),
-        hintStyle: Get.textTheme.titleLarge?.copyWith(
-            color: Colors.grey.shade400, fontFamily: Fonts.dmSansSemiBold),
-        labelStyle: labelStyle ??
-            Get.textTheme.titleMedium?.copyWith(
-                color: borderColor ?? Colors.lightBlueAccent,
-                fontFamily: Fonts.poppinsSemiBold),
-        labelText: label,
-        enabledBorder: changeStyle
-            ? UnderlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide:
-                    BorderSide(color: borderColor ?? Colors.lightBlueAccent),
-              )
-            : OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide:
-                    BorderSide(color: borderColor ?? Colors.grey.shade200)),
-        focusedBorder: changeStyle
-            ? UnderlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide:
-                    BorderSide(color: borderColor ?? Colors.lightBlueAccent))
-            : OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide:
-                    BorderSide(color: borderColor ?? Colors.lightBlueAccent)),
-        errorBorder: changeStyle
-            ? UnderlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.redAccent))
-            : OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: Colors.redAccent)),
-        suffixIcon: suffixIcon,
-      ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+          border: changeStyle
+              ? UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent))
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent)),
+          constraints: BoxConstraints.expand(
+              width: width ?? Get.width * .90, height: 45),
+          fillColor: Colors.grey.shade200,
+          filled: true,
+          hintText: hint,
+          errorText: error,
+          errorStyle: Get.textTheme.titleMedium
+              ?.copyWith(color: Colors.red, fontFamily: Fonts.dmSansSemiBold),
+          hintStyle: Get.textTheme.titleMedium?.copyWith(
+              color: Colors.grey.shade400, fontFamily: Fonts.dmSansSemiBold),
+          labelStyle: labelStyle ??
+              Get.textTheme.titleSmall?.copyWith(
+                  color: borderColor ?? Colors.lightBlueAccent,
+                  fontFamily: Fonts.poppinsSemiBold),
+          labelText: label,
+          enabledBorder: changeStyle
+              ? UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent),
+                )
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.grey.shade200)),
+          focusedBorder: changeStyle
+              ? UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent))
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      BorderSide(color: borderColor ?? Colors.lightBlueAccent)),
+          errorBorder: changeStyle
+              ? UnderlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.redAccent))
+              : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.redAccent)),
+          suffixIcon: suffixIcon,
+          prefixIcon: prefixIcon),
       onTap: onTap,
       cursorColor: Colors.lightBlueAccent,
       autocorrect: true,
