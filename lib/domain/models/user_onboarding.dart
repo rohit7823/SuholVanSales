@@ -22,4 +22,7 @@ class UserOnboarding {
       name: name ?? this.name,
     );
   }
+
+  Map<String, dynamic> toJson() =>
+      {"user_name": email ?? name, "password": password};
 }

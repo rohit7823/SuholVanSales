@@ -10,12 +10,15 @@ class RestService extends GetxService {
     _instance = Dio()
       //..interceptors.add(alice.getDioInterceptor())
       ..options = BaseOptions(
-        baseUrl: 'https://api.npoint.io',
-        connectTimeout: const Duration(seconds: 10),
-        followRedirects: true,
-        contentType: "application/json",
-        persistentConnection: true,
-      );
+          baseUrl: 'https://vansell.codeeaster.com/api',
+          connectTimeout: const Duration(seconds: 10),
+          followRedirects: true,
+          contentType: "application/json",
+          persistentConnection: true,
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          });
     return this;
   }
 

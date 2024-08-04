@@ -27,7 +27,6 @@ class _SignupScreenState extends State<SignupScreen> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,12 +84,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                   LoginIntent.signIn
                               ? [
                                   AppTextField(
-                                    controller: controller.email,
+                                    controller: controller.emailOrName,
                                     autoFocus: true,
                                     changeStyle: true,
-                                    label: "Email",
+                                    label: "Email Or Name",
                                     borderColor: AppColors.secondary,
-                                    hint: "Enter your email",
+                                    hint: "Enter your name or email",
                                   ),
                                   Obx(
                                     () => AppTextField(
@@ -126,7 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     inputAction: TextInputAction.next,
                                   ),
                                   AppTextField(
-                                    controller: controller.email,
+                                    controller: controller.emailOrName,
                                     autoFocus: true,
                                     changeStyle: true,
                                     label: "Email",

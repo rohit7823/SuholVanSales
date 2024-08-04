@@ -1,9 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:suhol_van_sales/data/utils/extensions.dart';
 import 'package:suhol_van_sales/domain/data_source/local/user_onboarding/dao/user_onboarding_dao.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/login/response/user_onboarding_response.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/web_service_pool.dart';
 import 'package:suhol_van_sales/domain/models/user_onboarding.dart';
+import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/signup_repository.dart';
 
-class SignupRepositoryImpl extends SignupRepository with UserOnboardingDao {
+class SignupRepositoryImpl extends SignupRepository
+    with UserOnboardingDao, WebServicePool {
   @override
   Future<UserOnboarding?> forgotPassword(String email) async {
     var value = await getByEmail(email);
@@ -12,10 +17,20 @@ class SignupRepositoryImpl extends SignupRepository with UserOnboardingDao {
   }
 
   @override
-  Future<UserOnboarding?> signIn(UserOnboarding data) async {
-    var value = await get(data);
+  Future<UserOnboardingResponse?> signIn(UserOnboarding data) async {
+    /*var value = await get(data);
 
-    return value?.toData;
+    return value?.toData;*/
+
+    var response = await login(data);
+    if (response is Success) {
+      return response.data;
+    } else if (response is Error) {
+      debugPrint("Error: ${response.message}");
+      return null;
+    }
+
+    return null;
   }
 
   @override
