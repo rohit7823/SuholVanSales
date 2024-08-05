@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/domain/di/preference_service.dart';
+import 'package:suhol_van_sales/domain/di/rest_service.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/user_onboarding.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/signup_repository.dart';
@@ -10,8 +11,7 @@ import 'package:suhol_van_sales/presentation/utils/login_intent.dart';
 
 class SignupScreenController extends GetxController {
   final _repo = Get.find<SignupRepository>();
-  final _pref = Get.find<PreferenceService>();
-  final _session = Get.find<SessionService>();
+
 
   var emailOrName = TextEditingController();
 
@@ -51,11 +51,10 @@ class SignupScreenController extends GetxController {
     passWordObs.value = password.text;
 
     btnState.value =
-        ((emailOrName.text.isEmail || emailOrName.text.isBlank == false) &&
-            (password.text.length >= 8 &&
+        (emailOrName.text.isEmail || emailOrName.text.isBlank == false) && (password.text.length >= 8); /*&&
                 !(password.text.isAlphabetOnly ||
                     password.text.isNumericOnly ||
-                    password.text.isBlank == true)));
+                    password.text.isBlank == true)));*/
   }
 
   Future<void> signIn() async {
@@ -66,7 +65,6 @@ class SignupScreenController extends GetxController {
         password: password.text));
     loading.value = false;
     if (result != null && result.status == true) {
-      _session.registerAppToken(result.token);
       Get.offNamed(Routes.home.name);
     } else {
       Get.showSnackbar(GetSnackBar(

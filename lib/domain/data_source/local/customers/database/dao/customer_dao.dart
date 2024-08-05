@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:suhol_van_sales/data/utils/extensions.dart';
 import 'package:suhol_van_sales/domain/data_source/local/customers/database/entities/customer_db.dart';
 import 'package:suhol_van_sales/domain/di/database_service.dart';
-import 'package:suhol_van_sales/domain/models/customer_details.dart';
+import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/utils/extenstions.dart';
 import 'package:suhol_van_sales/objectbox.g.dart';
 

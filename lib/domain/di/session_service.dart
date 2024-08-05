@@ -8,4 +8,8 @@ class SessionService extends GetxService {
   void registerAppToken(String? token) {
     _appToken = token;
   }
+
+  void unregisterAppToken() {
+    _appToken = null;
+  }
 }

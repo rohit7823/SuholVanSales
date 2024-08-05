@@ -5,38 +5,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-FutureOr<CustomerDetails> customerDetailsFromJson(Map<String, dynamic> str) => CustomerDetails.fromJson(str);
 
-FutureOr<Map<String, dynamic>> customerDetailsToJson(CustomerDetails data) => data.toJson();
-
-class CustomerDetails {
-  final bool? success;
-  final List<Customer>? customers;
-
-  CustomerDetails({
-    this.success,
-    this.customers,
-  });
-
-  CustomerDetails copyWith({
-    bool? success,
-    List<Customer>? customers,
-  }) =>
-      CustomerDetails(
-        success: success ?? this.success,
-        customers: customers ?? this.customers,
-      );
-
-  factory CustomerDetails.fromJson(Map<String, dynamic> json) => CustomerDetails(
-    success: json["success"],
-    customers: json["data"] == null ? [] : List<Customer>.from(json["data"]!.map((x) => Customer.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "success": success,
-    "data": customers == null ? [] : List<dynamic>.from(customers!.map((x) => x.toJson())),
-  };
-}
 
 class Customer {
   final int? id;

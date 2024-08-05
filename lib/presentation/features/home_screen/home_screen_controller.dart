@@ -4,12 +4,17 @@ import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
 import 'package:suhol_van_sales/data/di/customers_binding.dart';
 import 'package:suhol_van_sales/domain/di/preference_service.dart';
+import 'package:suhol_van_sales/presentation/features/signup_screen/signup_repository.dart';
 import 'package:suhol_van_sales/presentation/navigation/home_graph.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/bottom_menus.dart';
 
+import '../../../domain/di/rest_service.dart';
+import '../../../domain/di/session_service.dart';
+
 class HomeScreenController extends GetxController {
   final _prefs = Get.find<PreferenceService>();
+  final _signUpRepo = Get.find<SignupRepository>();
 
   var isLoggedIn = false.obs;
 
@@ -50,10 +55,7 @@ class HomeScreenController extends GetxController {
           ),
           actions: [
             TextButton(
-                onPressed: () {
-                  _prefs.logout();
-                  Get.offAllNamed(Routes.signup.name);
-                },
+                onPressed: _logout,
                 child: Text(
                   "Yes",
                   style: Get.textTheme.titleSmall?.copyWith(
@@ -91,5 +93,25 @@ class HomeScreenController extends GetxController {
 
   void login() {
     Get.offAndToNamed(Routes.signup.name);
+  }
+
+  void _logout() async {
+    await _signUpRepo.signOut().then((value) {
+      switch (value?.status) {
+        case true:
+          Get.offAllNamed(Routes.signup.name);
+          break;
+        case false:
+          Get.showSnackbar(GetSnackBar(
+            message: "${value?.message}",
+            duration: const Duration(seconds: 5),
+          ));
+          break;
+        case null:
+          break;
+      }
+    }, onError: (object) {
+      debugPrint("onLogout ${object.toString()}");
+    });
   }
 }

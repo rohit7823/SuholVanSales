@@ -157,14 +157,16 @@ class _SignupScreenState extends State<SignupScreen> {
                                   )
                                 ],
                           button: AppButton(
-                            onClick: controller.oboardingIntent.value ==
+                            onClick: controller
+                                .signIn, /*controller.oboardingIntent.value ==
                                     LoginIntent.signIn
                                 ? controller.signIn
-                                : controller.signUp,
-                            label: controller.oboardingIntent.value ==
+                                : controller.signUp*/
+                            label:
+                                "Sign In", /*controller.oboardingIntent.value ==
                                     LoginIntent.signUp
                                 ? "Sign Up"
-                                : "Sign In",
+                                : "Sign In"*/
                             labelColor: Colors.black54,
                             btnColor: AppColors.secondary,
                             height: 45,
@@ -173,7 +175,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             enable: controller.btnState.value,
                             showLoading: controller.loading.value,
                           ),
-                          optional: (context) => Obx(() => controller
+                          /*optional: (context) => Obx(() => controller
                                       .emailObs.value.isBlank ==
                                   true
                               ? Text(
@@ -204,14 +206,14 @@ class _SignupScreenState extends State<SignupScreen> {
                                               style: Get.textTheme.labelSmall
                                                   ?.copyWith(
                                                       color: Colors
-                                                          .grey.shade500))),
+                                                          .grey.shade500))),*/
                         ),
                       ],
                     ))),
                 SizedBox(
                   height: Get.height * .03,
                 ),
-                TextButton(
+                /*TextButton(
                     onPressed: controller.changeIntent,
                     child: Obx(() => Text(
                           controller.oboardingIntent.value == LoginIntent.signUp
@@ -220,7 +222,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           style: Get.textTheme.titleMedium?.copyWith(
                               color: AppColors.buttonColorAlternate,
                               fontFamily: Fonts.poppinsSemiBold),
-                        ))),
+                        )
+                    )
+                ),*/
                 SizedBox(
                   height: Get.height * .03,
                 ),
@@ -236,7 +240,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       )
                     : const SizedBox.shrink()),*/
                 SizedBox(
-                  height: Get.height * .06,
+                  height: Get.height * .18,
                 )
               ],
             ),

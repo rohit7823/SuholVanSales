@@ -15,11 +15,25 @@ class RestService extends GetxService {
           followRedirects: true,
           contentType: "application/json",
           persistentConnection: true,
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-          });
+          headers: _staticHeaders(),
+          validateStatus: (status) => true,
+      );
     return this;
+  }
+
+  Map<String, dynamic> _staticHeaders() {
+    return {"Accept": "application/json", "Content-Type": "application/json"};
+  }
+
+  void addAuthHeader(String? bearerToken) {
+    var headers = _staticHeaders();
+    headers.addIf(() => true, "Authorization", "Bearer $bearerToken");
+
+    _instance?.options = _instance!.options.copyWith(headers: headers);
+  }
+
+  void removeAuthHeader() {
+    _instance?.options = _instance!.options.copyWith(headers: _staticHeaders());
   }
 
   void updateBaseUrl(String url) {

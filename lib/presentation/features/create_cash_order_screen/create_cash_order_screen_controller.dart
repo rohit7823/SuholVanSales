@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/domain/data_source/local/customers/database/dao/customer_dao.dart';
-import 'package:suhol_van_sales/domain/models/customer_details.dart';
+import 'package:suhol_van_sales/domain/models/customer.dart';
+import 'package:suhol_van_sales/presentation/features/create_cash_order_screen/create_cash_order_repository.dart';
 
-class CreateCashOrderScreenController extends GetxController with CustomerDao {
+class CreateCashOrderScreenController extends GetxController {
+  final _repo = Get.find<CreateCashOrderRepository>();
 
   var userName = 'Marcel'.obs;
 
@@ -95,27 +97,27 @@ class CreateCashOrderScreenController extends GetxController with CustomerDao {
 
   void onAddItem() {}
 
-  FutureOr<Iterable<Customer>> findCustomerName(SearchController searchController) async {
+  FutureOr<Iterable<Customer>> findCustomerName(
+      SearchController searchController) async {
     debugPrint("query ${searchController.text}");
-    var values = await findByName(searchController.text);
+    var values = await _repo.findCustomerByName(searchController.text);
     return values ?? [];
-
   }
 
   void onSelectCustomer(Customer result, SearchController controller) {
-    if(result.name == null) return;
+    if (result.name == null) return;
     controller.text = result.name!;
     _selectedCustomer = result;
   }
 
-  FutureOr<Iterable<Customer>> findCustomerEmail(SearchController searchController) async {
-
-    var values = await findByEmail(searchController.text);
+  FutureOr<Iterable<Customer>> findCustomerEmail(
+      SearchController searchController) async {
+    var values = await _repo.findCustomerByEmail(searchController.text);
     return values ?? [];
   }
 
   void onSelectCustomerEmail(Customer result, SearchController controller) {
-    if(result.email == null) return;
+    if (result.email == null) return;
     controller.text = result.email!;
   }
 }

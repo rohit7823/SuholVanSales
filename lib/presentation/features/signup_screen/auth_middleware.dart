@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/domain/di/preference_service.dart';
+import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 
 class AuthMiddleware extends GetMiddleware {
-  final _prefs = Get.find<PreferenceService>();
+  final _session = Get.find<SessionService>();
 
   @override
   RouteSettings? redirect(String? route) {
-    var userId = _prefs.userID;
-    if (userId.isBlank == true) {
+    var token = _session.appToken;
+    if (token == null) {
       return null;
     }
 
