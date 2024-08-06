@@ -13,17 +13,17 @@ class StaticCustomers {
 
   static Future<CustomersWithLocationResponse?> getData() async {
     try {
-      var jsonStr = await rootBundle.loadString(StaticData.customersWithLocationsJSON);
+      var jsonStr =
+          await rootBundle.loadString(StaticData.customersWithLocationsJSON);
       var customersJson = json.decode(jsonStr) as Map<String, dynamic>;
       if (customersJson.isNotEmpty) {
-        return await compute(serializeCustomersWithLocationResponse, customersJson);
+        return await compute(
+            deserializeCustomersWithLocationResponse, customersJson);
       }
       return null;
-    } catch(e) {
+    } catch (e) {
       debugPrint("exception ${e.toString()}");
       return null;
     }
-
-
   }
 }

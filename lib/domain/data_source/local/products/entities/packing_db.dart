@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:objectbox/objectbox.dart';
 import 'package:suhol_van_sales/domain/data_source/local/products/entities/packing_pivot.dart';
 import 'package:suhol_van_sales/domain/data_source/local/products/entities/product_db.dart';
@@ -8,7 +10,9 @@ class PackingDB {
   int? dbId;
 
   final int? id;
+
   final String? packing;
+
   final int? isActive;
 
   @Property(type: PropertyType.date)
@@ -19,9 +23,21 @@ class PackingDB {
 
   final String? deletedAt;
 
-  final PackingPivotDB? pivot;
+  @Transient()
+  PackingPivotDB? pivot;
 
   final ToOne<ProductDB> product = ToOne();
+
+
+  String? get dbPivot => json.encode(pivot?.toMap());
+
+  set dbPivot(String? jsonStr) {
+    if (jsonStr == null) {
+      pivot = null;
+    } else {
+      pivot = PackingPivotDB.fromMap(json.decode(jsonStr));
+    }
+  }
 
   PackingDB({
     this.dbId = 0,

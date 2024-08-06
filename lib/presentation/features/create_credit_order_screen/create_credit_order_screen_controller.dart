@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_repository.dart';
 
 import '../../../domain/models/customer.dart';
+import '../../../domain/models/product.dart';
 
 class CreateCreditOrderScreenController extends GetxController {
   final _repo = Get.find<CreateCreditOrderRepository>();
@@ -21,17 +22,23 @@ class CreateCreditOrderScreenController extends GetxController {
 
   TextEditingController? mobileNumber = TextEditingController();
 
-  TextEditingController? productName = TextEditingController();
+  SearchController? productName = SearchController();
 
-  TextEditingController? packing = TextEditingController();
+  SearchController? packing = SearchController();
 
-  TextEditingController? unit = TextEditingController();
+  SearchController? unit = SearchController();
 
   TextEditingController? qty = TextEditingController();
 
   TextEditingController? price = TextEditingController();
 
   TextEditingController? remarks = TextEditingController();
+
+  Packing? selectedPacking;
+
+  UnitElement? selectedUnit;
+
+  Rx<Product?> selectedProduct = Rx(null);
 
   var items = '0'.obs;
 
@@ -122,8 +129,61 @@ class CreateCreditOrderScreenController extends GetxController {
     return values ?? [];
   }
 
+  FutureOr<Iterable<Packing>> findProductPacking(
+      SearchController searchController) {
+    debugPrint("query ${searchController.text}");
+    var values = selectedProduct.value?.packings
+        ?.where(
+          (element) =>
+      element.packing
+          ?.isCaseInsensitiveContains(searchController.text) ??
+          false,
+    )
+        .toList();
+    return values ?? [];
+  }
+  FutureOr<Iterable<Product>> findProductName(
+      SearchController searchController) async {
+    debugPrint("query ${searchController.text}");
+    var values = await _repo.findProductByName(searchController.text);
+    return values ?? [];
+  }
+
+
+  FutureOr<Iterable<UnitElement>> findProductUnit(
+      SearchController searchController) {
+    debugPrint("query ${searchController.text}");
+    var values = selectedProduct.value?.units
+        ?.where(
+          (element) =>
+      element.name?.name
+          .isCaseInsensitiveContains(searchController.text) ??
+          false,
+    )
+        .toList();
+    return values ?? [];
+  }
+
   void onSelectCustomerLocation(Customer result, SearchController controller) {
     if (result.location == null) return;
     controller.text = result.location!;
+  }
+
+  void onSelectProductPacking(Packing result, SearchController controller) {
+    if (result.packing == null) return;
+    controller.text = result.packing ?? "None";
+    selectedPacking = result;
+  }
+
+  void onSelectProductUnit(UnitElement result, SearchController controller) {
+    if (result.name?.name == null) return;
+    controller.text = result.name?.name ?? "None";
+    selectedUnit = result;
+  }
+
+  void onSelectProduct(Product result, SearchController controller) {
+    if (result.name == null) return;
+    controller.text = result.name ?? result.alias ?? "";
+    selectedProduct.value = result;
   }
 }

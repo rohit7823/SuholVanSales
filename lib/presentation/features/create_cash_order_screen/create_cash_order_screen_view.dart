@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:retrofit/http.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.dart';
 
@@ -205,13 +206,21 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               child: AppTextField(
                                 hint: "Product Name",
                                 width: Get.width * .95,
-                                controller: controller.productName!,
+                                isFullScreen: true,
+                                fieldType: FieldType.autocomplete,
+                                searchController: controller.productName!,
                                 capitalization: TextCapitalization.words,
                                 inputAction: TextInputAction.next,
                                 prefixIcon: const Icon(
                                   Icons.production_quantity_limits,
                                   color: Colors.grey,
                                 ),
+                                suggestionsBuilder: controller.findProductName,
+                                onSelectResult: controller.onSelectProduct,
+                                suggestionDisplayOption: (product) =>
+                                    product.name ?? "",
+                                suggestionConstraints:
+                                    BoxConstraints(maxHeight: (height * .35)),
                               ),
                             ),
                             SizedBox(
@@ -225,30 +234,54 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: AppTextField(
-                                      hint: "Packing",
-                                      controller: controller.packing!,
-                                      capitalization: TextCapitalization.words,
-                                      inputAction: TextInputAction.next,
-                                      prefixIcon: const Icon(
-                                        Icons.backpack,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                    child: Obx(() => AppTextField(
+                                          hint: "Packing",
+                                          searchController: controller.packing!,
+                                          capitalization:
+                                              TextCapitalization.words,
+                                          inputAction: TextInputAction.next,
+                                          prefixIcon: const Icon(
+                                            Icons.backpack,
+                                            color: Colors.grey,
+                                          ),
+                                          fieldType: controller
+                                                      .selectedProduct.value !=
+                                                  null
+                                              ? FieldType.autocomplete
+                                              : FieldType.normal,
+                                          suggestionConstraints: BoxConstraints(maxHeight: (height * .35)),
+                                          suggestionsBuilder: controller.findProductPacking,
+                                          onSelectResult: controller.onSelectProductPacking,
+                                          suggestionDisplayOption: (p0) => p0.packing ?? "None",
+                                          isFullScreen: true,
+                                        )),
                                   ),
                                   const SizedBox(
                                     width: 12,
                                   ),
                                   Expanded(
-                                    child: AppTextField(
-                                      hint: "Unit",
-                                      controller: controller.unit!,
-                                      inputAction: TextInputAction.next,
-                                      prefixIcon: const Icon(
-                                        Icons.ad_units,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                    child: Obx(() => AppTextField(
+                                          hint: "Unit",
+                                          searchController: controller.unit!,
+                                          inputAction: TextInputAction.next,
+                                          prefixIcon: const Icon(
+                                            Icons.ad_units,
+                                            color: Colors.grey,
+                                          ),
+                                          suggestionsBuilder: controller.findProductUnit,
+                                          onSelectResult: controller.onSelectProductUnit,
+                                          suggestionDisplayOption: (p0) => p0.name?.name ?? "None",
+                                          isFullScreen: true,
+                                          fieldType: controller
+                                                      .selectedProduct.value !=
+                                                  null
+                                              ? FieldType.autocomplete
+                                              : FieldType.normal,
+                                          capitalization:
+                                              TextCapitalization.words,
+                                          suggestionConstraints: BoxConstraints(
+                                              maxHeight: (height * .35)),
+                                        )),
                                   ),
                                   const SizedBox(
                                     width: 12,

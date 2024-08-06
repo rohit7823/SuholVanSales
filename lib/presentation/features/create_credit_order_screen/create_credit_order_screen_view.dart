@@ -85,13 +85,17 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         width: Get.width * .45,
                                         isFullScreen: true,
                                         fieldType: FieldType.autocomplete,
-                                        searchController: controller.customerName!,
-                                        capitalization: TextCapitalization.words,
+                                        searchController:
+                                            controller.customerName!,
+                                        capitalization:
+                                            TextCapitalization.words,
                                         inputAction: TextInputAction.next,
-                                        suggestionsBuilder: controller.findCustomerName,
-                                        onSelectResult: controller.onSelectCustomer,
+                                        suggestionsBuilder:
+                                            controller.findCustomerName,
+                                        onSelectResult:
+                                            controller.onSelectCustomer,
                                         suggestionDisplayOption: (customer) =>
-                                        customer.name ?? "",
+                                            customer.name ?? "",
                                         prefixIcon: const Icon(
                                           Icons.person_2,
                                           color: Colors.grey,
@@ -143,10 +147,12 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         width: Get.width * .45,
                                         isFullScreen: true,
                                         fieldType: FieldType.autocomplete,
-                                        suggestionsBuilder: controller.findCustomerLocation,
-                                        onSelectResult: controller.onSelectCustomerLocation,
+                                        suggestionsBuilder:
+                                            controller.findCustomerLocation,
+                                        onSelectResult:
+                                            controller.onSelectCustomerLocation,
                                         suggestionDisplayOption: (customer) =>
-                                        customer.location ?? "",
+                                            customer.location ?? "",
                                         prefixIcon: const Icon(
                                           Icons.pin_drop,
                                           color: Colors.grey,
@@ -230,13 +236,20 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 height: isHeightInfinite ? null : height * .07,
                                 child: AppTextField(
                                   hint: "Product Name",
-                                  controller: controller.productName!,
-                                  capitalization: TextCapitalization.words,
                                   inputAction: TextInputAction.next,
                                   prefixIcon: const Icon(
                                     Icons.production_quantity_limits,
                                     color: Colors.grey,
                                   ),
+                                  searchController: controller.productName!,
+                                  capitalization: TextCapitalization.words,
+                                  suggestionsBuilder:
+                                      controller.findProductName,
+                                  onSelectResult: controller.onSelectProduct,
+                                  suggestionDisplayOption: (product) =>
+                                      product.name ?? "",
+                                  fieldType: FieldType.autocomplete,
+                                  isFullScreen: true,
                                 ),
                               ),
                               SizedBox(
@@ -250,30 +263,54 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      child: AppTextField(
-                                        hint: "Packing",
-                                        controller: controller.packing!,
-                                        capitalization:
-                                            TextCapitalization.words,
-                                        inputAction: TextInputAction.next,
-                                        prefixIcon: const Icon(
-                                          Icons.backpack,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
+                                      child: Obx(() => AppTextField(
+                                            hint: "Packing",
+                                            searchController: controller.packing!,
+                                            capitalization:
+                                                TextCapitalization.words,
+                                            inputAction: TextInputAction.next,
+                                            prefixIcon: const Icon(
+                                              Icons.backpack,
+                                              color: Colors.grey,
+                                            ),
+                                            fieldType: controller
+                                                        .selectedProduct
+                                                        .value !=
+                                                    null
+                                                ? FieldType.autocomplete
+                                                : FieldType.normal,
+                                            suggestionConstraints: BoxConstraints(maxHeight: (height * .35)),
+                                            suggestionsBuilder: controller.findProductPacking,
+                                            onSelectResult: controller.onSelectProductPacking,
+                                            suggestionDisplayOption: (p0) => p0.packing ?? "None",
+                                            isFullScreen: true,
+                                          )),
                                     ),
                                     const SizedBox(
                                       width: 12,
                                     ),
                                     Expanded(
-                                      child: AppTextField(
-                                        hint: "Unit",
-                                        controller: controller.unit!,
-                                        inputAction: TextInputAction.next,
-                                        prefixIcon: const Icon(
-                                          Icons.ad_units,
-                                          color: Colors.grey,
-                                        ),
+                                      child: Obx(
+                                        ()=> AppTextField(
+                                          hint: "Unit",
+                                          searchController: controller.unit!,
+                                          inputAction: TextInputAction.next,
+                                          prefixIcon: const Icon(
+                                            Icons.ad_units,
+                                            color: Colors.grey,
+                                          ),
+                                          suggestionsBuilder: controller.findProductUnit,
+                                          onSelectResult: controller.onSelectProductUnit,
+                                          suggestionDisplayOption: (p0) => p0.name?.name ?? "None",
+                                          isFullScreen: true,
+                                          fieldType: controller
+                                              .selectedProduct.value !=
+                                              null
+                                              ? FieldType.autocomplete
+                                              : FieldType.normal,
+                                          suggestionConstraints: BoxConstraints(
+                                              maxHeight: (height * .35)),
+                                        )
                                       ),
                                     ),
                                     const SizedBox(
@@ -319,7 +356,6 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(
-
                                       child: AppTextField(
                                         hint: "Remarks",
                                         controller: controller.remarks!,
@@ -390,8 +426,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 ),
                               ),
                             ],
-                          )
-                  ),
+                          )),
                 ],
               ),
             ),

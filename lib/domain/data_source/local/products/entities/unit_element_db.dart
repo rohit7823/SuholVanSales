@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:objectbox/objectbox.dart';
 import 'package:suhol_van_sales/domain/data_source/local/products/entities/product_db.dart';
 import 'package:suhol_van_sales/domain/data_source/local/products/entities/unit_pivot_db.dart';
@@ -13,8 +15,10 @@ class UnitElementDB {
 
   @Transient()
   Name? name;
+
   @Transient()
   UnitEnum? unit;
+
   @Transient()
   UnitEnum? unitCode;
 
@@ -22,13 +26,14 @@ class UnitElementDB {
 
   @Property(type: PropertyType.date)
   final DateTime? createdAt;
+
   @Property(type: PropertyType.date)
   final DateTime? updatedAt;
 
   final String? deletedAt;
 
-  @Backlink('unitElement')
-  final ToOne<UnitPivotDB> pivot = ToOne();
+  @Transient()
+  UnitPivotDB? pivot;
 
   final ToOne<ProductDB> product = ToOne();
 
@@ -37,12 +42,11 @@ class UnitElementDB {
   }
 
   set dbName(int? value) {
-    if(value == null) {
+    if (value == null) {
       name = null;
     } else {
-      name = value >= 0 && value < Name.values.length
-          ? Name.values[value]
-          : null;
+      name =
+          value >= 0 && value < Name.values.length ? Name.values[value] : null;
     }
   }
 
@@ -51,7 +55,7 @@ class UnitElementDB {
   }
 
   set dbUnit(int? value) {
-    if(value == null) {
+    if (value == null) {
       unit = null;
     } else {
       unit = value >= 0 && value < UnitEnum.values.length
@@ -65,12 +69,22 @@ class UnitElementDB {
   }
 
   set dbUnitCode(int? value) {
-    if(value == null) {
+    if (value == null) {
       unitCode = null;
     } else {
       unitCode = value >= 0 && value < UnitEnum.values.length
           ? UnitEnum.values[value]
           : null;
+    }
+  }
+
+  String? get dbPivot => json.encode(pivot?.toMap());
+
+  set dbPivot(String? jsonStr) {
+    if (jsonStr == null) {
+      pivot = null;
+    } else {
+      pivot = UnitPivotDB.fromMap(json.decode(jsonStr));
     }
   }
 
@@ -84,5 +98,6 @@ class UnitElementDB {
     this.createdAt,
     this.updatedAt,
     this.deletedAt,
+    this.pivot,
   });
 }

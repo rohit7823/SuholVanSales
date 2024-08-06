@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
-import 'package:suhol_van_sales/data/di/customers_binding.dart';
+import 'package:suhol_van_sales/data/di/data_binding.dart';
 import 'package:suhol_van_sales/domain/di/service_binding.dart';
 import 'package:suhol_van_sales/presentation/navigation/main_graph.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
@@ -16,7 +16,7 @@ void main() {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await ServiceBindings().dependencies();
-      //DataBinding().init();
+      DataBinding().initProducts();
       runApp(const SuholVanSales());
     },
     (error, stack) {

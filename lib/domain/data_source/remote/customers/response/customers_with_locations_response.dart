@@ -2,11 +2,11 @@ import 'dart:async';
 
 import '../../../../models/customer.dart';
 
-FutureOr<CustomersWithLocationResponse> serializeCustomersWithLocationResponse(
-        Map<String, dynamic> str) =>
-    CustomersWithLocationResponse.fromJson(str);
+FutureOr<CustomersWithLocationResponse>
+    deserializeCustomersWithLocationResponse(Map<String, dynamic> str) =>
+        CustomersWithLocationResponse.fromJson(str);
 
-FutureOr<Map<String, dynamic>> deserializeCustomersWithLocationResponse(
+FutureOr<Map<String, dynamic>> serializeCustomersWithLocationResponse(
         CustomersWithLocationResponse data) =>
     data.toJson();
 

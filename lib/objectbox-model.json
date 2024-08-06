@@ -181,7 +181,7 @@
     },
     {
       "id": "4:2438683709265440315",
-      "lastPropertyId": "8:1852323569814062671",
+      "lastPropertyId": "9:3543068678614886564",
       "name": "PackingDB",
       "properties": [
         {
@@ -227,6 +227,11 @@
           "flags": 520,
           "indexId": "5:5673558322334340071",
           "relationTarget": "ProductDB"
+        },
+        {
+          "id": "9:3543068678614886564",
+          "name": "dbPivot",
+          "type": 9
         }
       ],
       "relations": []
@@ -308,7 +313,7 @@
     },
     {
       "id": "7:8032774063397815573",
-      "lastPropertyId": "10:5176770592853038148",
+      "lastPropertyId": "12:7041576715271418660",
       "name": "UnitElementDB",
       "properties": [
         {
@@ -364,13 +369,18 @@
           "id": "10:5176770592853038148",
           "name": "dbUnitCode",
           "type": 6
+        },
+        {
+          "id": "12:7041576715271418660",
+          "name": "dbPivot",
+          "type": 9
         }
       ],
       "relations": []
     },
     {
       "id": "8:1173052252988786141",
-      "lastPropertyId": "3:3569722824633089780",
+      "lastPropertyId": "4:2461287213509708389",
       "name": "UnitPivotDB",
       "properties": [
         {
@@ -394,14 +404,20 @@
     }
   ],
   "lastEntityId": "8:1173052252988786141",
-  "lastIndexId": "7:1276025123493621980",
+  "lastIndexId": "9:1304425101526633319",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
-  "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredIndexUids": [
+    587946028562729020,
+    1304425101526633319
+  ],
+  "retiredPropertyUids": [
+    454465461960097752,
+    2461287213509708389
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

@@ -8,14 +8,18 @@ class ProductDB {
   int? dbId;
 
   final int? id;
+  
   final String? name;
 
   @Unique(onConflict: ConflictStrategy.replace)
   final String? code;
 
   final String? alias;
+
   final String? secondaryName;
+
   final String? remarks;
+
   final String? tax;
 
   @Backlink('product')

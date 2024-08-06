@@ -42,7 +42,7 @@ class _CustomerApi implements CustomerApi {
               baseUrl,
             ))));
     final value =
-        await compute(serializeCustomersWithLocationResponse, _result.data!);
+        await compute(deserializeCustomersWithLocationResponse, _result.data!);
     return value;
   }
 

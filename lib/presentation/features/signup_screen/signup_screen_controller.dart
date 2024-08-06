@@ -64,14 +64,15 @@ class SignupScreenController extends GetxController {
         email: emailOrName.text,
         password: password.text));
     loading.value = false;
-    if (result != null && result.status == true) {
+    Get.offNamed(Routes.home.name);
+    /*if (result != null && result.status == true) {
       Get.offNamed(Routes.home.name);
     } else {
       Get.showSnackbar(GetSnackBar(
         message: "${result?.message}",
         duration: const Duration(seconds: 5),
       ));
-    }
+    }*/
   }
 
   Future<void> signUp() async {

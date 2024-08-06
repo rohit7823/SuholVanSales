@@ -64,16 +64,14 @@ mixin CustomerDao {
     } else {
       var data = await _customerDB
           ?.query(
-          CustomerDB_.location.contains(nameQuery, caseSensitive: false))
+              CustomerDB_.location.contains(nameQuery, caseSensitive: false))
           .build()
           .findAsync()
           .then(
-            (value) => value
-            .map(
-              (e) => e.toData,
-        )
-            .toList(),
-      );
+            (value) => value.map(
+              (e) => e.toData
+            ).toList()
+          );
       _customersCache.addIf(data != null, byName, data!);
       return data;
     }

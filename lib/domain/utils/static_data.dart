@@ -5,4 +5,7 @@ class StaticData {
 
   static const customersWithLocationsJSON =
       '$_path/customers-with-locations.json';
+
+  static const productsWithPackingAndUnitJSON =
+      "$_path/fetch-product-with-packing-and-unit.json";
 }
