@@ -382,44 +382,50 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      child: AppButton(
-                                        onClick: controller.onSubmitOrder,
-                                        height: isHeightInfinite
-                                            ? 40
-                                            : height * .07,
-                                        btnColor: AppColors.buttonColor,
-                                        border: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        child: Text(
-                                          "Submit Order",
-                                          style: Get.textTheme.titleLarge
-                                              ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontFamily:
-                                                      Fonts.poppinsMedium),
-                                        ),
+                                      child: Obx(
+                                        ()=> AppButton(
+                                          onClick: controller.onSubmitOrder,
+                                          height: isHeightInfinite
+                                              ? 40
+                                              : height * .07,
+                                          btnColor: AppColors.buttonColor,
+                                          border: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(8)),
+                                          showLoading: controller.orderLoading.value,
+                                          child: Text(
+                                            "Submit Order",
+                                            style: Get.textTheme.titleLarge
+                                                ?.copyWith(
+                                                color: Colors.white,
+                                                fontFamily:
+                                                Fonts.poppinsMedium),
+                                          ),
+                                        )
                                       ),
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(
-                                      child: AppButton(
-                                        onClick: controller.onAddItem,
-                                        height:
-                                            isHeightInfinite ? 40 : height * .0,
-                                        btnColor:
-                                            AppColors.buttonColorAlternate,
-                                        border: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        child: Text(
-                                          "Add Item",
-                                          style: Get.textTheme.titleLarge
-                                              ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontFamily:
-                                                      Fonts.poppinsMedium),
-                                        ),
+                                      child: Obx(
+                                        () => AppButton(
+                                          onClick: controller.onAddItem,
+                                          height:
+                                          isHeightInfinite ? 40 : height * .0,
+                                          btnColor:
+                                          AppColors.buttonColorAlternate,
+                                          showLoading: controller.addItemLoading.value,
+                                          border: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(8)),
+                                          child: Text(
+                                            "Add Item",
+                                            style: Get.textTheme.titleLarge
+                                                ?.copyWith(
+                                                color: Colors.white,
+                                                fontFamily:
+                                                Fonts.poppinsMedium),
+                                          ),
+                                        )
                                       ),
                                     )
                                   ],

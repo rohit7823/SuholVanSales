@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 abstract class RestResponse<T> {
   T? data;
   String? message;
@@ -20,5 +22,7 @@ class Error<T> extends RestResponse<T> {
   @override
   String? message;
 
-  Error({this.data, required this.message});
+  Error({this.data, required this.message}) {
+    debugPrint("message $message");
+  }
 }

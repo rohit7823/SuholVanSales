@@ -3,16 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/domain/data_source/local/customers/database/dao/customer_dao.dart';
+import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/models/product.dart';
 import 'package:suhol_van_sales/presentation/features/create_cash_order_screen/create_cash_order_repository.dart';
 
+import '../../../domain/data_source/remote/material_request/request/material_requisition_request.dart';
+
 class CreateCashOrderScreenController extends GetxController {
   final _repo = Get.find<CreateCashOrderRepository>();
+  final _session = Get.find<SessionService>();
 
-  var userName = 'Marcel'.obs;
+  var userName = ''.obs;
 
-  var shopName = 'Shop 01'.obs;
+  var shopName = ''.obs;
 
   var items = '0'.obs;
 
@@ -55,6 +59,8 @@ class CreateCashOrderScreenController extends GetxController {
 
     qty?.addListener(_onQtyChange);
     price?.addListener(_calculatePrice);
+
+    userName.value = _session.userDetails?.name ?? 'Welcome';
   }
 
   void _calculatePrice() {
@@ -102,9 +108,90 @@ class CreateCashOrderScreenController extends GetxController {
     email?.openView();
   }
 
-  void onSubmitOrder() {}
+  var orderLoading = false.obs;
 
-  void onAddItem() {}
+  var addItemLoading = false.obs;
+
+  Future<void> onSubmitOrder() async {
+    orderLoading.value = true;
+    var request = MaterialRequisitionRequest(
+        customerId: _selectedCustomer?.id,
+        productId: selectedProduct.value?.id,
+        packingId: selectedPacking?.id,
+        vehicleNo: vehicleNumber?.text,
+        deliveryDate: DateTime.now(),
+        remarks: remarks?.text,
+        unitOfMeasurementId: selectedUnit?.id
+    );
+    var result = await _repo.createRequisition(request);
+    orderLoading.value = false;
+    if (result != null) {
+      switch (result.success) {
+        case true:
+          await Future.delayed(const Duration(milliseconds: 500)).then(
+                (value) {
+              Get.back();
+            },
+          );
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.message}",
+            duration: const Duration(seconds: 5),
+          ));
+          break;
+        case false:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.message ?? result.error}",
+            duration: const Duration(seconds: 5),
+          ));
+        case null:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.error}",
+            duration: const Duration(seconds: 5),
+          ));
+          break;
+      }
+    }
+  }
+
+  Future<void> onAddItem() async {
+    addItemLoading.value = true;
+    var request = MaterialRequisitionRequest(
+        customerId: _selectedCustomer?.id,
+        productId: selectedProduct.value?.id,
+        packingId: selectedPacking?.id,
+        vehicleNo: vehicleNumber?.text,
+        deliveryDate: DateTime.now(),
+        remarks: remarks?.text,
+        unitOfMeasurementId: selectedUnit?.id);
+    var result = await _repo.createRequisitionOrder(request);
+    addItemLoading.value = false;
+    if (result != null) {
+      switch (result.success) {
+        case true:
+          await Future.delayed(const Duration(milliseconds: 500)).then(
+                (value) {
+              Get.back();
+            },
+          );
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.message}",
+            duration: const Duration(seconds: 5),
+          ));
+          break;
+        case false:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.message ?? result.error}",
+            duration: const Duration(seconds: 5),
+          ));
+        case null:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.error}",
+            duration: const Duration(seconds: 5),
+          ));
+          break;
+      }
+    }
+  }
 
   FutureOr<Iterable<Customer>> findCustomerName(
       SearchController searchController) async {
@@ -158,6 +245,8 @@ class CreateCashOrderScreenController extends GetxController {
     if (result.name == null) return;
     controller.text = result.name ?? result.alias ?? "";
     selectedProduct.value = result;
+    clearSelectedPacking();
+    clearSelectedUnit();
   }
 
   FutureOr<Iterable<Customer>> findCustomerEmail(
@@ -181,5 +270,15 @@ class CreateCashOrderScreenController extends GetxController {
     if (result.name?.name == null) return;
     controller.text = result.name?.name ?? "None";
     selectedUnit = result;
+  }
+
+  void clearSelectedPacking() {
+    packing?.text = "";
+    selectedPacking = null;
+  }
+
+  void clearSelectedUnit() {
+    unit?.text = "";
+    selectedUnit = null;
   }
 }

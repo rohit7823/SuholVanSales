@@ -15,12 +15,13 @@ import '../../../domain/di/session_service.dart';
 class HomeScreenController extends GetxController {
   final _prefs = Get.find<PreferenceService>();
   final _signUpRepo = Get.find<SignupRepository>();
+  final _session = Get.find<SessionService>();
 
   var isLoggedIn = false.obs;
 
-  var userName = "Marcel".obs;
+  var userName = "".obs;
 
-  var shopName = "Shop 01".obs;
+  var shopName = "".obs;
 
   Rx<BottomMenus> selectedBottomMenu = BottomMenus.home.obs;
 
@@ -29,8 +30,8 @@ class HomeScreenController extends GetxController {
     // TODO: implement onReady
     super.onReady();
 
-    isLoggedIn.value = _prefs.userID.isBlank == false;
-    userName.value = _prefs.userName?.split(" ").first ?? "Welcome";
+    isLoggedIn.value = _session.appToken != null;
+    userName.value = _session.userDetails?.name ?? "Welcome";
   }
 
   @override

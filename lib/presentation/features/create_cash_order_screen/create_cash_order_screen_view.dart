@@ -249,10 +249,14 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                                   null
                                               ? FieldType.autocomplete
                                               : FieldType.normal,
-                                          suggestionConstraints: BoxConstraints(maxHeight: (height * .35)),
-                                          suggestionsBuilder: controller.findProductPacking,
-                                          onSelectResult: controller.onSelectProductPacking,
-                                          suggestionDisplayOption: (p0) => p0.packing ?? "None",
+                                          suggestionConstraints: BoxConstraints(
+                                              maxHeight: (height * .35)),
+                                          suggestionsBuilder:
+                                              controller.findProductPacking,
+                                          onSelectResult:
+                                              controller.onSelectProductPacking,
+                                          suggestionDisplayOption: (p0) =>
+                                              p0.packing ?? "None",
                                           isFullScreen: true,
                                         )),
                                   ),
@@ -268,9 +272,12 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                             Icons.ad_units,
                                             color: Colors.grey,
                                           ),
-                                          suggestionsBuilder: controller.findProductUnit,
-                                          onSelectResult: controller.onSelectProductUnit,
-                                          suggestionDisplayOption: (p0) => p0.name?.name ?? "None",
+                                          suggestionsBuilder:
+                                              controller.findProductUnit,
+                                          onSelectResult:
+                                              controller.onSelectProductUnit,
+                                          suggestionDisplayOption: (p0) =>
+                                              p0.name?.name ?? "None",
                                           isFullScreen: true,
                                           fieldType: controller
                                                       .selectedProduct.value !=
@@ -351,43 +358,50 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: AppButton(
-                                      onClick: controller.onSubmitOrder,
-                                      height:
-                                          isHeightInfinite ? 40 : height * .07,
-                                      btnColor: AppColors.buttonColor,
-                                      border: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      child: Text(
-                                        "Submit Order",
-                                        style: Get.textTheme.titleLarge
-                                            ?.copyWith(
-                                                color: Colors.white,
-                                                fontFamily:
-                                                    Fonts.poppinsMedium),
-                                      ),
-                                    ),
+                                    child: Obx(() => AppButton(
+                                          onClick: controller.onSubmitOrder,
+                                          height: isHeightInfinite
+                                              ? 40
+                                              : height * .07,
+                                          btnColor: AppColors.buttonColor,
+                                          border: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          showLoading:
+                                              controller.orderLoading.value,
+                                          child: Text(
+                                            "Submit Order",
+                                            style: Get.textTheme.titleLarge
+                                                ?.copyWith(
+                                                    color: Colors.white,
+                                                    fontFamily:
+                                                        Fonts.poppinsMedium),
+                                          ),
+                                        )),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
-                                    child: AppButton(
-                                      onClick: controller.onAddItem,
-                                      height:
-                                          isHeightInfinite ? 40 : height * .07,
-                                      btnColor: AppColors.buttonColorAlternate,
-                                      border: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      child: Text(
-                                        "Add Item",
-                                        style: Get.textTheme.titleLarge
-                                            ?.copyWith(
-                                                color: Colors.white,
-                                                fontFamily:
-                                                    Fonts.poppinsMedium),
-                                      ),
-                                    ),
+                                    child: Obx(() => AppButton(
+                                          onClick: controller.onAddItem,
+                                          height: isHeightInfinite
+                                              ? 40
+                                              : height * .07,
+                                          btnColor:
+                                              AppColors.buttonColorAlternate,
+                                          border: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          showLoading:
+                                              controller.addItemLoading.value,
+                                          child: Text(
+                                            "Add Item",
+                                            style: Get.textTheme.titleLarge
+                                                ?.copyWith(
+                                                    color: Colors.white,
+                                                    fontFamily:
+                                                        Fonts.poppinsMedium),
+                                          ),
+                                        )),
                                   )
                                 ],
                               ),

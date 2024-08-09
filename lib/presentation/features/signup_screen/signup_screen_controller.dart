@@ -11,7 +11,7 @@ import 'package:suhol_van_sales/presentation/utils/login_intent.dart';
 
 class SignupScreenController extends GetxController {
   final _repo = Get.find<SignupRepository>();
-
+  final _session = Get.find<SessionService>();
 
   var emailOrName = TextEditingController();
 
@@ -50,8 +50,10 @@ class SignupScreenController extends GetxController {
     emailObs.value = emailOrName.text;
     passWordObs.value = password.text;
 
-    btnState.value =
-        (emailOrName.text.isEmail || emailOrName.text.isBlank == false) && (password.text.length >= 8); /*&&
+    btnState.value = (emailOrName.text.isEmail ||
+            emailOrName.text.isBlank == false) &&
+        (password.text.length >=
+            8); /*&&
                 !(password.text.isAlphabetOnly ||
                     password.text.isNumericOnly ||
                     password.text.isBlank == true)));*/
@@ -64,15 +66,16 @@ class SignupScreenController extends GetxController {
         email: emailOrName.text,
         password: password.text));
     loading.value = false;
-    Get.offNamed(Routes.home.name);
-    /*if (result != null && result.status == true) {
+    //Get.offNamed(Routes.home.name);
+    if (result != null && result.status == true) {
+      fetchUserDetails();
       Get.offNamed(Routes.home.name);
     } else {
       Get.showSnackbar(GetSnackBar(
         message: "${result?.message}",
         duration: const Duration(seconds: 5),
       ));
-    }*/
+    }
   }
 
   Future<void> signUp() async {
@@ -119,5 +122,12 @@ class SignupScreenController extends GetxController {
 
   void toggleVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  Future<void> fetchUserDetails() async {
+    var result = await _repo.fetchUserDetails();
+    if (result != null) {
+      _session.injectUserDetails(result);
+    }
   }
 }

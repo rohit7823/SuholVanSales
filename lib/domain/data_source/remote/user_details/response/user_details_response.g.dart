@@ -11,11 +11,11 @@ UserDetailsResponse _$UserDetailsResponseFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
       userName: json['user_name'] as String?,
-      customerId: json['customer_id'],
-      locationId: json['location_id'],
+      customerId: (json['customer_id'] as num?)?.toInt(),
+      locationId: (json['location_id'] as num?)?.toInt(),
       chooseCust: (json['choose_cust'] as num?)?.toInt(),
       isActive: (json['is_active'] as num?)?.toInt(),
-      parentMasterId: json['parent_master_id'],
+      parentMasterId: (json['parent_master_id'] as num?)?.toInt(),
       createdAt: json['created_at'] == null
           ? null
           : DateTime.parse(json['created_at'] as String),

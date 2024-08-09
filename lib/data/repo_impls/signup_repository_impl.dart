@@ -4,6 +4,7 @@ import 'package:suhol_van_sales/data/utils/extensions.dart';
 import 'package:suhol_van_sales/domain/data_source/local/user_onboarding/dao/user_onboarding_dao.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/login/response/user_onboarding_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/logout/response/sign_out_user_response.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/user_details/response/user_details_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/web_service_pool.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/user_onboarding.dart';
@@ -55,6 +56,19 @@ class SignupRepositoryImpl extends SignupRepository
       return response.data;
     } else if (response is Error) {
       debugPrint("Error: ${response.message}");
+      return null;
+    }
+
+    return null;
+  }
+
+  @override
+  Future<UserDetailsResponse?> fetchUserDetails() async {
+    var response = await userDetails();
+
+    if (response is Success) {
+      return response.data;
+    } else if (response is Error) {
       return null;
     }
 

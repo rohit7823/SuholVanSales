@@ -16,7 +16,7 @@ void main() {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
       await ServiceBindings().dependencies();
-      DataBinding().initProducts();
+      //DataBinding().initProducts();
       runApp(const SuholVanSales());
     },
     (error, stack) {

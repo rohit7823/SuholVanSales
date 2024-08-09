@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:suhol_van_sales/domain/data_source/local/customers/database/dao/customer_dao.dart';
 import 'package:suhol_van_sales/domain/data_source/local/products/dao/product_dao.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/create_material_requisition.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/web_service_pool.dart';
 import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/models/product.dart';
@@ -8,6 +11,7 @@ import 'package:suhol_van_sales/presentation/features/create_cash_order_screen/c
 
 class CreateCashOrderRepositoryImpl extends CreateCashOrderRepository
     with CustomerDao, ProductDao, WebServicePool {
+
   @override
   Future<List<Customer>?> findCustomerByName(String query) async {
     var hasData = dataCount != null && dataCount! > 0;
@@ -60,6 +64,30 @@ class CreateCashOrderRepositoryImpl extends CreateCashOrderRepository
   Future<List<Product>?> findProductByName(String query) async {
     // TODO: implement findProductByName
     return productByName(query);
+  }
+
+  @override
+  Future<CreateMaterialRequisitionResponse?> createRequisition(MaterialRequisitionRequest request) async {
+    var result =  await createMaterialRequisition(request);
+    if (result is Success) {
+      return result.data;
+    } else if (result is Error) {
+      return null;
+    }
+    return null;
+  }
+
+  @override
+  Future<CreateMaterialRequisitionResponse?> createRequisitionOrder(MaterialRequisitionRequest request) async {
+    debugPrint("clicked!!");
+    var result =  await createMaterialRequisitionOrder(request);
+    debugPrint("response ${result.toString()}");
+    if (result is Success) {
+      return result.data;
+    } else if (result is Error) {
+      return null;
+    }
+    return null;
   }
 
 

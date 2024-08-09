@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/images.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
@@ -26,11 +27,17 @@ class UserInfo extends StatelessWidget {
                 "Hi, ${userName.value}",
                 style: Get.textTheme.titleLarge,
               )),
-              Obx(() => Text("Today Mon, 17 sep - ${shopName.value}", style: Get.textTheme.titleSmall))
+              Obx(() => Text("${_date(DateTime.now())}  ${shopName.value}", style: Get.textTheme.titleSmall))
             ],
           ),
         )
       ],
     );
+  }
+
+  String _date(DateTime dateTime) {
+    var formatter = DateFormat("EEE dd MMM");
+    var formattedDate = formatter.format(dateTime);
+    return "Today $formattedDate";
   }
 }

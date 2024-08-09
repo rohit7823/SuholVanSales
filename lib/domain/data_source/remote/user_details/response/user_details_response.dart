@@ -11,15 +11,15 @@ class UserDetailsResponse {
   @JsonKey(name: "user_name")
   final String? userName;
   @JsonKey(name: "customer_id")
-  final dynamic customerId;
+  final int? customerId;
   @JsonKey(name: "location_id")
-  final dynamic locationId;
+  final int? locationId;
   @JsonKey(name: "choose_cust")
   final int? chooseCust;
   @JsonKey(name: "is_active")
   final int? isActive;
   @JsonKey(name: "parent_master_id")
-  final dynamic parentMasterId;
+  final int? parentMasterId;
   @JsonKey(name: "created_at")
   final DateTime? createdAt;
   @JsonKey(name: "updated_at")
@@ -42,11 +42,11 @@ class UserDetailsResponse {
     int? id,
     String? name,
     String? userName,
-    dynamic customerId,
-    dynamic locationId,
+    int? customerId,
+    int? locationId,
     int? chooseCust,
     int? isActive,
-    dynamic parentMasterId,
+    int? parentMasterId,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) =>

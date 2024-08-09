@@ -65,9 +65,13 @@ class AppButton extends StatelessWidget {
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5)))),
       child: showLoading
-          ? CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.background,
-            )
+          ? SizedBox(
+            width: 25,
+            height: 25,
+            child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.surface,
+              strokeCap: StrokeCap.round),
+          )
           : child ??
               label
                   ?.text(labelColor != null
