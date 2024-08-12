@@ -55,6 +55,8 @@ class CreateCreditOrderScreenController extends GetxController {
 
   RxList<LocationWithQuantityUiModel> selectedLocations = RxList.empty();
 
+  RxList<MaterialRequisitionRequest> addedMaterialRequests = RxList.empty();
+
   var items = '0'.obs;
 
   var vat = "OMR 0.000".obs;
@@ -84,7 +86,7 @@ class CreateCreditOrderScreenController extends GetxController {
   }
 
   void _onQtyChange() {
-    items.value = qty?.text ?? items.value;
+    items.value = "${addedMaterialRequests.length}";
     _calculatePrice();
   }
 
@@ -278,9 +280,9 @@ class CreateCreditOrderScreenController extends GetxController {
         vehicleNumber?.text.isBlank == true ||
         mobileNumber?.text.isNum == false) {
       Get.showSnackbar(const GetSnackBar(
-        message: "Important values are not available",
-        duration: Duration(seconds: 5),
-      ));
+          message: "Important values are not available",
+          duration: Duration(seconds: 5),
+          progressIndicatorValueColor: AlwaysStoppedAnimation(Colors.white)));
       return;
     }
 
@@ -304,22 +306,28 @@ class CreateCreditOrderScreenController extends GetxController {
                   id: element.location?.id,
                   qty: int.tryParse(element.qty.text)),
             )
-            .toList());
+            .toList()
+    );
     var result = await _repo.createRequisitionOrder(request);
     addItemLoading.value = false;
     if (result is Success) {
       switch (result.data?.success) {
         case true:
-          await Future.delayed(const Duration(milliseconds: 500)).then(
+          /*await Future.delayed(const Duration(milliseconds: 500)).then(
             (value) {
               Get.back();
             },
-          );
+          );*/
           Get.showSnackbar(GetSnackBar(
             message: "${result.data?.message}",
             duration: const Duration(seconds: 5),
           ));
-
+          addedMaterialRequests.addIf(
+              () => addedMaterialRequests
+                      .firstWhereOrNull((element) => element == request) ==
+                  null,
+              request);
+          _clearValues();
           break;
         case false:
           Get.showSnackbar(GetSnackBar(
@@ -339,6 +347,24 @@ class CreateCreditOrderScreenController extends GetxController {
         duration: const Duration(seconds: 5),
       ));
     }
+  }
+
+  void _clearValues() {
+    _selectedCustomer = null;
+    selectedProduct.value = null;
+    selectedPacking = null;
+    selectedUnit = null;
+    selectedLocations.clear();
+    remarks?.text = "";
+    customerName?.text = '';
+    customerLocation?.text = '';
+    qty?.text = '';
+    unit?.text = '';
+    mobileNumber?.text = '';
+    vehicleNumber?.text = '';
+    productName?.text = '';
+    packing?.text = '';
+    price?.text = '';
   }
 
   FutureOr<Iterable<Customer>> findCustomerName(
@@ -463,4 +489,6 @@ class CreateCreditOrderScreenController extends GetxController {
       }
     }
   }
+
+
 }

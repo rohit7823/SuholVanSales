@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
@@ -439,12 +440,199 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                               ),
                             ],
                           )),
+                  Obx(() => ListView.separated(
+                        separatorBuilder: (context, index) => const SizedBox(
+                          height: 6,
+                        ),
+                        itemCount: controller.addedMaterialRequests.length,
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          var request = controller.addedMaterialRequests[index];
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            elevation: 6,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize:MainAxisSize.min,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text.rich(TextSpan(
+                                                text: "Customer ID: ",
+                                                style: Get.textTheme.bodySmall,
+                                                children: [
+                                                  TextSpan(
+                                                    text: "${request.customerId}",
+                                                    style: Get.textTheme.bodySmall
+                                                        ?.copyWith(
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  )
+                                                ])),
+                                            Text.rich(TextSpan(
+                                                text: "Product ID: ",
+                                                style: Get.textTheme.bodySmall,
+                                                children: [
+                                                  TextSpan(
+                                                    text: "${request.productId}",
+                                                    style: Get.textTheme.bodySmall
+                                                        ?.copyWith(
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  )
+                                                ])),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisSize:MainAxisSize.min,
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            Text.rich(TextSpan(
+                                                text: "Unit of Measurement ID: ",
+                                                style: Get.textTheme.bodySmall,
+                                                children: [
+                                                  TextSpan(
+                                                    text:
+                                                    "${request.unitOfMeasurementId}",
+                                                    style: Get.textTheme.bodySmall
+                                                        ?.copyWith(
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  )
+                                                ])),
+                                            Text.rich(TextSpan(
+                                                text: "Packing ID: ",
+                                                style: Get.textTheme.bodySmall,
+                                                children: [
+                                                  TextSpan(
+                                                    text: "${request.packingId}",
+                                                    style: Get.textTheme.bodySmall
+                                                        ?.copyWith(
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  )
+                                                ])),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const Divider(),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: Text.rich(TextSpan(
+                                        text: "Delivery Date: ",
+                                        style: Get.textTheme.bodySmall,
+                                        children: [
+                                          TextSpan(
+                                            text: DateFormat('yyyy-MM-dd')
+                                                .format(request.deliveryDate ??
+                                                    DateTime.now()),
+                                            style: Get.textTheme.bodySmall
+                                                ?.copyWith(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          )
+                                        ])),
+                                  ),
+                                  const Divider(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          "Parent Master ID(s): ",
+                                          style: Get.textTheme.bodySmall,
+                                        ),
+                                      ),
+                                      Row(
+                                        children:
+                                            request.locationIdsWithQuantity
+                                                    ?.map(
+                                                      (e) => Text.rich(TextSpan(
+                                                        text: "ID: ",
+                                                        style: Get.textTheme
+                                                            .bodySmall,
+                                                        children: [
+                                                          TextSpan(
+                                                            text: "${e.id}",
+                                                            style: Get.textTheme
+                                                                .bodySmall
+                                                                ?.copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                          ),
+                                                          const TextSpan(
+                                                              text: " | "),
+                                                          TextSpan(
+                                                              text: "Quantity: ",
+                                                              style: Get
+                                                                  .textTheme
+                                                                  .bodySmall,
+                                                              children: [
+                                                                TextSpan(
+                                                                  text:
+                                                                      "${e.qty}${e != request.locationIdsWithQuantity?.last ? ', ' : ''}",
+                                                                  style: Get
+                                                                      .textTheme
+                                                                      .bodySmall
+                                                                      ?.copyWith(
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                )
+                                                              ])
+                                                        ],
+                                                      )),
+                                                    )
+                                                    .toList() ??
+                                                [],
+                                      )
+                                    ],
+                                  ),
+                                  const Divider(),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: Text.rich(TextSpan(
+                                        text: "Remarks: ",
+                                        style: Get.textTheme.bodySmall,
+                                        children: [
+                                          TextSpan(
+                                            text: "${request.remarks}",
+                                            style: Get.textTheme.bodySmall
+                                                ?.copyWith(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          )
+                                        ])),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ))
                 ],
               ),
             ),
           ),
           BudgetWidget(
-              items: controller.items,
+              items: controller.addedMaterialRequests,
               vat: controller.vat,
               total: controller.total)
         ],

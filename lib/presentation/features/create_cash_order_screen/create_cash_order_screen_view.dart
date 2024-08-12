@@ -412,7 +412,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
             ),
           )),
           BudgetWidget(
-              items: controller.items,
+              items: controller.addedMaterialRequests,
               vat: controller.vat,
               total: controller.total)
         ],

@@ -51,6 +51,7 @@ class CreateCashOrderScreenController extends GetxController {
   Packing? selectedPacking;
 
   UnitElement? selectedUnit;
+  RxList<MaterialRequisitionRequest> addedMaterialRequests = RxList.empty();
 
   @override
   void onReady() {

@@ -7,7 +7,7 @@ class BudgetWidget extends StatelessWidget {
   const BudgetWidget(
       {super.key, required this.items, required this.vat, required this.total});
 
-  final RxString items;
+  final RxList items;
   final RxString vat;
   final RxString total;
 
@@ -22,7 +22,7 @@ class BudgetWidget extends StatelessWidget {
             children: [
               Obx(
                 () => Text(
-                  "Item: ${items.value}",
+                  "Item: ${items.length}",
                   style: Get.textTheme.titleLarge?.copyWith(
                       color: const Color(0xFF092058),
                       fontFamily: Fonts.poppinsSemiBold),
