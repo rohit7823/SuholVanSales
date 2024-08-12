@@ -27,7 +27,12 @@ extension CustomerDbExts on CustomerDB {
       location: location,
       mobileNumber: mobileNumber,
       name: name,
-      productLastUpdate: productLastUpdate);
+      productLastUpdate: productLastUpdate,
+      locations: locations
+          .map(
+            (element) => element.toData,
+          )
+          .toList());
 }
 
 extension LocationDbExts on LocationDB {

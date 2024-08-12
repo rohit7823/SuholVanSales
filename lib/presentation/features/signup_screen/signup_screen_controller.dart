@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:suhol_van_sales/domain/di/preference_service.dart';
-import 'package:suhol_van_sales/domain/di/rest_service.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/user_onboarding.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/signup_repository.dart';
@@ -52,8 +50,8 @@ class SignupScreenController extends GetxController {
 
     btnState.value = (emailOrName.text.isEmail ||
             emailOrName.text.isBlank == false) &&
-        (password.text.length >=
-            8); /*&&
+        password.text
+            .isNotEmpty; /*&&
                 !(password.text.isAlphabetOnly ||
                     password.text.isNumericOnly ||
                     password.text.isBlank == true)));*/

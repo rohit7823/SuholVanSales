@@ -28,7 +28,8 @@ dependencies:
   shared_preferences: ^2.2.3
   transparent_image: ^2.0.1
   crypto: ^3.0.3
-
+  material_tag_editor: ^0.1.2
+  rxdart:
 
 dev_dependencies:
   flutter_test:

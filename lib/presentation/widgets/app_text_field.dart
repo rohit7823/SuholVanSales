@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -17,7 +18,7 @@ class AppTextField<T extends Object> extends StatelessWidget {
       this.onSubmitted,
       this.capitalization,
       this.inputAction,
-      this.autoFocus = true,
+      this.autoFocus = false,
       this.width,
       this.isReadOnly,
       this.changeStyle = false,
@@ -38,7 +39,9 @@ class AppTextField<T extends Object> extends StatelessWidget {
       this.suggestionConstraints,
       this.searchController,
       this.viewBuilder,
-      this.focusNode, this.prefixIcon});
+      this.focusNode,
+      this.prefixIcon,
+      this.onTap});
 
   final FieldType fieldType;
 
@@ -97,11 +100,13 @@ class AppTextField<T extends Object> extends StatelessWidget {
 
   final SearchController? searchController;
 
-  final Widget Function(Iterable<Widget>)? viewBuilder;
+  final Widget Function(Iterable<Widget> widgets)? viewBuilder;
 
   final bool isFullScreen;
 
   final FocusNode? focusNode;
+
+  final void Function(FocusNode? focusNode)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +127,7 @@ class AppTextField<T extends Object> extends StatelessWidget {
               inputAction: inputAction,
               inputFormatters: inputFormatters,
               isReadOnly: isReadOnly,
-              onTap: searchController?.openView,
+              onTap: (focusNode) => searchController?.openView(),
               keyboardType: keyboardType,
               label: label,
               labelStyle: labelStyle,
@@ -134,11 +139,8 @@ class AppTextField<T extends Object> extends StatelessWidget {
             isFullScreen: isFullScreen,
             suggestionsBuilder:
                 (BuildContext context, SearchController controller) async {
-              if (suggestionsBuilder == null) throw Exception();
-
-              var items = await suggestionsBuilder?.call(controller);
-
-              return items!
+              var values = await suggestionsBuilder?.call(controller);
+              return values!
                   .mapIndexed((idx, item) => CustomAutocompleteOption(
                         displayStringForOption: suggestionDisplayOption!,
                         onSelected: (option) {
@@ -206,7 +208,8 @@ class AppTextField<T extends Object> extends StatelessWidget {
             suffixIcon: suffixIcon,
             textAlign: textAlign,
             focusNode: focusNode,
-          prefixIcon: prefixIcon,
+            prefixIcon: prefixIcon,
+            onTap: onTap,
           );
   }
 }
@@ -282,7 +285,7 @@ class MyTextField extends StatelessWidget {
 
   final FocusNode? focusNode;
 
-  final void Function()? onTap;
+  final void Function(FocusNode? focusNode)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -345,12 +348,15 @@ class MyTextField extends StatelessWidget {
                   borderSide: const BorderSide(color: Colors.redAccent)),
           suffixIcon: suffixIcon,
           prefixIcon: prefixIcon),
-      onTap: onTap,
+      onTap: onTap != null
+          ? () {
+              onTap?.call(focusNode);
+            }
+          : null,
       cursorColor: Colors.lightBlueAccent,
       autocorrect: true,
       autofocus: autoFocus ?? false,
       controller: controller,
-      canRequestFocus: autoFocus ?? false,
       inputFormatters: inputFormatters,
       scrollPhysics: const BouncingScrollPhysics(),
       keyboardType: keyboardType,

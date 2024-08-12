@@ -2,11 +2,6 @@
 //
 //     final customerDetails = customerDetailsFromJson(jsonString);
 
-import 'dart:async';
-import 'dart:convert';
-
-
-
 class Customer {
   final int? id;
   final String? name;
@@ -63,32 +58,37 @@ class Customer {
       );
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
-    id: json["id"],
-    name: json["name"],
-    customerCode: json["customer_code"],
-    address: json["address"],
-    location: json["location"],
-    mobileNumber: json["mobile_number"],
-    email: json["email"],
-    contactPerson: json["contact_person"],
-    status: json["status"],
-    productLastUpdate: json["product_last_update"],
-    locations: json["locations"] == null ? [] : List<Location>.from(json["locations"]!.map((x) => Location.fromJson(x))),
-  );
+        id: json["id"],
+        name: json["name"],
+        customerCode: json["customer_code"],
+        address: json["address"],
+        location: json["location"],
+        mobileNumber: json["mobile_number"],
+        email: json["email"],
+        contactPerson: json["contact_person"],
+        status: json["status"],
+        productLastUpdate: json["product_last_update"],
+        locations: json["locations"] == null
+            ? []
+            : List<Location>.from(
+                json["locations"]!.map((x) => Location.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "customer_code": customerCode,
-    "address": address,
-    "location": location,
-    "mobile_number": mobileNumber,
-    "email": email,
-    "contact_person": contactPerson,
-    "status": status,
-    "product_last_update": productLastUpdate,
-    "locations": locations == null ? [] : List<dynamic>.from(locations!.map((x) => x.toJson())),
-  };
+        "id": id,
+        "name": name,
+        "customer_code": customerCode,
+        "address": address,
+        "location": location,
+        "mobile_number": mobileNumber,
+        "email": email,
+        "contact_person": contactPerson,
+        "status": status,
+        "product_last_update": productLastUpdate,
+        "locations": locations == null
+            ? []
+            : List<dynamic>.from(locations!.map((x) => x.toJson())),
+      };
 }
 
 class Location {
@@ -135,35 +135,36 @@ class Location {
         addressOne: addressOne ?? this.addressOne,
         addressTwo: addressTwo ?? this.addressTwo,
         phoneNo: phoneNo ?? this.phoneNo,
-        vatIdentificationNumbers: vatIdentificationNumbers ?? this.vatIdentificationNumbers,
+        vatIdentificationNumbers:
+            vatIdentificationNumbers ?? this.vatIdentificationNumbers,
         productLastUpdate: productLastUpdate ?? this.productLastUpdate,
         productLink: productLink ?? this.productLink,
         taxPercentage: taxPercentage ?? this.taxPercentage,
       );
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
-    id: json["id"],
-    location: json["location"],
-    companyName: json["company_name"],
-    addressOne: json["address_one"],
-    addressTwo: json["address_two"],
-    phoneNo: json["phone_no"],
-    vatIdentificationNumbers: json["vat_identification_numbers"],
-    productLastUpdate: json["product_last_update"],
-    productLink: json["product_link"],
-    taxPercentage: json["tax_percentage"],
-  );
+        id: json["id"],
+        location: json["name"],
+        companyName: json["company_name"],
+        addressOne: json["address_one"],
+        addressTwo: json["address_two"],
+        phoneNo: json["phone_no"],
+        vatIdentificationNumbers: json["vat_identification_numbers"],
+        productLastUpdate: json["product_last_update"],
+        productLink: json["product_link"],
+        taxPercentage: json["tax_percentage"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "location": location,
-    "company_name": companyName,
-    "address_one": addressOne,
-    "address_two": addressTwo,
-    "phone_no": phoneNo,
-    "vat_identification_numbers": vatIdentificationNumbers,
-    "product_last_update": productLastUpdate,
-    "product_link": productLink,
-    "tax_percentage": taxPercentage,
-  };
+        "id": id,
+        "name": location,
+        "company_name": companyName,
+        "address_one": addressOne,
+        "address_two": addressTwo,
+        "phone_no": phoneNo,
+        "vat_identification_numbers": vatIdentificationNumbers,
+        "product_last_update": productLastUpdate,
+        "product_link": productLink,
+        "tax_percentage": taxPercentage,
+      };
 }

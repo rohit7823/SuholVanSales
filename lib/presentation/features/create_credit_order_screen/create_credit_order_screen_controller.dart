@@ -2,12 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
+import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_repository.dart';
+import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
+import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
+import 'package:suhol_van_sales/presentation/widgets/animated_progress.dart';
+import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 
+import '../../../app/theme/fonts.dart';
 import '../../../domain/models/customer.dart';
 import '../../../domain/models/product.dart';
+import '../../widgets/app_button.dart';
 
 class CreateCreditOrderScreenController extends GetxController {
   final _repo = Get.find<CreateCreditOrderRepository>();
@@ -43,6 +51,10 @@ class CreateCreditOrderScreenController extends GetxController {
 
   Rx<Product?> selectedProduct = Rx(null);
 
+  RxList<Customer> customers = RxList.empty();
+
+  RxList<LocationWithQuantityUiModel> selectedLocations = RxList.empty();
+
   var items = '0'.obs;
 
   var vat = "OMR 0.000".obs;
@@ -50,6 +62,8 @@ class CreateCreditOrderScreenController extends GetxController {
   var total = "OMR 0.000".obs;
 
   Customer? _selectedCustomer;
+
+  var loadingCustomers = false.obs;
 
   @override
   void onReady() {
@@ -64,9 +78,9 @@ class CreateCreditOrderScreenController extends GetxController {
   void _calculatePrice() {
     var q = double.tryParse(qty?.text ?? '0.00');
     var p = double.tryParse(price?.text ?? '0.00');
-    if (q == null && p == null) return;
-
-    total.value = (q! * p!).toStringAsPrecision(3);
+    if (q != null && p != null) {
+      total.value = (q * p).toStringAsPrecision(3);
+    }
   }
 
   void _onQtyChange() {
@@ -115,8 +129,100 @@ class CreateCreditOrderScreenController extends GetxController {
   var orderLoading = false.obs;
   var addItemLoading = false.obs;
 
+  void addIdWiseQuantities() {
+    Get.dialog(Dialog(
+      insetPadding: const EdgeInsets.all(8),
+      alignment: Alignment.center,
+      backgroundColor: Colors.white,
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(12))),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                  onPressed: () => Navigator.of(Get.overlayContext!).pop(),
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.redAccent,
+                  )),
+            ),
+            Obx(
+              () => ListView.separated(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    var model = selectedLocations[index];
+                    return Row(
+                      children: [
+                        Expanded(
+                            flex: 2,
+                            child: Text(
+                              "${model.location?.location}",
+                              style: Get.textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            )),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          child: MyTextField(
+                              changeStyle: true,
+                              enabled: true,
+                              isObscure: false,
+                              controller: model.qty,
+                              hint: "Enter Qty",
+                              inputFormatters: [NumberTextInputFormatter()],
+                              keyboardType:
+                                  const TextInputType.numberWithOptions()),
+                        ),
+                      ],
+                    );
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(
+                        height: 8,
+                      ),
+                  itemCount: selectedLocations.length,
+                  cacheExtent: 50),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            AppButton(
+              onClick: () {
+                Navigator.of(Get.context!).pop();
+              },
+              btnColor: AppColors.buttonColor,
+              border: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              height: 35,
+              child: Text(
+                "ADD",
+                style: Get.textTheme.titleLarge?.copyWith(
+                    color: Colors.white, fontFamily: Fonts.poppinsMedium),
+              ),
+            )
+          ],
+        ),
+      ),
+    ));
+  }
+
   Future<void> onSubmitOrder() async {
-    orderLoading.value = true;
+    if (vehicleNumber?.text.isBlank == true) {
+      Get.showSnackbar(const GetSnackBar(
+        message: "Vehicle no is not given.",
+        duration: Duration(seconds: 5),
+      ));
+      return;
+    }
+
     var request = MaterialRequisitionRequest(
         customerId: _selectedCustomer?.id,
         productId: selectedProduct.value?.id,
@@ -125,38 +231,64 @@ class CreateCreditOrderScreenController extends GetxController {
         deliveryDate: DateTime.now(),
         remarks: remarks?.text,
         unitOfMeasurementId: selectedUnit?.id);
+
+    orderLoading.value = true;
     var result = await _repo.createRequisition(request);
     orderLoading.value = false;
-    if (result != null) {
-      switch (result.success) {
+    if (result is Success) {
+      switch (result.data?.success) {
         case true:
           await Future.delayed(const Duration(milliseconds: 500)).then(
-                (value) {
+            (value) {
               Get.back();
             },
           );
           Get.showSnackbar(GetSnackBar(
-            message: "${result.message}",
+            message: "${result.data?.message}",
             duration: const Duration(seconds: 5),
           ));
 
           break;
         case false:
           Get.showSnackbar(GetSnackBar(
-            message: "${result.message ?? result.error}",
+            message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
           ));
         case null:
           Get.showSnackbar(GetSnackBar(
-            message: "${result.error}",
+            message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
           ));
           break;
       }
+    } else if (result is Error) {
+      Get.showSnackbar(GetSnackBar(
+        message: "${result.message}",
+        duration: const Duration(seconds: 5),
+      ));
     }
   }
 
   Future<void> onAddItem() async {
+    if (_selectedCustomer == null ||
+        selectedLocations.every((element) => element.location?.id == null) ||
+        selectedProduct.value == null ||
+        selectedUnit == null ||
+        selectedPacking == null ||
+        vehicleNumber?.text.isBlank == true ||
+        mobileNumber?.text.isNum == false) {
+      Get.showSnackbar(const GetSnackBar(
+        message: "Important values are not available",
+        duration: Duration(seconds: 5),
+      ));
+      return;
+    }
+
+    var isValid = selectedLocations.every((element) => element.isValid);
+    if (isValid) {
+      addIdWiseQuantities();
+      return;
+    }
     addItemLoading.value = true;
     var request = MaterialRequisitionRequest(
         customerId: _selectedCustomer?.id,
@@ -165,42 +297,60 @@ class CreateCreditOrderScreenController extends GetxController {
         vehicleNo: vehicleNumber?.text,
         deliveryDate: DateTime.now(),
         remarks: remarks?.text,
-        unitOfMeasurementId: selectedUnit?.id);
+        unitOfMeasurementId: selectedUnit?.id,
+        locationIdsWithQuantity: selectedLocations
+            .map(
+              (element) => LocationIDWithQuantity(
+                  id: element.location?.id,
+                  qty: int.tryParse(element.qty.text)),
+            )
+            .toList());
     var result = await _repo.createRequisitionOrder(request);
     addItemLoading.value = false;
-    if (result != null) {
-      switch (result.success) {
+    if (result is Success) {
+      switch (result.data?.success) {
         case true:
           await Future.delayed(const Duration(milliseconds: 500)).then(
-                (value) {
+            (value) {
               Get.back();
             },
           );
           Get.showSnackbar(GetSnackBar(
-            message: "${result.message}",
+            message: "${result.data?.message}",
             duration: const Duration(seconds: 5),
           ));
 
           break;
         case false:
           Get.showSnackbar(GetSnackBar(
-            message: "${result.message ?? result.error}",
+            message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
           ));
         case null:
           Get.showSnackbar(GetSnackBar(
-            message: "${result.error}",
+            message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
           ));
           break;
       }
+    } else if (result is Error) {
+      Get.showSnackbar(GetSnackBar(
+        message: "${result.message}",
+        duration: const Duration(seconds: 5),
+      ));
     }
   }
 
   FutureOr<Iterable<Customer>> findCustomerName(
       SearchController searchController) async {
-    debugPrint("query ${searchController.text}");
+    if (searchController.text.isBlank == true) {
+      return [];
+    }
+
+    AnimatedProgress.showProgressIfNot();
     var values = await _repo.findCustomerByName(searchController.text);
+    AnimatedProgress.closeProgressIfShowing();
+
     return values ?? [];
   }
 
@@ -208,13 +358,19 @@ class CreateCreditOrderScreenController extends GetxController {
     if (result.name == null) return;
     controller.text = result.name!;
     _selectedCustomer = result;
+    _addLocations(result.locations);
   }
 
-  FutureOr<Iterable<Customer>> findCustomerLocation(
+  /*FutureOr<Iterable<Customer>> findCustomerLocation(
       SearchController searchController) async {
+    if (searchController.text.isBlank == true) {
+      return [];
+    }
+    AnimatedProgress.showProgressIfNot();
     var values = await _repo.findCustomerByLocation(searchController.text);
+    AnimatedProgress.closeProgressIfShowing();
     return values ?? [];
-  }
+  }*/
 
   FutureOr<Iterable<Packing>> findProductPacking(
       SearchController searchController) {
@@ -232,14 +388,18 @@ class CreateCreditOrderScreenController extends GetxController {
 
   FutureOr<Iterable<Product>> findProductName(
       SearchController searchController) async {
-    debugPrint("query ${searchController.text}");
+    if (searchController.text.isBlank == true) {
+      return [];
+    }
+
+    AnimatedProgress.showProgressIfNot();
     var values = await _repo.findProductByName(searchController.text);
+    AnimatedProgress.closeProgressIfShowing();
     return values ?? [];
   }
 
   FutureOr<Iterable<UnitElement>> findProductUnit(
       SearchController searchController) {
-    debugPrint("query ${searchController.text}");
     var values = selectedProduct.value?.units
         ?.where(
           (element) =>
@@ -284,5 +444,23 @@ class CreateCreditOrderScreenController extends GetxController {
   void clearSelectedUnit() {
     unit?.text = "";
     selectedUnit = null;
+  }
+
+  void onLocationChanged(String value, {Location? location}) {
+    if (value.isBlank == false) {
+      var loc = Location(location: value);
+      selectedLocations.add(LocationWithQuantityUiModel(location: loc));
+    } else {
+      selectedLocations.add(LocationWithQuantityUiModel(location: location));
+    }
+  }
+
+  void _addLocations(List<Location>? locations) {
+    selectedLocations.clear();
+    if (locations != null) {
+      for (var loc in locations) {
+        onLocationChanged("", location: loc);
+      }
+    }
   }
 }

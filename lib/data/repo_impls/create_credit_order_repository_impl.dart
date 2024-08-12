@@ -1,4 +1,4 @@
-import 'package:suhol_van_sales/domain/data_source/local/customers/database/dao/customer_dao.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:suhol_van_sales/domain/data_source/local/products/dao/product_dao.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/create_material_requisition.dart';
@@ -9,13 +9,17 @@ import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_repository.dart';
 
 class CreateCreditOrderRepositoryImpl extends CreateCreditOrderRepository
-    with CustomerDao, ProductDao, WebServicePool {
+    with ProductDao, WebServicePool {
   @override
   Future<List<Customer>?> findCustomerByLocation(String query) async {
-    var hasData = dataCount != null && dataCount! > 0;
+    var hasData = isInMemoryCustomersAvailable;
 
     if (hasData) {
-      return findByLocation(query);
+      return customersCache
+          .where((element) =>
+              element.location?.toLowerCase().contains(query.toLowerCase()) ??
+              false)
+          .toList();
     } else {
       var result = await customersWithLocations().then((value) {
         if (value is Success) {
@@ -24,9 +28,8 @@ class CreateCreditOrderRepositoryImpl extends CreateCreditOrderRepository
           return value.message;
         }
       }, onError: (error) => null);
-
       if (result is List<Customer>? && result != null) {
-        insertAll(result);
+        customersCache.addAll(result);
         return result;
       }
 
@@ -36,10 +39,14 @@ class CreateCreditOrderRepositoryImpl extends CreateCreditOrderRepository
 
   @override
   Future<List<Customer>?> findCustomerByName(String query) async {
-    var hasData = dataCount != null && dataCount! > 0;
+    var hasData = isInMemoryCustomersAvailable;
 
     if (hasData) {
-      return findByName(query);
+      return customersCache
+          .where((element) =>
+              element.name?.toLowerCase().contains(query.toLowerCase()) ??
+              false)
+          .toList();
     } else {
       var result = await customersWithLocations().then((value) {
         if (value is Success) {
@@ -50,7 +57,7 @@ class CreateCreditOrderRepositoryImpl extends CreateCreditOrderRepository
       }, onError: (error) => null);
 
       if (result is List<Customer>? && result != null) {
-        insertAll(result);
+        customersCache.addAll(result);
         return result;
       }
 
@@ -60,32 +67,43 @@ class CreateCreditOrderRepositoryImpl extends CreateCreditOrderRepository
 
   @override
   Future<List<Product>?> findProductByName(String query) async {
-    // TODO: implement findProductByName
-    return productByName(query);
+    if (isInMemoryProductsAvailable) {
+      return productsCache
+          .where(
+            (element) =>
+                element.name?.toLowerCase().contains(query.toLowerCase()) ??
+                false,
+          )
+          .toList();
+    } else {
+      var values = await productsWithPackingAndUnits().then((value) {
+        if (value is Success) {
+          return value.data?.data;
+        } else if (value is Error) {
+          return value.message;
+        }
+      }, onError: (error) => null);
+      if (values is List<Product>? && values != null) {
+        productsCache.addAll(values);
+      }
+      return null;
+    }
   }
 
   @override
-  Future<CreateMaterialRequisitionResponse?> createRequisition(
+  Future<RestResponse<CreateMaterialRequisitionResponse>> createRequisition(
       MaterialRequisitionRequest request) async {
-
-    var result =  await createMaterialRequisition(request);
-    if (result is Success) {
-      return result.data;
-    } else if (result is Error) {
-      return null;
-    }
-    return null;
+    debugPrint("request ${request.toJson()}");
+    var result = await createMaterialRequisition(request);
+    debugPrint("result ${result.data?.toJson()}");
+    return result;
   }
 
   @override
-  Future<CreateMaterialRequisitionResponse?> createRequisitionOrder(
-      MaterialRequisitionRequest request) async {
-    var result =  await createMaterialRequisitionOrder(request);
-    if (result is Success) {
-      return result.data;
-    } else if (result is Error) {
-      return null;
-    }
-    return null;
+  Future<RestResponse<CreateMaterialRequisitionResponse>>
+      createRequisitionOrder(MaterialRequisitionRequest request) async {
+    var result = await createMaterialRequisitionOrder(request);
+
+    return result;
   }
 }

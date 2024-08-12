@@ -11,13 +11,12 @@ import 'package:suhol_van_sales/presentation/features/create_cash_order_screen/c
 
 class CreateCashOrderRepositoryImpl extends CreateCashOrderRepository
     with CustomerDao, ProductDao, WebServicePool {
-
   @override
   Future<List<Customer>?> findCustomerByName(String query) async {
     var hasData = dataCount != null && dataCount! > 0;
 
     if (hasData) {
-      return findByName(query);
+      return await findByName(query);
     } else {
       var result = await customersWithLocations().then((value) {
         if (value is Success) {
@@ -63,12 +62,13 @@ class CreateCashOrderRepositoryImpl extends CreateCashOrderRepository
   @override
   Future<List<Product>?> findProductByName(String query) async {
     // TODO: implement findProductByName
-    return productByName(query);
+    return getAllProducts(query);
   }
 
   @override
-  Future<CreateMaterialRequisitionResponse?> createRequisition(MaterialRequisitionRequest request) async {
-    var result =  await createMaterialRequisition(request);
+  Future<CreateMaterialRequisitionResponse?> createRequisition(
+      MaterialRequisitionRequest request) async {
+    var result = await createMaterialRequisition(request);
     if (result is Success) {
       return result.data;
     } else if (result is Error) {
@@ -78,9 +78,10 @@ class CreateCashOrderRepositoryImpl extends CreateCashOrderRepository
   }
 
   @override
-  Future<CreateMaterialRequisitionResponse?> createRequisitionOrder(MaterialRequisitionRequest request) async {
+  Future<CreateMaterialRequisitionResponse?> createRequisitionOrder(
+      MaterialRequisitionRequest request) async {
     debugPrint("clicked!!");
-    var result =  await createMaterialRequisitionOrder(request);
+    var result = await createMaterialRequisitionOrder(request);
     debugPrint("response ${result.toString()}");
     if (result is Success) {
       return result.data;
@@ -89,6 +90,4 @@ class CreateCashOrderRepositoryImpl extends CreateCashOrderRepository
     }
     return null;
   }
-
-
 }

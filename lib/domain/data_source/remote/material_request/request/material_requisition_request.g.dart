@@ -18,6 +18,10 @@ MaterialRequisitionRequest _$MaterialRequisitionRequestFromJson(
       unitOfMeasurementId: (json['unit_of_measurement_id'] as num?)?.toInt(),
       packingId: (json['packing_id'] as num?)?.toInt(),
       remarks: json['remarks'] as String?,
+      locationIdsWithQuantity: (json['parent_master_id_list'] as List<dynamic>?)
+          ?.map(
+              (e) => LocationIDWithQuantity.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$MaterialRequisitionRequestToJson(
@@ -30,4 +34,19 @@ Map<String, dynamic> _$MaterialRequisitionRequestToJson(
       'unit_of_measurement_id': instance.unitOfMeasurementId,
       'packing_id': instance.packingId,
       'remarks': instance.remarks,
+      'parent_master_id_list': instance.locationIdsWithQuantity,
+    };
+
+LocationIDWithQuantity _$LocationIDWithQuantityFromJson(
+        Map<String, dynamic> json) =>
+    LocationIDWithQuantity(
+      id: (json['id'] as num?)?.toInt(),
+      qty: (json['quantity'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$LocationIDWithQuantityToJson(
+        LocationIDWithQuantity instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'quantity': instance.qty,
     };

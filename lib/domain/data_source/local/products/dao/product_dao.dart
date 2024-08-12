@@ -39,26 +39,9 @@ mixin ProductDao {
     return isSuccess;
   }
 
-  Future<List<Product>?> productByName(String nameQuery) async {
-    if (_productsCache.containsKey(byName) &&
-        (_productsCache[byName]?.isNotEmpty == true)) {
-      return _productsCache[byName]
-          ?.where(
-            (element) =>
-                element.alias?.isCaseInsensitiveContains(
-                  nameQuery,
-                ) ??
-                false,
-          )
-          .toList();
-    } else {
-      var data = await _productDB
-          ?.query(ProductDB_.alias.contains(nameQuery, caseSensitive: false))
-          .build()
-          .findAsync()
-          .then((value) => value.map((e) => e.toData).toList());
-      _productsCache.addIf(data != null, byName, data!);
-      return data;
-    }
+  Future<List<Product>?> getAllProducts(String nameQuery) async {
+    return await _productDB
+        ?.getAllAsync()
+        .then((value) => value.map((e) => e.toData).toList());
   }
 }

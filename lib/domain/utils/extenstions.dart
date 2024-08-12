@@ -32,7 +32,13 @@ extension CustomerDataLayerExts on Customer {
       location: location,
       mobileNumber: mobileNumber,
       name: name,
-      productLastUpdate: productLastUpdate);
+      productLastUpdate: productLastUpdate)
+    ..locations.addAll(locations
+            ?.map(
+              (e) => e.toDB,
+            )
+            .toList() ??
+        <LocationDB>[]);
 }
 
 extension LocationDataLayerExts on Location {

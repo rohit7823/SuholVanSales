@@ -8,6 +8,8 @@ import 'package:suhol_van_sales/domain/data_source/remote/logout/response/sign_o
 import 'package:suhol_van_sales/domain/data_source/remote/logout/service/logout_api.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/service/material_request_api.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/products/response/products_response.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/products/service/products_api.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/user_details/response/user_details_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/user_details/service/user_details_api.dart';
 import 'package:suhol_van_sales/domain/di/rest_service.dart';
@@ -107,6 +109,20 @@ mixin WebServicePool {
             .then((value) => Success(value),
                 onError: (data) => Error<CustomersWithLocationResponse>(
                     message: data.toString()))
+        : Error(message: _noConnectivity);
+  }
+
+  Future<RestResponse<ProductsResponse>> productsWithPackingAndUnits() async {
+    if (httpClient.instance == null) {
+      return Error<ProductsResponse>(
+          message: "httpClient.instance is not ready");
+    }
+
+    return await connectivityService.isConnected()
+        ? ProductsApi(httpClient.instance!).withPackingAndUnit().then(
+            (value) => Success(value),
+            onError: (data) =>
+                Error<ProductsResponse>(message: data.toString()))
         : Error(message: _noConnectivity);
   }
 }

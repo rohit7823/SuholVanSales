@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
+import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 import 'package:suhol_van_sales/presentation/widgets/budget_widget.dart';
+import 'package:suhol_van_sales/presentation/widgets/chip.dart';
 import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.dart';
+import 'package:suhol_van_sales/presentation/widgets/my_tag_editor.dart';
 
 import '../../widgets/my_app_bar.dart';
 import '../../widgets/user_info.dart';
@@ -81,26 +84,26 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                     Expanded(
                                       flex: 3,
                                       child: AppTextField(
-                                        hint: "Customer Name",
-                                        width: Get.width * .45,
-                                        isFullScreen: true,
-                                        fieldType: FieldType.autocomplete,
-                                        searchController:
-                                            controller.customerName!,
-                                        capitalization:
-                                            TextCapitalization.words,
-                                        inputAction: TextInputAction.next,
-                                        suggestionsBuilder:
-                                            controller.findCustomerName,
-                                        onSelectResult:
-                                            controller.onSelectCustomer,
-                                        suggestionDisplayOption: (customer) =>
-                                            customer.name ?? "",
-                                        prefixIcon: const Icon(
-                                          Icons.person_2,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
+                                          hint: "Customer Name",
+                                          width: Get.width * .45,
+                                          isFullScreen: true,
+                                          fieldType: FieldType.autocomplete,
+                                          searchController:
+                                              controller.customerName!,
+                                          capitalization:
+                                              TextCapitalization.words,
+                                          inputAction: TextInputAction.next,
+                                          suggestionsBuilder:
+                                              controller.findCustomerName,
+                                          onSelectResult:
+                                              controller.onSelectCustomer,
+                                          suggestionDisplayOption: (customer) =>
+                                              customer.name ?? "",
+                                          prefixIcon: const Icon(
+                                            Icons.person_2,
+                                            color: Colors.grey,
+                                          ),
+                                          autoFocus: false),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -131,56 +134,44 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                     : height * .02,
                               ),
                               SizedBox(
-                                width: Get.width * .95,
-                                height: isHeightInfinite ? null : height * .07,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: AppTextField(
-                                        hint: "Customer Location",
-                                        searchController:
-                                            controller.customerLocation!,
-                                        capitalization:
-                                            TextCapitalization.words,
-                                        inputAction: TextInputAction.next,
-                                        width: Get.width * .45,
-                                        isFullScreen: true,
-                                        fieldType: FieldType.autocomplete,
-                                        suggestionsBuilder:
-                                            controller.findCustomerLocation,
-                                        onSelectResult:
-                                            controller.onSelectCustomerLocation,
-                                        suggestionDisplayOption: (customer) =>
-                                            customer.location ?? "",
-                                        prefixIcon: const Icon(
-                                          Icons.pin_drop,
-                                          color: Colors.grey,
-                                        ),
+                                width: context.width * .95,
+                                child: Obx(() => MyTagEditor(
+                                      length:
+                                          controller.selectedLocations.length,
+                                      delimiters: const [',', ' '],
+                                      tagBuilder: (context, index) => controller
+                                                      .selectedLocations
+                                                      .length >
+                                                  2 &&
+                                              !isHeightInfinite
+                                          ? Text(
+                                              ".",
+                                              style: Get.textTheme.displaySmall
+                                                  ?.copyWith(
+                                                      color:
+                                                          Colors.grey.shade400,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            )
+                                          : MyChip(
+                                              label:
+                                                  "${controller.selectedLocations[index].location?.location}",
+                                              onDeleted: (value) => controller
+                                                  .selectedLocations
+                                                  .removeAt(index),
+                                              index: index),
+                                      tagChanged: controller.onLocationChanged,
+                                      controller: controller.customerLocation,
+                                      prefixIconWidget: const Icon(
+                                        Icons.location_pin,
+                                        color: Colors.grey,
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: ColoredBox(
-                                          color: AppColors.buttonColorAlternate,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: InkWell(
-                                                onTap: controller
-                                                    .onClickSendCustomerLocation,
-                                                child: const Icon(
-                                                  Icons.arrow_forward,
-                                                  color: Colors.white,
-                                                )),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                      hint: controller.selectedLocations.isEmpty
+                                          ? "Customer Locations"
+                                          : "",
+                                      showAddButton: false,
+                                      changeStyle: false,
+                                    )),
                               ),
                               SizedBox(
                                 height: isHeightInfinite
@@ -222,6 +213,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         Icons.phone_android,
                                         color: Colors.grey,
                                       ),
+                                      autoFocus: false,
                                     )
                                   ],
                                 ),
@@ -250,6 +242,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                       product.name ?? "",
                                   fieldType: FieldType.autocomplete,
                                   isFullScreen: true,
+                                  autoFocus: false,
                                 ),
                               ),
                               SizedBox(
@@ -265,7 +258,8 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                     Expanded(
                                       child: Obx(() => AppTextField(
                                             hint: "Packing",
-                                            searchController: controller.packing!,
+                                            searchController:
+                                                controller.packing!,
                                             capitalization:
                                                 TextCapitalization.words,
                                             inputAction: TextInputAction.next,
@@ -279,39 +273,48 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                                     null
                                                 ? FieldType.autocomplete
                                                 : FieldType.normal,
-                                            suggestionConstraints: BoxConstraints(maxHeight: (height * .35)),
-                                            suggestionsBuilder: controller.findProductPacking,
-                                            onSelectResult: controller.onSelectProductPacking,
-                                            suggestionDisplayOption: (p0) => p0.packing ?? "None",
+                                            suggestionConstraints:
+                                                BoxConstraints(
+                                                    maxHeight: (height * .35)),
+                                            suggestionsBuilder:
+                                                controller.findProductPacking,
+                                            onSelectResult: controller
+                                                .onSelectProductPacking,
+                                            suggestionDisplayOption: (p0) =>
+                                                p0.packing ?? "None",
                                             isFullScreen: true,
+                                            autoFocus: false,
                                           )),
                                     ),
                                     const SizedBox(
                                       width: 12,
                                     ),
                                     Expanded(
-                                      child: Obx(
-                                        ()=> AppTextField(
-                                          hint: "Unit",
-                                          searchController: controller.unit!,
-                                          inputAction: TextInputAction.next,
-                                          prefixIcon: const Icon(
-                                            Icons.ad_units,
-                                            color: Colors.grey,
-                                          ),
-                                          suggestionsBuilder: controller.findProductUnit,
-                                          onSelectResult: controller.onSelectProductUnit,
-                                          suggestionDisplayOption: (p0) => p0.name?.name ?? "None",
-                                          isFullScreen: true,
-                                          fieldType: controller
-                                              .selectedProduct.value !=
-                                              null
-                                              ? FieldType.autocomplete
-                                              : FieldType.normal,
-                                          suggestionConstraints: BoxConstraints(
-                                              maxHeight: (height * .35)),
-                                        )
-                                      ),
+                                      child: Obx(() => AppTextField(
+                                            hint: "Unit",
+                                            searchController: controller.unit!,
+                                            inputAction: TextInputAction.next,
+                                            prefixIcon: const Icon(
+                                              Icons.ad_units,
+                                              color: Colors.grey,
+                                            ),
+                                            suggestionsBuilder:
+                                                controller.findProductUnit,
+                                            onSelectResult:
+                                                controller.onSelectProductUnit,
+                                            suggestionDisplayOption: (p0) =>
+                                                p0.name?.name ?? "None",
+                                            isFullScreen: true,
+                                            fieldType: controller
+                                                        .selectedProduct
+                                                        .value !=
+                                                    null
+                                                ? FieldType.autocomplete
+                                                : FieldType.normal,
+                                            suggestionConstraints:
+                                                BoxConstraints(
+                                                    maxHeight: (height * .35)),
+                                          )),
                                     ),
                                     const SizedBox(
                                       width: 12,
@@ -382,51 +385,54 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      child: Obx(
-                                        ()=> AppButton(
-                                          onClick: controller.onSubmitOrder,
-                                          height: isHeightInfinite
-                                              ? 40
-                                              : height * .07,
-                                          btnColor: AppColors.buttonColor,
-                                          border: RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(8)),
-                                          showLoading: controller.orderLoading.value,
-                                          child: Text(
-                                            "Submit Order",
-                                            style: Get.textTheme.titleLarge
-                                                ?.copyWith(
-                                                color: Colors.white,
-                                                fontFamily:
-                                                Fonts.poppinsMedium),
-                                          ),
-                                        )
-                                      ),
+                                      child: Obx(() => AppButton(
+                                            onClick: controller.onSubmitOrder,
+                                            height: isHeightInfinite
+                                                ? 40
+                                                : height * .07,
+                                            btnColor: AppColors.buttonColor,
+                                            border: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            showLoading:
+                                                controller.orderLoading.value,
+                                            child: Text(
+                                              "Submit Order",
+                                              style: Get.textTheme.titleLarge
+                                                  ?.copyWith(
+                                                      color: Colors.white,
+                                                      fontFamily:
+                                                          Fonts.poppinsMedium),
+                                            ).fitBox(),
+                                          )),
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(
-                                      child: Obx(
-                                        () => AppButton(
-                                          onClick: controller.onAddItem,
-                                          height:
-                                          isHeightInfinite ? 40 : height * .0,
-                                          btnColor:
-                                          AppColors.buttonColorAlternate,
-                                          showLoading: controller.addItemLoading.value,
-                                          border: RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(8)),
-                                          child: Text(
-                                            "Add Item",
-                                            style: Get.textTheme.titleLarge
-                                                ?.copyWith(
-                                                color: Colors.white,
-                                                fontFamily:
-                                                Fonts.poppinsMedium),
-                                          ),
-                                        )
-                                      ),
+                                      child: Obx(() => AppButton(
+                                            onClick: controller.onAddItem,
+                                            height: isHeightInfinite
+                                                ? 40
+                                                : height * .0,
+                                            btnColor:
+                                                AppColors.buttonColorAlternate,
+                                            showLoading:
+                                                controller.addItemLoading.value,
+                                            border: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            child: Text(
+                                              !controller.selectedLocations
+                                                      .every((element) =>
+                                                          element.isValid)
+                                                  ? "Add Item Now"
+                                                  : "Add Item",
+                                              style: Get.textTheme.titleLarge
+                                                  ?.copyWith(
+                                                      color: Colors.white,
+                                                      fontFamily:
+                                                          Fonts.poppinsMedium),
+                                            ),
+                                          )),
                                     )
                                   ],
                                 ),
