@@ -6,15 +6,29 @@ import 'package:suhol_van_sales/app/theme/images.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 class UserInfo extends StatelessWidget {
-  const UserInfo({super.key, required this.userName, required this.shopName});
+  const UserInfo(
+      {super.key,
+      required this.userName,
+      required this.shopName,
+      this.back});
 
   final RxString userName;
   final RxString shopName;
+  final void Function()? back;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
+        back != null
+            ? InkWell(
+                onTap: back,
+                child: const Icon(
+                  Icons.arrow_back_sharp,
+                  color: Colors.grey,
+                )).paddings(right: 8)
+            : const SizedBox.shrink(),
+
         const CircleAvatar(
           backgroundColor: AppColors.primary,
           foregroundImage: AssetImage(Images.person),
@@ -24,10 +38,11 @@ class UserInfo extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Obx(() => Text(
-                "Hi, ${userName.value}",
-                style: Get.textTheme.titleLarge,
-              )),
-              Obx(() => Text("${_date(DateTime.now())}  ${shopName.value}", style: Get.textTheme.titleSmall))
+                    "Hi, ${userName.value}",
+                    style: Get.textTheme.titleLarge,
+                  )),
+              Obx(() => Text("${_date(DateTime.now())}  ${shopName.value}",
+                  style: Get.textTheme.titleSmall))
             ],
           ),
         )

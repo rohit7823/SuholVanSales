@@ -12,6 +12,12 @@ extension DateTimeUtils on DateTime {
   }
 }
 
+
+extension StringUtils on String {
+  Color get toColor =>
+      Color(int.parse(substring(1, 7), radix: 16) + 0xFF000000);
+}
+
 extension ExtsOnContext on BuildContext {
   bool get isKeyboardVisible => MediaQuery.of(this).viewInsets.bottom > 0;
 }

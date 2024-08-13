@@ -10,11 +10,13 @@ class ServiceContainer extends StatelessWidget {
       this.animation,
       this.onClick,
       this.image,
+      this.color,
       required this.name});
 
   final double? animation;
   final void Function()? onClick;
   final dynamic image;
+  final String? color;
   final String name;
 
   @override
@@ -30,20 +32,36 @@ class ServiceContainer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             image is String
-                ? image.endsWith(".svg")
-                    ? SvgPicture.asset(
-                        image,
-                        width: 35,
-                        height: 35,
-                        color: AppColors.buttonColorAlternate,
-                      )
-                    : Image.asset(
-                        image,
-                        width: 35,
-                        height: 35,
-                      )
+                ? (image as String).isURL
+                    ? image.endsWith(".svg")
+                        ? SvgPicture.network(
+                            image,
+                            width: 35,
+                            height: 35,
+                            color: color?.toColor,
+                          )
+                        : Image.network(
+                            image,
+                            width: 35,
+                            height: 35,
+                            color: color?.toColor,
+                          )
+                    : image.endsWith(".svg")
+                        ? SvgPicture.asset(
+                            image,
+                            width: 35,
+                            height: 35,
+                            color: color?.toColor,
+                          )
+                        : Image.asset(
+                            image,
+                            width: 35,
+                            height: 35,
+                            color: color?.toColor,
+                          )
                 : Icon(
                     image,
+                    size: 35,
                   ),
             Text(
               name,

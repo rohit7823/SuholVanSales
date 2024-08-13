@@ -35,44 +35,20 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
       appBar: MyAppBar(
         leadingWidth: 12,
         title: UserInfo(
-            userName: controller.userName, shopName: controller.shopName),
+          userName: controller.userName,
+          shopName: controller.shopName,
+          back: controller.pop,
+        ),
       ),
       body: SafeArea(
           child: Column(
         children: [
+          const SizedBox(height: 8,),
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: ColoredBox(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Row(
-                          children: [
-                            InkWell(
-                                onTap: controller.pop,
-                                child: const Icon(
-                                  Icons.arrow_back_sharp,
-                                  color: Colors.grey,
-                                )),
-                            const SizedBox(
-                              width: 12,
-                            ),
-                            Text(
-                              "Create Credit Sales Order",
-                              style: Get.textTheme.titleMedium?.copyWith(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
                   KeyboardAwareWidgetTwo(
                       child: (context, height, isHeightInfinite) => Column(
                             children: [
@@ -398,7 +374,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                             showLoading:
                                                 controller.orderLoading.value,
                                             child: Text(
-                                              "Submit Order",
+                                              "SUBMIT ORDER",
                                               style: Get.textTheme.titleLarge
                                                   ?.copyWith(
                                                       color: Colors.white,
@@ -421,17 +397,19 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                             border: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(8)),
-                                            child: Text(
-                                              !controller.selectedLocations
-                                                      .every((element) =>
-                                                          element.isValid)
-                                                  ? "Add Item Now"
-                                                  : "Add Item",
-                                              style: Get.textTheme.titleLarge
-                                                  ?.copyWith(
-                                                      color: Colors.white,
-                                                      fontFamily:
-                                                          Fonts.poppinsMedium),
+                                            child: Obx(
+                                              () => Text(
+                                                !controller.selectedLocations
+                                                    .every((element) =>
+                                                element.isValid)
+                                                    ? "Add ITEM NOW"
+                                                    : "ADD ITEM",
+                                                style: Get.textTheme.titleLarge
+                                                    ?.copyWith(
+                                                    color: Colors.white,
+                                                    fontFamily:
+                                                    Fonts.poppinsMedium),
+                                              )
                                             ),
                                           )),
                                     )

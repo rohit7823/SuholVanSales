@@ -12,6 +12,9 @@ UserOnboardingResponse _$UserOnboardingResponseFromJson(
       status: json['status'] as bool?,
       message: json['message'] as String?,
       token: json['token'] as String?,
+      appIcons: (json['app_icons'] as List<dynamic>?)
+          ?.map((e) => AppIcon.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$UserOnboardingResponseToJson(
@@ -20,4 +23,5 @@ Map<String, dynamic> _$UserOnboardingResponseToJson(
       'status': instance.status,
       'message': instance.message,
       'token': instance.token,
+      'app_icons': instance.appIcons,
     };

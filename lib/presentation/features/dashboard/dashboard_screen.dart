@@ -148,12 +148,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
               mainAxisSpacing: 2),
           itemBuilder: (context, index, animation) {
             var service = ServiceOne.values[index];
-
+            var icon = controller.session.appIcons?.firstWhereOrNull(
+              (element) =>
+                  element.id?.toLowerCase() == service.name.toLowerCase(),
+            );
             return ServiceContainer(
               name: service.name,
-              image: service.image,
+              image: icon?.icon ?? service.image,
               animation: animation.value,
               onClick: () => controller.onTapServiceOne(service),
+              color: icon?.color,
             );
           },
         ),

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/presentation/navigation/home_graph.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/service_one.dart';
@@ -14,6 +15,8 @@ class DashboardController extends GetxController {
     {"SALE OFF 20%": "https://rohit7823.github.io/assets/ad_one.png"},
     {"GIVE COUPONS": "https://rohit7823.github.io/assets/ad_two.png"}
   ]);
+
+  final session = Get.find<SessionService>();
 
   @override
   void onReady() {
