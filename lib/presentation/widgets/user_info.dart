@@ -7,10 +7,7 @@ import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 class UserInfo extends StatelessWidget {
   const UserInfo(
-      {super.key,
-      required this.userName,
-      required this.shopName,
-      this.back});
+      {super.key, required this.userName, required this.shopName, this.back});
 
   final RxString userName;
   final RxString shopName;
@@ -28,10 +25,10 @@ class UserInfo extends StatelessWidget {
                   color: Colors.grey,
                 )).paddings(right: 8)
             : const SizedBox.shrink(),
-
         const CircleAvatar(
           backgroundColor: AppColors.primary,
           foregroundImage: AssetImage(Images.person),
+          maxRadius: 24,
         ).paddings(right: 12),
         Expanded(
           child: Column(

@@ -8,6 +8,9 @@ import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
 
 class AppTextField<T extends Object> extends StatelessWidget {
+  static BoxConstraints fixedBoxConstraints() =>
+      const BoxConstraints(maxHeight: kMinInteractiveDimension * 5);
+
   const AppTextField(
       {super.key,
       this.hint,
@@ -140,6 +143,7 @@ class AppTextField<T extends Object> extends StatelessWidget {
             suggestionsBuilder:
                 (BuildContext context, SearchController controller) async {
               var values = await suggestionsBuilder?.call(controller);
+
               return values!
                   .mapIndexed((idx, item) => CustomAutocompleteOption(
                         displayStringForOption: suggestionDisplayOption!,
@@ -154,7 +158,9 @@ class AppTextField<T extends Object> extends StatelessWidget {
                   .toList();
             },
             viewConstraints: suggestionConstraints ??
-                BoxConstraints(maxWidth: context.width),
+                BoxConstraints(
+                    maxWidth: context.width,
+                    maxHeight: kMinInteractiveDimension * 5),
             dividerColor: Colors.grey,
             viewHintText: hint,
             headerHintStyle: Get.textTheme.titleLarge?.copyWith(

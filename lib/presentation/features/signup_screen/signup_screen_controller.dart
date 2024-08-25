@@ -8,7 +8,6 @@ import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/login_intent.dart';
 
 class SignupScreenController extends GetxController {
-
   final _repo = Get.find<SignupRepository>();
 
   final _session = Get.find<SessionService>();
@@ -66,11 +65,13 @@ class SignupScreenController extends GetxController {
     var result = await _repo.signIn(UserOnboarding(
         type: oboardingIntent.value.name,
         email: emailOrName.text,
-        password: password.text)
-    );
+        password: password.text));
     loading.value = false;
     //Get.offNamed(Routes.home.name);
     if (result != null && result.status == true) {
+      if (result.appIcons != null) {
+        _session.setAppIcons(result.appIcons!);
+      }
       fetchUserDetails();
       Get.offNamed(Routes.home.name);
     } else {

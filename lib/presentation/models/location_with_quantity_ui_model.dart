@@ -4,7 +4,7 @@ import 'package:suhol_van_sales/domain/models/customer.dart';
 
 class LocationWithQuantityUiModel {
   final Location? location;
-  final TextEditingController qty = TextEditingController();
+  final TextEditingController qty = TextEditingController(text: "1");
 
   LocationWithQuantityUiModel({
     this.location,

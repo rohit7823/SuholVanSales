@@ -13,49 +13,49 @@ class Customer {
   final String? contactPerson;
   final int? status;
   final int? productLastUpdate;
-
+  final int? creditLimit;
   final List<Location>? locations;
 
-  Customer({
-    this.id,
-    this.name,
-    this.customerCode,
-    this.address,
-    this.location,
-    this.mobileNumber,
-    this.email,
-    this.contactPerson,
-    this.status,
-    this.productLastUpdate,
-    this.locations,
-  });
+  Customer(
+      {this.id,
+      this.name,
+      this.customerCode,
+      this.address,
+      this.location,
+      this.mobileNumber,
+      this.email,
+      this.contactPerson,
+      this.status,
+      this.productLastUpdate,
+      this.locations,
+      this.creditLimit});
 
-  Customer copyWith({
-    int? id,
-    String? name,
-    String? customerCode,
-    String? address,
-    String? location,
-    String? mobileNumber,
-    dynamic email,
-    String? contactPerson,
-    int? status,
-    int? productLastUpdate,
-    List<Location>? locations,
-  }) =>
+  Customer copyWith(
+          {int? id,
+          String? name,
+          String? customerCode,
+          String? address,
+          String? location,
+          String? mobileNumber,
+          dynamic email,
+          String? contactPerson,
+          int? status,
+          int? productLastUpdate,
+          List<Location>? locations,
+          int? creditLimit}) =>
       Customer(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        customerCode: customerCode ?? this.customerCode,
-        address: address ?? this.address,
-        location: location ?? this.location,
-        mobileNumber: mobileNumber ?? this.mobileNumber,
-        email: email ?? this.email,
-        contactPerson: contactPerson ?? this.contactPerson,
-        status: status ?? this.status,
-        productLastUpdate: productLastUpdate ?? this.productLastUpdate,
-        locations: locations ?? this.locations,
-      );
+          id: id ?? this.id,
+          name: name ?? this.name,
+          customerCode: customerCode ?? this.customerCode,
+          address: address ?? this.address,
+          location: location ?? this.location,
+          mobileNumber: mobileNumber ?? this.mobileNumber,
+          email: email ?? this.email,
+          contactPerson: contactPerson ?? this.contactPerson,
+          status: status ?? this.status,
+          productLastUpdate: productLastUpdate ?? this.productLastUpdate,
+          locations: locations ?? this.locations,
+          creditLimit: creditLimit ?? this.creditLimit);
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         id: json["id"],
@@ -68,6 +68,7 @@ class Customer {
         contactPerson: json["contact_person"],
         status: json["status"],
         productLastUpdate: json["product_last_update"],
+        creditLimit: json['credit_limit'],
         locations: json["locations"] == null
             ? []
             : List<Location>.from(
@@ -85,6 +86,7 @@ class Customer {
         "contact_person": contactPerson,
         "status": status,
         "product_last_update": productLastUpdate,
+        "credit_limit": creditLimit,
         "locations": locations == null
             ? []
             : List<dynamic>.from(locations!.map((x) => x.toJson())),

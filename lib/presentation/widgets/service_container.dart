@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 class ServiceContainer extends StatelessWidget {
@@ -62,6 +61,7 @@ class ServiceContainer extends StatelessWidget {
                 : Icon(
                     image,
                     size: 35,
+                    color: color?.toColor,
                   ),
             Text(
               name,

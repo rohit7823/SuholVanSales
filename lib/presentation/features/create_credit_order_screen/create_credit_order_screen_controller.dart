@@ -7,7 +7,9 @@ import 'package:suhol_van_sales/domain/data_source/remote/material_request/reque
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_repository.dart';
+import 'package:suhol_van_sales/presentation/models/added_product_ui_model.dart';
 import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
+import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/animated_progress.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
@@ -54,8 +56,9 @@ class CreateCreditOrderScreenController extends GetxController {
   RxList<Customer> customers = RxList.empty();
 
   RxList<LocationWithQuantityUiModel> selectedLocations = RxList.empty();
+  RxList<LocationWithQuantityUiModel> removedLocations = RxList.empty();
 
-  RxList<MaterialRequisitionRequest> addedMaterialRequests = RxList.empty();
+  RxList<AddedProductUiModel> addedProducts = RxList.empty();
 
   var items = '0'.obs;
 
@@ -86,7 +89,7 @@ class CreateCreditOrderScreenController extends GetxController {
   }
 
   void _onQtyChange() {
-    items.value = "${addedMaterialRequests.length}";
+    items.value = "${addedProducts.length}";
     _calculatePrice();
   }
 
@@ -155,10 +158,12 @@ class CreateCreditOrderScreenController extends GetxController {
                     color: Colors.redAccent,
                   )),
             ),
-            Obx(
+            Flexible(
+                child: Obx(
               () => ListView.separated(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
                     var model = selectedLocations[index];
                     return Row(
@@ -192,7 +197,7 @@ class CreateCreditOrderScreenController extends GetxController {
                       ),
                   itemCount: selectedLocations.length,
                   cacheExtent: 50),
-            ),
+            )),
             const SizedBox(
               height: 8,
             ),
@@ -306,8 +311,7 @@ class CreateCreditOrderScreenController extends GetxController {
                   id: element.location?.id,
                   qty: int.tryParse(element.qty.text)),
             )
-            .toList()
-    );
+            .toList());
     var result = await _repo.createRequisitionOrder(request);
     addItemLoading.value = false;
     if (result is Success) {
@@ -322,12 +326,16 @@ class CreateCreditOrderScreenController extends GetxController {
             message: "${result.data?.message}",
             duration: const Duration(seconds: 5),
           ));
-          addedMaterialRequests.addIf(
-              () => addedMaterialRequests
-                      .firstWhereOrNull((element) => element == request) ==
-                  null,
-              request);
-          _clearValues();
+          addedProducts.add(AddedProductUiModel(
+              productName: selectedProduct.value?.name,
+              unit: selectedUnit?.name?.name,
+              packing: selectedPacking?.packing,
+              quantity: selectedLocations.fold(
+                0,
+                (previousValue, element) =>
+                    previousValue! + (int.tryParse(element.qty.text) ?? 0),
+              )));
+          //_clearValues();
           break;
         case false:
           Get.showSnackbar(GetSnackBar(
@@ -385,6 +393,13 @@ class CreateCreditOrderScreenController extends GetxController {
     controller.text = result.name!;
     _selectedCustomer = result;
     _addLocations(result.locations);
+  }
+
+  void removeLocation(LocationWithQuantityUiModel? location) {
+    selectedLocations.remove(location);
+    if (location != null) {
+      removedLocations.add(location);
+    }
   }
 
   /*FutureOr<Iterable<Customer>> findCustomerLocation(
@@ -473,16 +488,18 @@ class CreateCreditOrderScreenController extends GetxController {
   }
 
   void onLocationChanged(String value, {Location? location}) {
-    if (value.isBlank == false) {
+    if (value.isBlank == false && value.endsWith(" ")) {
       var loc = Location(location: value);
-      selectedLocations.add(LocationWithQuantityUiModel(location: loc));
-    } else {
+      selectedLocations.insert(0, LocationWithQuantityUiModel(location: loc));
+      customerLocation?.clear();
+    } else if (location != null) {
       selectedLocations.add(LocationWithQuantityUiModel(location: location));
     }
   }
 
   void _addLocations(List<Location>? locations) {
     selectedLocations.clear();
+    removedLocations.clear();
     if (locations != null) {
       for (var loc in locations) {
         onLocationChanged("", location: loc);
@@ -490,5 +507,145 @@ class CreateCreditOrderScreenController extends GetxController {
     }
   }
 
+  void expandLocations() {
+    Get.dialog(Dialog(
+      insetPadding: EdgeInsets.symmetric(vertical: Get.height * .20),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Obx(() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "Currently added",
+                    style: Get.textTheme.bodySmall
+                        ?.copyWith(fontFamily: Fonts.poppinsSemiBold),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  const Expanded(child: Divider()),
+                  IconButton(
+                      onPressed: () {
+                        if (Get.overlayContext != null) {
+                          Navigator.of(Get.overlayContext!).pop();
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ))
+                ],
+              ),
+              Wrap(
+                alignment: WrapAlignment.spaceEvenly,
+                runAlignment: WrapAlignment.spaceBetween,
+                direction: Axis.horizontal,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                spacing: 8,
+                children: selectedLocations
+                    .map(
+                      (location) => Chip(
+                        label: Text(
+                          "${location.location?.location}",
+                        ),
+                        labelStyle: Get.textTheme.bodySmall?.copyWith(
+                            fontSize: 12, fontFamily: Fonts.poppinsSemiBold),
+                        avatar: const Icon(
+                          Icons.location_on_sharp,
+                          size: 18,
+                          color: Colors.blueAccent,
+                        ),
+                        padding: const EdgeInsets.all(5),
+                        labelPadding: const EdgeInsets.only(right: 5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        deleteIcon: const Icon(
+                          Icons.close,
+                          size: 18,
+                        ),
+                        deleteButtonTooltipMessage: "Remove this location",
+                        deleteIconColor: Colors.grey,
+                        onDeleted: () {
+                          removeLocation(location);
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+              removedLocations.isNotEmpty
+                  ? Row(
+                      children: [
+                        Text(
+                          "Removed by you",
+                          style: Get.textTheme.bodySmall
+                              ?.copyWith(fontFamily: Fonts.poppinsSemiBold),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        const Expanded(child: Divider())
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+              removedLocations.isNotEmpty
+                  ? Wrap(
+                      alignment: WrapAlignment.spaceEvenly,
+                      runAlignment: WrapAlignment.center,
+                      direction: Axis.horizontal,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      children: removedLocations
+                          .map(
+                            (location) => Chip(
+                              label: Text(
+                                "${location.location?.location}",
+                              ),
+                              labelStyle: Get.textTheme.bodySmall?.copyWith(
+                                  fontSize: 12,
+                                  fontFamily: Fonts.poppinsSemiBold),
+                              avatar: const Icon(
+                                Icons.location_off_sharp,
+                                size: 18,
+                                color: Colors.grey,
+                              ),
+                              padding: const EdgeInsets.all(5),
+                              labelPadding: const EdgeInsets.only(right: 5),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              deleteIcon: const Icon(
+                                Icons.add,
+                                size: 18,
+                              ),
+                              deleteButtonTooltipMessage: "Add this location",
+                              deleteIconColor: Colors.grey,
+                              onDeleted: () {
+                                reAdd(location);
+                              },
+                              backgroundColor: Colors.redAccent.withAlpha(30),
+                            ),
+                          )
+                          .toList(),
+                    )
+                  : const SizedBox.shrink(),
+            ],
+          );
+        }).paddings(all: 8),
+      ),
+    ));
+  }
 
+  void reAdd(LocationWithQuantityUiModel location) {
+    if (!selectedLocations.contains(location) &&
+        removedLocations.contains(location)) {
+      selectedLocations.insert(0, location);
+      removedLocations.remove(location);
+    }
+  }
+
+  void deleteAddedProduct(AddedProductUiModel request) {
+    addedProducts.remove(request);
+  }
 }

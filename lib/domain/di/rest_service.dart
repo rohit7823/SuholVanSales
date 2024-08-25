@@ -10,7 +10,7 @@ class RestService extends GetxService {
     _instance = Dio()
       //..interceptors.add(alice.getDioInterceptor())
       ..options = BaseOptions(
-          baseUrl: 'https://vansell.codeeaster.com/api',
+          baseUrl: 'http://demoapp.souqsuhol.com/api',
           connectTimeout: const Duration(seconds: 10),
           followRedirects: true,
           contentType: "application/json",
