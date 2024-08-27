@@ -10,11 +10,15 @@ class FeatureComponent extends StatelessWidget {
       required this.image,
       required this.name,
       this.onClick,
-      this.color});
+      this.color,
+      this.width,
+      this.height});
 
   final String? image;
   final String? color;
   final String name;
+  final double? width;
+  final double? height;
   final void Function(String componentName)? onClick;
 
   @override
@@ -29,15 +33,29 @@ class FeatureComponent extends StatelessWidget {
                       ? SvgPicture.network(
                           image!,
                           color: color?.toColor,
+                          width: width,
+                          height: height,
                         )
-                      : Image.network(image!, color: color?.toColor,)
+                      : Image.network(
+                          image!,
+                          color: color?.toColor,
+                          width: width,
+                          height: height,
+                        )
                   : image!.endsWith(".svg")
-                      ? SvgPicture.asset(image!, color: color?.toColor,)
-                      : Image.asset(image!, color: color?.toColor,)
+                      ? SvgPicture.asset(
+                          image!,
+                          color: color?.toColor,
+                          width: width,
+                          height: height,
+                        )
+                      : Image.asset(
+                          image!,
+                          color: color?.toColor,
+                          width: width,
+                          height: height,
+                        )
               : const SizedBox.shrink(),
-          const SizedBox(
-            height: 12,
-          ),
           Text(
             name,
             style: Get.textTheme.labelSmall?.copyWith(color: Colors.grey),

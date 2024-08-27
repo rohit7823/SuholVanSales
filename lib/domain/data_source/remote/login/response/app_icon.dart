@@ -1,5 +1,3 @@
-
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'app_icon.g.dart';
@@ -12,26 +10,33 @@ class AppIcon {
   final String? icon;
   @JsonKey(name: "color")
   final String? color;
+  @JsonKey(name: "size")
+  final double? size;
 
   const AppIcon({
     this.id,
     this.icon,
     this.color,
+    this.size
   });
 
   AppIcon copyWith({
     String? id,
     String? icon,
     String? color,
+    double? size
   }) {
     return AppIcon(
-      icon: icon ?? this.icon,
-      color: color ?? this.color,
-      id: id ?? this.id
+        icon: icon ?? this.icon,
+        color: color ?? this.color,
+        id: id ?? this.id,
+        size: size ?? this.size
     );
   }
 
-  factory AppIcon.fromJson(Map<String, dynamic> json) => _$AppIconFromJson(json);
+  factory AppIcon.fromJson(Map<String, dynamic> json) =>
+      _$AppIconFromJson(json);
 
-  	Map<String, dynamic> toJson() => _$AppIconToJson(this);
+  Map<String, dynamic> toJson() => _$AppIconToJson(this);
+
 }

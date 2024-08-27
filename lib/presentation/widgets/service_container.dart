@@ -65,7 +65,8 @@ class ServiceContainer extends StatelessWidget {
                   ),
             Text(
               name,
-              style: Get.textTheme.titleMedium?.copyWith(color: Colors.black),
+              style: Get.textTheme.titleMedium
+                  ?.copyWith(color: color?.toColor ?? Colors.black),
               textAlign: TextAlign.center,
             ).paddings(horizontal: 3)
           ],

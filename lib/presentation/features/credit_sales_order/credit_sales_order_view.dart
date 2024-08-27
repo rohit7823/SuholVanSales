@@ -6,6 +6,7 @@ import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/widgets/feature_component.dart';
 import 'package:suhol_van_sales/presentation/widgets/service_container.dart';
 
+import '../../utils/features.dart';
 import 'credit_sales_order_controller.dart';
 
 class CreditSalesOrder extends StatefulWidget {
@@ -60,20 +61,34 @@ class _CreditSalesOrderState extends State<CreditSalesOrder> {
               child: ColoredBox(
                 color: Colors.white,
                 child: Row(
-                  children: [
-                    const FeatureComponent(
-                            image: Images.walletSVG, name: "Date")
-                        .expanded(flex: 1),
-                    const FeatureComponent(
-                            image: Images.targetsSVG, name: "Location")
-                        .expanded(flex: 1),
-                    const FeatureComponent(
-                            image: Images.misSVG, name: "Printer")
-                        .expanded(flex: 1),
-                    const FeatureComponent(
-                            image: Images.reportsSVG, name: "Data Sync")
-                        .paddings(right: 12)
-                  ],
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: Features.values.map(
+                    (feature) {
+                      var icon = controller.session.appIcons?.firstWhereOrNull(
+                        (icon) => icon.id == feature.name,
+                      );
+                      var idx = Features.values.indexOf(feature);
+                      var name = idx == 0
+                          ? "Date"
+                          : idx == 1
+                              ? "Location"
+                              : idx == 2
+                                  ? "Printer"
+                                  : idx == 3
+                                      ? "Data Sync"
+                                      : "";
+                      return FeatureComponent(
+                        image:
+                            icon?.icon != null && icon?.icon?.isNotEmpty == true
+                                ? icon?.icon
+                                : feature.icon,
+                        name: name,
+                        color: icon?.color,
+                        width: icon?.size,
+                        height: icon?.size,
+                      );
+                    },
+                  ).toList(),
                 ).paddings(vertical: 12),
               ),
             ),
@@ -89,7 +104,7 @@ class _CreditSalesOrderState extends State<CreditSalesOrder> {
               var type = CreditOrderHistoryTypes.values[index];
 
               return ServiceContainer(
-                name: type.name,
+                name: type.text,
                 image: type.image,
                 animation: animation.value,
                 onClick: () => controller.onTapCreditHistory(type),

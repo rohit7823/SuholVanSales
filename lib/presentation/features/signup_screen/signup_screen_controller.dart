@@ -16,7 +16,7 @@ class SignupScreenController extends GetxController {
 
   var password = TextEditingController();
 
-  Rx<LoginIntent> oboardingIntent = Rx(LoginIntent.signIn);
+  Rx<LoginIntent> onboardingIntent = Rx(LoginIntent.signIn);
 
   var name = TextEditingController();
 
@@ -34,7 +34,6 @@ class SignupScreenController extends GetxController {
     super.onReady();
 
     emailOrName.addListener(_inputCheck);
-
     password.addListener(_inputCheck);
   }
 
@@ -63,7 +62,7 @@ class SignupScreenController extends GetxController {
   Future<void> signIn() async {
     loading.value = true;
     var result = await _repo.signIn(UserOnboarding(
-        type: oboardingIntent.value.name,
+        //type: oboardingIntent.value.name,
         email: emailOrName.text,
         password: password.text));
     loading.value = false;
@@ -87,7 +86,7 @@ class SignupScreenController extends GetxController {
     int? userId;
     try {
       userId = await _repo.signUp(UserOnboarding(
-          type: oboardingIntent.value.name,
+          type: onboardingIntent.value.name,
           email: emailOrName.text,
           password: password.text,
           name: name.text));
@@ -99,7 +98,7 @@ class SignupScreenController extends GetxController {
     } finally {
       loading.value = false;
       if (userId != null) {
-        oboardingIntent.value = LoginIntent.signIn;
+        onboardingIntent.value = LoginIntent.signIn;
         Get.showSnackbar(const GetSnackBar(
           message: "Account has been created, please sign-up to your account.",
           duration: Duration(seconds: 5),
@@ -109,7 +108,7 @@ class SignupScreenController extends GetxController {
   }
 
   void changeIntent() {
-    oboardingIntent.value = oboardingIntent.value == LoginIntent.signUp
+    onboardingIntent.value = onboardingIntent.value == LoginIntent.signUp
         ? LoginIntent.signIn
         : LoginIntent.signUp;
     password.text = '';

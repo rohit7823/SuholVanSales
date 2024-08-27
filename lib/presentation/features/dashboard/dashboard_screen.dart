@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/images.dart';
+import 'package:suhol_van_sales/objectbox.g.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
+import 'package:suhol_van_sales/presentation/utils/features.dart';
 import 'package:suhol_van_sales/presentation/utils/service_one.dart';
 import 'package:suhol_van_sales/presentation/widgets/feature_component.dart';
 import 'package:suhol_van_sales/presentation/widgets/service_container.dart';
@@ -31,20 +33,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: ColoredBox(
               color: Colors.white,
               child: Row(
-                children: [
-                  const FeatureComponent(
-                          image: Images.walletSVG, name: "DASHBOARD")
-                      .expanded(flex: 1),
-                  const FeatureComponent(
-                          image: Images.targetsSVG, name: "MY TARGETS")
-                      .expanded(flex: 1),
-                  const FeatureComponent(image: Images.misSVG, name: "MIS")
-                      .expanded(flex: 1),
-                  const FeatureComponent(
-                          image: Images.reportsSVG, name: "REPORTS")
-                      .paddings(right: 12)
-                ],
-              ).paddings(vertical: 12),
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: Features.values.map(
+                (feature) {
+                  var icon = controller.session.appIcons?.firstWhereOrNull(
+                    (icon) => icon.id == feature.name,
+                  );
+                  return FeatureComponent(
+                    image: icon?.icon != null && icon?.icon?.isNotEmpty == true
+                        ? icon?.icon
+                        : feature.icon,
+                    name: feature.text,
+                    color: icon?.color,
+                    width: icon?.size,
+                    height: icon?.size,
+                  );
+                },
+              ).toList())
+                  .paddings(vertical: 12),
             ),
           ),
         ),
@@ -148,7 +154,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               mainAxisSpacing: 2),
           itemBuilder: (context, index, animation) {
             var service = ServiceOne.values[index];
-            var icon = controller.session.appIcons?.elementAtOrNull(index);
+            var icon = controller.session.appIcons?.firstWhereOrNull(
+              (icon) => icon.id == service.key,
+            );
+
             return ServiceContainer(
               name: service.name,
               image: icon?.icon != null && icon!.icon!.isNotEmpty

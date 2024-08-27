@@ -7,13 +7,14 @@ part of 'app_icon.dart';
 // **************************************************************************
 
 AppIcon _$AppIconFromJson(Map<String, dynamic> json) => AppIcon(
-      id: json['key'] as String?,
-      icon: json['icon'] as String?,
-      color: json['color'] as String?,
-    );
+    id: json['key'] as String?,
+    icon: json['icon'] as String?,
+    color: json['color'] as String?,
+    size: json['size'] as double?);
 
 Map<String, dynamic> _$AppIconToJson(AppIcon instance) => <String, dynamic>{
       'key': instance.id,
       'icon': instance.icon,
       'color': instance.color,
+      'size': instance.size
     };

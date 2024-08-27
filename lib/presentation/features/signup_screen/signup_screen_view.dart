@@ -71,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Align(
                           alignment: Alignment.center,
                           child: Text(
-                            controller.oboardingIntent.value ==
+                            controller.onboardingIntent.value ==
                                     LoginIntent.signIn
                                 ? "Please login to your account"
                                 : "Please register yourself",
@@ -80,7 +80,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ).paddings(horizontal: Get.width * .05),
                         FieldsCard(
-                          fields: controller.oboardingIntent.value ==
+                          fields: controller.onboardingIntent.value ==
                                   LoginIntent.signIn
                               ? [
                                   AppTextField(

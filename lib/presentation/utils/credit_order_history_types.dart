@@ -9,6 +9,6 @@ enum CreditOrderHistoryTypes {
   billToBilCash(Images.walletSVG, "Bill to Bill\nCash Collection");
 
   final dynamic image;
-  final String name;
-  const CreditOrderHistoryTypes(this.image, this.name);
+  final String text;
+  const CreditOrderHistoryTypes(this.image, this.text);
 }

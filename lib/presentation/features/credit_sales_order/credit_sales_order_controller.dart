@@ -3,7 +3,11 @@ import 'package:suhol_van_sales/presentation/navigation/home_graph.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/credit_order_history_types.dart';
 
+import '../../../domain/di/session_service.dart';
+
 class CreditSalesOrderController extends GetxController {
+
+  final session = Get.find<SessionService>();
   @override
   void onReady() {
     // TODO: implement onReady

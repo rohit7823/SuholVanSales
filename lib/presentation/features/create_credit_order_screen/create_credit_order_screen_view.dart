@@ -1065,6 +1065,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                           Icons.price_change,
                                           color: Colors.grey,
                                         ),
+
                                       ),
                                     ),
                                     const SizedBox(width: 12),
