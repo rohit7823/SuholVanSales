@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:suhol_van_sales/app/theme/images.dart';
 import 'package:suhol_van_sales/presentation/utils/credit_order_history_types.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/widgets/feature_component.dart';
@@ -102,12 +101,17 @@ class _CreditSalesOrderState extends State<CreditSalesOrder> {
                 mainAxisSpacing: 2),
             itemBuilder: (context, index, animation) {
               var type = CreditOrderHistoryTypes.values[index];
-
+              var icon = controller.session.appIcons?.firstWhereOrNull(
+                (icon) => icon.id == type.name,
+              );
               return ServiceContainer(
                 name: type.text,
-                image: type.image,
+                image: icon != null && icon.icon?.isNotEmpty == true
+                    ? icon.icon
+                    : type.image,
                 animation: animation.value,
                 onClick: () => controller.onTapCreditHistory(type),
+                color: icon?.color,
               );
             },
           ),

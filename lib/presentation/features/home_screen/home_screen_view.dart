@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             currentIndex: controller.selectedBottomMenu.value.index,
             showUnselectedLabels: true,
             showSelectedLabels: true,
-            type: BottomNavigationBarType.shifting,
+            type: BottomNavigationBarType.fixed,
             selectedItemColor: AppColors.bottomMenuLabelColor,
             unselectedItemColor: Colors.grey.shade400,
             items: BottomMenus.values
