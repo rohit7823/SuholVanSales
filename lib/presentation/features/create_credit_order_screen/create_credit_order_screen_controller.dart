@@ -63,6 +63,8 @@ class CreateCreditOrderScreenController extends GetxController {
 
   RxList<AddedProductUiModel> addedProducts = RxList.empty();
 
+  Worker? _pickupOrderWorker;
+
   var items = '0'.obs;
 
   var vat = "OMR 0.000".obs;
@@ -81,6 +83,50 @@ class CreateCreditOrderScreenController extends GetxController {
     price?.addListener(_calculatePrice);
 
     userName.value = _session.userDetails?.name ?? "Welcome";
+
+    _pickupOrderWorker = ever(
+      pickupOrders,
+      (orders) {
+        if (orders.isNotEmpty) {
+          Get.defaultDialog(
+            title: "Last Pickup Orders",
+            contentPadding: const EdgeInsets.all(5),
+            titlePadding: const EdgeInsets.symmetric(vertical: 5),
+            radius: 8,
+            cancel: InkWell(
+                onTap: () {
+                  if (Get.overlayContext != null) {
+                    Navigator.of(Get.overlayContext!).pop();
+                  }
+                },
+                child: Text(
+                  "Close",
+                  style: Get.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.redAccent),
+                )),
+            content: Flexible(
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => ListTile(
+                        style: ListTileStyle.list,
+                        contentPadding: const EdgeInsets.all(5),
+                        titleAlignment: ListTileTitleAlignment.titleHeight,
+                        minVerticalPadding: 5,
+                        title: Text(
+                          "${orders[index].toJson()}",
+                          style: Get.textTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  separatorBuilder: (context, index) => const SizedBox(
+                        height: 5,
+                      ),
+                  itemCount: orders.length),
+            ),
+          );
+        }
+      },
+    );
   }
 
   void _calculatePrice() {
@@ -111,6 +157,8 @@ class CreateCreditOrderScreenController extends GetxController {
     qty?.dispose();
     price?.dispose();
     remarks?.dispose();
+    _pickupOrderWorker?.dispose();
+    _pickupOrderWorker = null;
     customerName = null;
     customerLocation = null;
     vehicleNumber = null;
@@ -132,13 +180,16 @@ class CreateCreditOrderScreenController extends GetxController {
 
   void onClickSendCustomerLocation() {
     //customerLocation?.openView();
-    lastPickupOrders("${_selectedCustomer?.id}", loading: (state) {
-      if(state) {
-        AnimatedProgress.showProgressIfNot(msg: "Getting orders");
-      } else {
-        AnimatedProgress.closeProgressIfShowing();
-      }
-    },);
+    lastPickupOrders(
+      "${_selectedCustomer?.id}",
+      loading: (state) {
+        if (state) {
+          AnimatedProgress.showProgressIfNot(msg: "Getting orders");
+        } else {
+          AnimatedProgress.closeProgressIfShowing();
+        }
+      },
+    );
   }
 
   var orderLoading = false.obs;
@@ -680,6 +731,5 @@ class CreateCreditOrderScreenController extends GetxController {
         duration: const Duration(seconds: 5),
       ));
     }
-
   }
 }
