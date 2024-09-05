@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 class AnimatedProgress {
   AnimatedProgress._();
@@ -9,7 +10,7 @@ class AnimatedProgress {
   static bool _isShowing = false;
 
   static void showProgressIfNot(
-      {bool showBlur = false, bool showBarrier = true}) {
+      {bool showBlur = false, bool showBarrier = true, String? msg}) {
     if (Get.overlayContext != null && !(Get.isDialogOpen == true)) {
       _isShowing = true;
       Get.dialog(
@@ -34,7 +35,7 @@ class AnimatedProgress {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "Loading..",
+                               msg ?? "Loading..",
                                 style: Get.textTheme.titleMedium,
                               ),
                               const SizedBox(
@@ -49,7 +50,7 @@ class AnimatedProgress {
                                 ),
                               )
                             ],
-                          ),
+                          ).fitBox(),
                         ),
                       ),
                     )),
@@ -72,7 +73,7 @@ class AnimatedProgress {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Loading..",
+                           msg ?? "Loading..",
                             style: Get.textTheme.titleMedium,
                           ),
                           const SizedBox(
@@ -87,7 +88,7 @@ class AnimatedProgress {
                             ),
                           )
                         ],
-                      ),
+                      ).fitBox(),
                     ),
                   ),
                 )),

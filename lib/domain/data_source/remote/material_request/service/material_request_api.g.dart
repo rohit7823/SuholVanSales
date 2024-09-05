@@ -76,6 +76,34 @@ class _MaterialRequestApi implements MaterialRequestApi {
     return value;
   }
 
+  @override
+  Future<LastMaterialOrdersResponse> lastMaterialOrdersPickups(
+      String customerId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'customer_id': customerId};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<LastMaterialOrdersResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/material-requests/last-five-order-pickups',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = LastMaterialOrdersResponse.fromJson(_result.data!);
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

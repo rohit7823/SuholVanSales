@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:suhol_van_sales/domain/data_source/local/products/dao/product_dao.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/create_material_requisition.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/last_material_orders_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/web_service_pool.dart';
 import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/models/product.dart';
@@ -106,4 +107,9 @@ class CreateCreditOrderRepositoryImpl extends CreateCreditOrderRepository
 
     return result;
   }
+
+  @override
+  Future<RestResponse<LastMaterialOrdersResponse>> lastPickupOrders(
+          String customerID) async =>
+      await lastMaterialOrdersPickups(customerID);
 }

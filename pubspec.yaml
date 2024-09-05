@@ -30,6 +30,8 @@ dependencies:
   crypto: ^3.0.3
   material_tag_editor: ^0.1.2
   rxdart:
+  rfw: ^1.0.29
+
 
 dev_dependencies:
   flutter_test:

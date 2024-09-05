@@ -13,8 +13,13 @@ extension DateTimeUtils on DateTime {
 }
 
 extension StringUtils on String {
-  Color get toColor =>
-      Color(int.parse(substring(1, 6), radix: 16) + 0xFF000000);
+  Color get toColor {
+    if(isBlank == true) {
+      return Colors.black;
+    }
+
+    return Color(int.parse(substring(1, 6), radix: 16) + 0xFF000000);
+  }
 }
 
 extension ExtsOnContext on BuildContext {

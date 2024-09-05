@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
+import 'package:suhol_van_sales/domain/models/order.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_repository.dart';
 import 'package:suhol_van_sales/presentation/models/added_product_ui_model.dart';
@@ -54,6 +55,8 @@ class CreateCreditOrderScreenController extends GetxController {
   Rx<Product?> selectedProduct = Rx(null);
 
   RxList<Customer> customers = RxList.empty();
+
+  RxList<Order> pickupOrders = RxList.empty();
 
   RxList<LocationWithQuantityUiModel> selectedLocations = RxList.empty();
   RxList<LocationWithQuantityUiModel> removedLocations = RxList.empty();
@@ -128,7 +131,14 @@ class CreateCreditOrderScreenController extends GetxController {
   }
 
   void onClickSendCustomerLocation() {
-    customerLocation?.openView();
+    //customerLocation?.openView();
+    lastPickupOrders("${_selectedCustomer?.id}", loading: (state) {
+      if(state) {
+        AnimatedProgress.showProgressIfNot(msg: "Getting orders");
+      } else {
+        AnimatedProgress.closeProgressIfShowing();
+      }
+    },);
   }
 
   var orderLoading = false.obs;
@@ -647,5 +657,29 @@ class CreateCreditOrderScreenController extends GetxController {
 
   void deleteAddedProduct(AddedProductUiModel request) {
     addedProducts.remove(request);
+  }
+
+  Future<void> lastPickupOrders(String customerID,
+      {void Function(bool state)? loading}) async {
+    loading?.call(true);
+    var response = await _repo.lastPickupOrders(customerID);
+    loading?.call(false);
+    if (response is Success) {
+      if (response.data?.success case true) {
+        var orders = response.data?.data;
+        pickupOrders.value = orders ?? [];
+      } else {
+        Get.showSnackbar(GetSnackBar(
+          message: "${response.data?.message ?? response.message}",
+          duration: const Duration(seconds: 5),
+        ));
+      }
+    } else {
+      Get.showSnackbar(GetSnackBar(
+        message: "${response.data?.message ?? response.message}",
+        duration: const Duration(seconds: 5),
+      ));
+    }
+
   }
 }

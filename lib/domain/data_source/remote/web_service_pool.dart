@@ -7,6 +7,7 @@ import 'package:suhol_van_sales/domain/data_source/remote/login/service/login_ap
 import 'package:suhol_van_sales/domain/data_source/remote/logout/response/sign_out_user_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/logout/service/logout_api.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/last_material_orders_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/service/material_request_api.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/products/response/products_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/products/service/products_api.dart';
@@ -123,6 +124,21 @@ mixin WebServicePool {
             (value) => Success(value),
             onError: (data) =>
                 Error<ProductsResponse>(message: data.toString()))
+        : Error(message: _noConnectivity);
+  }
+
+  Future<RestResponse<LastMaterialOrdersResponse>> lastMaterialOrdersPickups(
+      String customerID) async {
+    if (httpClient.instance == null) {
+      return Error<LastMaterialOrdersResponse>(
+          message: "httpClient.instance is not ready");
+    }
+    return await connectivityService.isConnected()
+        ? MaterialRequestApi(httpClient.instance!)
+            .lastMaterialOrdersPickups(customerID)
+            .then((value) => Success(value),
+                onError: (data) =>
+                    Error<LastMaterialOrdersResponse>(message: data.toString()))
         : Error(message: _noConnectivity);
   }
 }

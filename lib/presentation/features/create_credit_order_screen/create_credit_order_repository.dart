@@ -1,5 +1,6 @@
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/create_material_requisition.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/last_material_orders_response.dart';
 import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
 
@@ -23,4 +24,6 @@ abstract class CreateCreditOrderRepository {
 
   Future<RestResponse<CreateMaterialRequisitionResponse>>
       createRequisitionOrder(MaterialRequisitionRequest request);
+
+  Future<RestResponse<LastMaterialOrdersResponse>> lastPickupOrders(String customerID);
 }
