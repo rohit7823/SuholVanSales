@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/helpers/check_internet.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/customers/response/customers_with_locations_response.dart';
@@ -74,10 +76,13 @@ mixin WebServicePool {
     }
 
     return await connectivityService.isConnected()
-        ? CustomerApi(httpClient.instance!).withLocations().then(
-            (value) => Success(value),
-            onError: (data) =>
-                Error<CustomersWithLocationResponse>(message: data.toString()))
+        ? CustomerApi(httpClient.instance!)
+            .withLocations()
+            .then((value) => Success(value), onError: (data) {
+            log("customers $data");
+            return Error<CustomersWithLocationResponse>(
+                message: data.toString());
+          })
         : Error(message: _noConnectivity);
   }
 
@@ -120,10 +125,12 @@ mixin WebServicePool {
     }
 
     return await connectivityService.isConnected()
-        ? ProductsApi(httpClient.instance!).withPackingAndUnit().then(
-            (value) => Success(value),
-            onError: (data) =>
-                Error<ProductsResponse>(message: data.toString()))
+        ? ProductsApi(httpClient.instance!)
+            .withPackingAndUnit()
+            .then((value) => Success(value), onError: (data) {
+            log("products $data");
+            return Error<ProductsResponse>(message: data.toString());
+          })
         : Error(message: _noConnectivity);
   }
 

@@ -25,34 +25,8 @@ class _CreditSalesOrderState extends State<CreditSalesOrder> {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            sliver: SliverToBoxAdapter(
-              child: ColoredBox(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      InkWell(
-                          onTap: controller.pop,
-                          child: const Icon(
-                            Icons.arrow_back_sharp,
-                            color: Colors.grey,
-                          )),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        "Credit Sales Order",
-                        style: Get.textTheme.titleMedium?.copyWith(
-                            color: Colors.grey, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(vertical: 8),
           ),
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 12),
@@ -85,6 +59,7 @@ class _CreditSalesOrderState extends State<CreditSalesOrder> {
                         color: icon?.color,
                         width: icon?.size,
                         height: icon?.size,
+                        onClick: controller.onClickFeature,
                       );
                     },
                   ).toList(),

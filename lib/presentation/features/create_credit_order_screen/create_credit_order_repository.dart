@@ -7,11 +7,10 @@ import 'package:suhol_van_sales/domain/utils/response.dart';
 import '../../../domain/models/product.dart';
 
 abstract class CreateCreditOrderRepository {
-  final List<Customer> customersCache = [];
-  final List<Product> productsCache = [];
+  /*bool get isInMemoryCustomersAvailable => customersCache.isNotEmpty;
+  bool get isInMemoryProductsAvailable => productsCache.isNotEmpty;*/
 
-  bool get isInMemoryCustomersAvailable => customersCache.isNotEmpty;
-  bool get isInMemoryProductsAvailable => productsCache.isNotEmpty;
+  Future fetchData();
 
   Future<List<Customer>?> findCustomerByName(String query);
 
@@ -25,5 +24,6 @@ abstract class CreateCreditOrderRepository {
   Future<RestResponse<CreateMaterialRequisitionResponse>>
       createRequisitionOrder(MaterialRequisitionRequest request);
 
-  Future<RestResponse<LastMaterialOrdersResponse>> lastPickupOrders(String customerID);
+  Future<RestResponse<LastMaterialOrdersResponse>> lastPickupOrders(
+      String customerID);
 }

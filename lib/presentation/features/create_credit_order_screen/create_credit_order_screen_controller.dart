@@ -1,13 +1,15 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
+import 'package:suhol_van_sales/data/repo_impls/create_credit_order_repository_impl.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/order.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
-import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_repository.dart';
 import 'package:suhol_van_sales/presentation/models/added_product_ui_model.dart';
 import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
@@ -21,7 +23,7 @@ import '../../../domain/models/product.dart';
 import '../../widgets/app_button.dart';
 
 class CreateCreditOrderScreenController extends GetxController {
-  final _repo = Get.find<CreateCreditOrderRepository>();
+  final _repo = Get.find<CreateCreditOrderRepositoryImpl>();
   final _session = Get.find<SessionService>();
 
   var userName = ''.obs;
@@ -75,10 +77,12 @@ class CreateCreditOrderScreenController extends GetxController {
 
   var loadingCustomers = false.obs;
 
+  var userLocationDropdownController =
+      MultiSelectController<LocationWithQuantityUiModel>();
+
   @override
   void onReady() {
     super.onReady();
-
     qty?.addListener(_onQtyChange);
     price?.addListener(_calculatePrice);
 
@@ -453,7 +457,16 @@ class CreateCreditOrderScreenController extends GetxController {
     if (result.name == null) return;
     controller.text = result.name!;
     _selectedCustomer = result;
-    _addLocations(result.locations);
+    //_addLocations(result.locations);
+    if (result.locations != null) {
+      userLocationDropdownController.addItems(result.locations!
+          .map((element) => LocationWithQuantityUiModel(location: element))
+          .toList()
+          .map(
+            (e) => DropdownItem(label: "${e.location?.location}", value: e),
+          )
+          .toList());
+    }
   }
 
   void removeLocation(LocationWithQuantityUiModel? location) {
@@ -731,5 +744,10 @@ class CreateCreditOrderScreenController extends GetxController {
         duration: const Duration(seconds: 5),
       ));
     }
+  }
+
+  void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
+    selectedLocations.value = selectedItems;
+    log("selectedLocations.value ${selectedLocations}");
   }
 }

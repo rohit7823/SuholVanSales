@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/helpers/check_internet.dart';
+import 'package:suhol_van_sales/data/repo_impls/create_credit_order_repository_impl.dart';
 import 'package:suhol_van_sales/domain/di/database_service.dart';
 import 'package:suhol_van_sales/domain/di/preference_service.dart';
 import 'package:suhol_van_sales/domain/di/rest_service.dart';
@@ -22,5 +23,7 @@ class ServiceBindings extends Bindings {
     await Get.putAsync(() async {
       return await RestService().init();
     });
+
+    Get.put(CreateCreditOrderRepositoryImpl(), permanent: true);
   }
 }

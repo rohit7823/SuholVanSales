@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
+import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
@@ -99,220 +102,81 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                               ? Get.height * .02
                               : height * .02,
                         ),
-                        Obx(() => controller.selectedLocations.isNotEmpty ||
-                                controller.removedLocations.isNotEmpty
-                            ? SizedBox(
-                                width: context.width * .95,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          flex: 3,
-                                          child: ObxValue(
-                                              (locations) => SizedBox(
-                                                    height: 35,
-                                                    child: ListView.separated(
-                                                      physics:
-                                                          const BouncingScrollPhysics(),
-                                                      itemCount:
-                                                          locations.length,
-                                                      separatorBuilder:
-                                                          (context, index) =>
-                                                              const SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      itemBuilder:
-                                                          (context, index) =>
-                                                              Chip(
-                                                        label: Text(
-                                                          "${locations[index].location?.location}",
-                                                        ),
-                                                        labelStyle: Get
-                                                            .textTheme.bodySmall
-                                                            ?.copyWith(
-                                                                fontSize: 12,
-                                                                fontFamily: Fonts
-                                                                    .poppinsSemiBold),
-                                                        avatar: const Icon(
-                                                          Icons
-                                                              .location_on_sharp,
-                                                          size: 18,
-                                                          color:
-                                                              Colors.blueAccent,
-                                                        ),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(5),
-                                                        labelPadding:
-                                                            const EdgeInsets
-                                                                .only(right: 5),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8)),
-                                                        deleteIcon: const Icon(
-                                                          Icons.close,
-                                                          size: 18,
-                                                        ),
-                                                        deleteButtonTooltipMessage:
-                                                            "Remove this location",
-                                                        deleteIconColor:
-                                                            Colors.grey,
-                                                        onDeleted: () =>
-                                                            controller
-                                                                .removeLocation(
-                                                                    locations[
-                                                                        index]),
-                                                      ),
-                                                    ).fadedH,
-                                                  ),
-                                              controller.selectedLocations),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            child: ColoredBox(
-                                              color: AppColors
-                                                  .buttonColorAlternate,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5),
-                                                child: InkWell(
-                                                    onTap: controller
-                                                        .onClickSendCustomerLocation,
-                                                    child: const Icon(
-                                                      Icons.arrow_forward,
-                                                      color: Colors.white,
-                                                    )),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    ObxValue(
-                                        (locations) => SizedBox(
-                                              height: 35,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  locations.isEmpty
-                                                      ? Expanded(
-                                                          child: Text(
-                                                          "Removed locations will show here..",
-                                                          style: Get.textTheme
-                                                              .bodySmall
-                                                              ?.copyWith(
-                                                                  fontSize: 10,
-                                                                  fontFamily: Fonts
-                                                                      .poppinsSemiBold),
-                                                        ))
-                                                      : Expanded(
-                                                          child: ListView
-                                                              .separated(
-                                                            physics:
-                                                                const BouncingScrollPhysics(),
-                                                            itemCount: locations
-                                                                .length,
-                                                            separatorBuilder:
-                                                                (context,
-                                                                        index) =>
-                                                                    const SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            scrollDirection:
-                                                                Axis.horizontal,
-                                                            itemBuilder:
-                                                                (context,
-                                                                        index) =>
-                                                                    Chip(
-                                                              label: Text(
-                                                                "${locations[index].location?.location}",
-                                                              ),
-                                                              labelStyle: Get
-                                                                  .textTheme
-                                                                  .bodySmall
-                                                                  ?.copyWith(
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontFamily:
-                                                                          Fonts
-                                                                              .poppinsSemiBold),
-                                                              avatar:
-                                                                  const Icon(
-                                                                Icons
-                                                                    .location_off_sharp,
-                                                                size: 18,
-                                                                color:
-                                                                    Colors.grey,
-                                                              ),
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(5),
-                                                              labelPadding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      right: 5),
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              8)),
-                                                              deleteIcon:
-                                                                  const Icon(
-                                                                Icons.add,
-                                                                size: 18,
-                                                              ),
-                                                              deleteButtonTooltipMessage:
-                                                                  "Add this location",
-                                                              deleteIconColor:
-                                                                  Colors.grey,
-                                                              onDeleted: () =>
-                                                                  controller.reAdd(
-                                                                      locations[
-                                                                          index]),
-                                                              backgroundColor:
-                                                                  Colors
-                                                                      .redAccent
-                                                                      .withAlpha(
-                                                                          30),
-                                                            ),
-                                                          ).fadedH,
-                                                        ),
-                                                  TextButton(
-                                                      onPressed: controller
-                                                          .expandLocations,
-                                                      child: Text(
-                                                        "Expand",
-                                                        style: Get.textTheme
-                                                            .bodyMedium
-                                                            ?.copyWith(
-                                                                color: AppColors
-                                                                    .buttonColorAlternate,
-                                                                fontFamily: Fonts
-                                                                    .dmSansBold),
-                                                      ))
-                                                ],
-                                              ),
-                                            ),
-                                        controller.removedLocations)
-                                  ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Obx(
+                            () => MultiDropdown<LocationWithQuantityUiModel>(
+                              items: [],
+                              controller:
+                                  controller.userLocationDropdownController,
+                              enabled: true,
+                              searchEnabled: false,
+                              chipDecoration: ChipDecoration(
+                                  backgroundColor: Colors.blueAccent,
+                                  wrap:
+                                      controller.selectedLocations.length != 1,
+                                  runSpacing: 2,
+                                  spacing: 10,
+                                  labelStyle: Get.textTheme.bodyMedium
+                                      ?.copyWith(
+                                          fontFamily: Fonts.dmSansBold,
+                                          color: Colors.white)),
+                              fieldDecoration: FieldDecoration(
+                                hintText: 'Location',
+                                hintStyle: Get.textTheme.titleMedium?.copyWith(
+                                    color: Colors.grey.shade400,
+                                    fontFamily: Fonts.dmSansSemiBold),
+                                prefixIcon: const Icon(
+                                  CupertinoIcons.location_fill,
+                                  color: Colors.grey,
                                 ),
-                              )
-                            : const SizedBox.shrink()),
+                                showClearIcon: false,
+                                backgroundColor: Colors.grey.shade200,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: BorderSide(
+                                        color: Colors.grey.shade200)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(
+                                        color: Colors.lightBlueAccent)),
+                              ),
+                              dropdownDecoration: const DropdownDecoration(
+                                marginTop: 2,
+                                maxHeight: 500,
+                                header: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'Select locations from the list',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              dropdownItemDecoration: DropdownItemDecoration(
+                                selectedIcon: const Icon(Icons.check_box,
+                                    color: Colors.green),
+                                disabledIcon: Icon(Icons.lock,
+                                    color: Colors.grey.shade300),
+                              ),
+                              onSelectionChange: controller.onSelectionLocation,
+                              itemBuilder: (item, index, onTap) => ListTile(
+                                onTap: onTap,
+                                style: ListTileStyle.drawer,
+                                minTileHeight: 30,
+                                title: Text(
+                                  item.label,
+                                  style: Get.textTheme.bodyMedium?.copyWith(
+                                      fontFamily: Fonts.dmSansSemiBold,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: isHeightInfinite
                               ? Get.height * .02

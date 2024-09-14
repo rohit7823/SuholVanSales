@@ -31,6 +31,7 @@ dependencies:
   material_tag_editor: ^0.1.2
   rxdart:
   rfw: ^1.0.29
+  multi_dropdown: ^3.0.1
 
 
 dev_dependencies:
