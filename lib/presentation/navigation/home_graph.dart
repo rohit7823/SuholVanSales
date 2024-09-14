@@ -10,6 +10,25 @@ import 'package:suhol_van_sales/presentation/features/dashboard/dashboard_screen
 
 import 'routes.dart';
 
+class HomeNavObserver extends NavigatorObserver {
+  static Rx<String?> currentRoute = Rx(null);
+
+  static bool get condition =>
+      currentRoute.value == Routes.creditSalesOrder.name ||
+      currentRoute.value == Routes.createCashOrder.name;
+
+  @override
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    currentRoute.value = route.settings.name;
+  }
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    currentRoute.value =
+        currentRoute.value == route.settings.name ? null : currentRoute.value;
+  }
+}
+
 class HomeGraph {
   HomeGraph._();
 

@@ -7,21 +7,34 @@ import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 class UserInfo extends StatelessWidget {
   const UserInfo(
-      {super.key, required this.userName, required this.shopName, this.back});
+      {super.key,
+      required this.userName,
+      required this.shopName,
+      this.back,
+      this.menu});
 
   final RxString userName;
   final RxString shopName;
   final void Function()? back;
+  final void Function()? menu;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        back != null
+        back != null && menu == null
             ? InkWell(
                 onTap: back,
                 child: const Icon(
                   Icons.arrow_back_sharp,
+                  color: Colors.grey,
+                )).paddings(right: 8)
+            : const SizedBox.shrink(),
+        menu != null && back == null
+            ? InkWell(
+                onTap: menu,
+                child: const Icon(
+                  Icons.menu,
                   color: Colors.grey,
                 )).paddings(right: 8)
             : const SizedBox.shrink(),

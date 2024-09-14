@@ -466,6 +466,7 @@ class CreateCreditOrderScreenController extends GetxController {
             (e) => DropdownItem(label: "${e.location?.location}", value: e),
           )
           .toList());
+      userLocationDropdownController.openDropdown();
     }
   }
 

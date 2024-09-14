@@ -1,15 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
-import 'package:suhol_van_sales/data/di/data_binding.dart';
 import 'package:suhol_van_sales/domain/di/preference_service.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/signup_repository.dart';
 import 'package:suhol_van_sales/presentation/navigation/home_graph.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/bottom_menus.dart';
 
-import '../../../domain/di/rest_service.dart';
 import '../../../domain/di/session_service.dart';
 
 class HomeScreenController extends GetxController {
@@ -115,4 +112,6 @@ class HomeScreenController extends GetxController {
       debugPrint("onLogout ${object.toString()}");
     });
   }
+
+  void onDrawerClicked() {}
 }

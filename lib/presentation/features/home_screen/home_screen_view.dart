@@ -24,13 +24,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Get.theme.colorScheme.primary,
       appBar: MyAppBar(
-        leading: const Icon(
-          Icons.menu_rounded,
-          color: Colors.black,
+        leadingWidth: 10,
+        title: Obx(
+          () => UserInfo(
+            userName: controller.userName,
+            shopName: controller.shopName,
+            back: HomeNavObserver.condition
+                ? () => controller.backPress(true)
+                : null,
+            menu:
+                !HomeNavObserver.condition ? controller.onDrawerClicked : null,
+          ),
         ),
-        leadingWidth: Get.width * .15,
-        title: UserInfo(
-            userName: controller.userName, shopName: controller.shopName),
         actions: [
           Obx(() => !controller.isLoggedIn.value
               ? Padding(
@@ -56,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
           onGenerateRoute: HomeGraph.instance.routes,
           onPopPage: controller.onChildPop,
           reportsRouteUpdateToEngine: true,
+          observers: [HomeNavObserver()],
         ),
       ),
       bottomNavigationBar: Obx(

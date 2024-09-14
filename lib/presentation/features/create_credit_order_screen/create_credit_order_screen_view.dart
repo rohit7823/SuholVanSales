@@ -174,6 +174,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                       overflow: TextOverflow.ellipsis),
                                 ),
                               ),
+                              singleSelect: true,
                             ),
                           ),
                         ),
