@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
+import 'package:suhol_van_sales/app/theme/images.dart';
 import 'package:suhol_van_sales/data/repo_impls/create_credit_order_repository_impl.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
@@ -16,6 +19,9 @@ import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/animated_progress.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
+import 'package:suhol_van_sales/printer/bluetooh_utills.dart';
+import 'package:suhol_van_sales/printer/device_info_with_state.dart';
+import 'package:suhol_van_sales/printer/printer.dart';
 
 import '../../../app/theme/fonts.dart';
 import '../../../domain/models/customer.dart';
@@ -25,6 +31,7 @@ import '../../widgets/app_button.dart';
 class CreateCreditOrderScreenController extends GetxController {
   final _repo = Get.find<CreateCreditOrderRepositoryImpl>();
   final _session = Get.find<SessionService>();
+  final _printer = GenericPrinter();
 
   var userName = ''.obs;
 
@@ -65,6 +72,12 @@ class CreateCreditOrderScreenController extends GetxController {
 
   RxList<AddedProductUiModel> addedProducts = RxList.empty();
 
+  RxList<BluetoothInfo> pairedDevices = RxList.empty();
+
+  Rx<BluetoothInfo?> selectedDevice = Rx(null);
+
+  Worker? _pairedDevicesWorker;
+
   Worker? _pickupOrderWorker;
 
   var items = '0'.obs;
@@ -85,7 +98,7 @@ class CreateCreditOrderScreenController extends GetxController {
     super.onReady();
     qty?.addListener(_onQtyChange);
     price?.addListener(_calculatePrice);
-
+    _printer.setup();
     userName.value = _session.userDetails?.name ?? "Welcome";
 
     _pickupOrderWorker = ever(
@@ -133,6 +146,92 @@ class CreateCreditOrderScreenController extends GetxController {
     );
   }
 
+  void print() async {
+    var isGranted = await BluetoohUtills.instance.isPermissionGranted;
+    if (isGranted) {
+      var isBluetoothConnected =
+          await BluetoohUtills.instance.isBluetoothEnabled;
+      debugPrint("isBluetoothConnected $isBluetoothConnected");
+      if (isBluetoothConnected) {
+        List<BluetoothInfo> pairedDevices = [];
+        AnimatedProgress.showProgressIfNot(msg: "Getting Devices...");
+        try {
+          pairedDevices = await BluetoohUtills.instance.pairedBluetooth();
+          debugPrint("pairedDevices.value ${pairedDevices.toString()}");
+        } on Exception catch (ex) {
+          Get.showSnackbar(GetSnackBar(
+            message: ex.toString(),
+            duration: const Duration(seconds: 5),
+          ));
+        } finally {
+          AnimatedProgress.closeProgressIfShowing();
+        }
+        var data = pairedDevices
+            .map(
+              (e) => DeviceInfoWithState(data: e),
+            )
+            .toList();
+        showAvailableDevices(data);
+      } else {
+        Get.showSnackbar(const GetSnackBar(
+          message: "Need to connect with bluetooth first.",
+          duration: Duration(seconds: 5),
+        ));
+      }
+    } else {
+      Get.defaultDialog(
+        content: Text(
+          "Need to give bluetooth permission manually for accessing available devices",
+          style: Get.textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
+        textCancel: "No",
+        textConfirm: "Ok",
+        onCancel: () {},
+        onConfirm: () async {
+          if (Get.overlayContext != null) {
+            Navigator.of(Get.overlayContext!).pop();
+          }
+          await BluetoohUtills.instance.openBluetoothSettings().then(
+                (value) => print(),
+              );
+        },
+      );
+    }
+  }
+
+  void onDeviceConnection(BluetoothInfo device,
+      {void Function(bool state)? currentState}) async {
+    if (selectedDevice.value == device) {
+      selectedDevice.value = null;
+    } else {
+      selectedDevice.value = device;
+    }
+
+    if (device.macAdress.isNotEmpty) {
+      AnimatedProgress.showProgressIfNot(msg: "Connecting...");
+      var isConnected = await BluetoohUtills.instance
+          .connect(printerAddress: device.macAdress);
+      AnimatedProgress.closeProgressIfShowing();
+      if (isConnected) {
+        Get.showSnackbar(GetSnackBar(
+          message: "Connection Successful with ${device.name}",
+          duration: const Duration(seconds: 5),
+        ));
+        currentState?.call(true);
+        var imageData = await rootBundle.load(Images.invoiceTemplate);
+        var progress = await _printer.printImageIfConnected(imageData);
+        currentState?.call(false);
+      } else {
+        Get.showSnackbar(GetSnackBar(
+          message:
+              "Unable to connect with ${device.name.isNotEmpty ? device.name : device.macAdress}, Try again.",
+          duration: const Duration(seconds: 5),
+        ));
+      }
+    }
+  }
+
   void _calculatePrice() {
     var q = double.tryParse(qty?.text ?? '0.00');
     var p = double.tryParse(price?.text ?? '0.00');
@@ -162,6 +261,8 @@ class CreateCreditOrderScreenController extends GetxController {
     price?.dispose();
     remarks?.dispose();
     _pickupOrderWorker?.dispose();
+    _pairedDevicesWorker?.dispose();
+    _pairedDevicesWorker = null;
     _pickupOrderWorker = null;
     customerName = null;
     customerLocation = null;
@@ -750,5 +851,71 @@ class CreateCreditOrderScreenController extends GetxController {
   void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
     selectedLocations.value = selectedItems;
     log("selectedLocations.value ${selectedLocations}");
+  }
+
+  void showAvailableDevices(List<DeviceInfoWithState> pairedDevices) {
+    if (pairedDevices.isNotEmpty) {
+      Get.dialog(AlertDialog(
+        title: const Text("Paired Devices"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 12),
+        content: Obx(
+          () => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: pairedDevices
+                .map(
+                  (device) => InkWell(
+                    onTap: () => onDeviceConnection(
+                      device.data!,
+                      currentState: (state) {
+                        if (device.data == selectedDevice.value) {
+                          device.updateState(state);
+                        }
+                      },
+                    ),
+                    child: Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      color: device.data == selectedDevice.value
+                          ? AppColors.buttonColorAlternate
+                          : Colors.white,
+                      elevation: 5,
+                      child: SizedBox(
+                        width: Get.width * .85,
+                        height: 45,
+                        child: Center(
+                          child: Text(
+                            "${device.data?.name} ${device.state.value ? 'Printing Sample' : ''}",
+                            style: Get.textTheme.labelLarge?.copyWith(
+                                fontFamily: device.data == selectedDevice.value
+                                    ? Fonts.dmSansBold
+                                    : Fonts.dmSansSemiBold,
+                                color: device.data == selectedDevice.value
+                                    ? Colors.white
+                                    : Colors.black),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                if (Get.overlayContext != null) {
+                  Navigator.of(Get.overlayContext!).pop();
+                }
+              },
+              child: Text(
+                "CLOSE",
+                style: Get.textTheme.bodyMedium?.copyWith(
+                    fontFamily: Fonts.poppinsBold, color: Colors.redAccent),
+              )),
+        ],
+        actionsAlignment: MainAxisAlignment.center,
+      ));
+    }
   }
 }
