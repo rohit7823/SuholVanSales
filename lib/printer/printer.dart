@@ -9,7 +9,7 @@ class GenericPrinter {
 
   Future<void> setup() async {
     _profile = await CapabilityProfile.load();
-    _generator = Generator(PaperSize.mm80, _profile!);
+    _generator = Generator(PaperSize.mm58, _profile!);
   }
 
   Future<List<int>?> printImageIfConnected(ByteData imageData) async {
@@ -22,7 +22,7 @@ class GenericPrinter {
 
     if (image != null) {
       _generator?.beep(n: 1);
-      return _generator?.image(image);
+      return _generator?.imageRaster(image, imageFn: PosImageFn.graphics);
     }
     return null;
   }
