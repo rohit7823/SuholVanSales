@@ -33,9 +33,8 @@ dependencies:
   rfw: ^1.0.29
   multi_dropdown: ^3.0.1
   print_bluetooth_thermal: ^1.1.3
-  esc_pos_utils_plus: ^2.0.4
   app_settings: ^5.1.1
-
+  esc_pos_bluetooth_updated: ^0.5.0
 
 
 dev_dependencies:
