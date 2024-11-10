@@ -33,13 +33,15 @@ class DashboardController extends GetxController {
   void onTapServiceOne(ServiceOne service) {
     switch (service) {
       case ServiceOne.cashSales:
-        Get.toNamed(Routes.cashSalesOrder.name,
-            id: HomeGraph.instance.navKey);
+        Get.toNamed(Routes.cashSalesOrder.name, id: HomeGraph.instance.navKey);
+        break;
       case ServiceOne.creditSales:
         Get.toNamed(Routes.creditSalesOrder.name,
             id: HomeGraph.instance.navKey);
+        break;
       case ServiceOne.preOrder:
-      // TODO: Handle this case.
+        Get.toNamed(Routes.preorder.name, id: HomeGraph.instance.navKey);
+        break;
       case ServiceOne.remotePrint:
       // TODO: Handle this case.
       case ServiceOne.stocks:
@@ -49,7 +51,8 @@ class DashboardController extends GetxController {
       case ServiceOne.purchaseOrder:
       // TODO: Handle this case.
       case ServiceOne.myOrder:
-      // TODO: Handle this case.
+        Get.toNamed(Routes.mrorder.name, id: HomeGraph.instance.navKey);
+        break;
       case ServiceOne.allService:
       // TODO: Handle this case.
     }

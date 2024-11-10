@@ -10,11 +10,13 @@ extension DateTimeUtils on DateTime {
     );
     return fomatter.format(date);
   }
+
+  String get stdDate => DateFormat('dd/MM/yyyy').format(this);
 }
 
 extension StringUtils on String {
   Color get toColor {
-    if(isBlank == true) {
+    if (isBlank == true) {
       return Colors.black;
     }
 

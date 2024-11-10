@@ -322,6 +322,20 @@ class CreateCreditOrderScreenController extends GetxController {
   var addItemLoading = false.obs;
 
   void addIdWiseQuantities() {
+    if (_selectedCustomer == null ||
+        selectedLocations.every((element) => element.location?.id == null) ||
+        selectedProduct.value == null ||
+        selectedUnit == null ||
+        selectedPacking == null ||
+        vehicleNumber?.text.isBlank == true ||
+        mobileNumber?.text.isNum == false) {
+      Get.showSnackbar(const GetSnackBar(
+          message: "Important values are not available",
+          duration: Duration(seconds: 5),
+          progressIndicatorValueColor: AlwaysStoppedAnimation(Colors.white)));
+      return;
+    }
+
     Get.dialog(Dialog(
       insetPadding: const EdgeInsets.all(8),
       alignment: Alignment.center,
@@ -391,6 +405,7 @@ class CreateCreditOrderScreenController extends GetxController {
             AppButton(
               onClick: () {
                 Navigator.of(Get.context!).pop();
+                onAddItem();
               },
               btnColor: AppColors.buttonColor,
               border: RoundedRectangleBorder(
@@ -464,25 +479,6 @@ class CreateCreditOrderScreenController extends GetxController {
   }
 
   Future<void> onAddItem() async {
-    if (_selectedCustomer == null ||
-        selectedLocations.every((element) => element.location?.id == null) ||
-        selectedProduct.value == null ||
-        selectedUnit == null ||
-        selectedPacking == null ||
-        vehicleNumber?.text.isBlank == true ||
-        mobileNumber?.text.isNum == false) {
-      Get.showSnackbar(const GetSnackBar(
-          message: "Important values are not available",
-          duration: Duration(seconds: 5),
-          progressIndicatorValueColor: AlwaysStoppedAnimation(Colors.white)));
-      return;
-    }
-
-    var isValid = selectedLocations.every((element) => element.isValid);
-    if (isValid) {
-      addIdWiseQuantities();
-      return;
-    }
     addItemLoading.value = true;
     var request = MaterialRequisitionRequest(
         customerId: _selectedCustomer?.id,

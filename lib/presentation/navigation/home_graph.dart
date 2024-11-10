@@ -7,6 +7,10 @@ import 'package:suhol_van_sales/presentation/features/credit_sales_order/credit_
 import 'package:suhol_van_sales/presentation/features/credit_sales_order/credit_sales_order_view.dart';
 import 'package:suhol_van_sales/presentation/features/dashboard/dashboard_binding.dart';
 import 'package:suhol_van_sales/presentation/features/dashboard/dashboard_screen.dart';
+import 'package:suhol_van_sales/presentation/features/mr_order_screen/mr_order_screen_binding.dart';
+import 'package:suhol_van_sales/presentation/features/mr_order_screen/mr_order_screen_view.dart';
+import 'package:suhol_van_sales/presentation/features/preorder_screen/preorder_screen_binding.dart';
+import 'package:suhol_van_sales/presentation/features/preorder_screen/preorder_screen_view.dart';
 
 import 'routes.dart';
 
@@ -63,6 +67,22 @@ class HomeGraph {
         return _generatePageRoute(
           page: const CashSalesOrder(),
           binding: CashSalesOrderBinding(),
+          settings: settings,
+          maintainState: false,
+          routeName: name,
+        );
+      case Routes.preorder:
+        return _generatePageRoute(
+          page: const PreorderScreen(),
+          binding: PreorderScreenBinding(),
+          settings: settings,
+          maintainState: false,
+          routeName: name,
+        );
+      case Routes.mrorder:
+        return _generatePageRoute(
+          page: const MrOrderScreen(),
+          binding: MrOrderScreenBinding(),
           settings: settings,
           maintainState: false,
           routeName: name,

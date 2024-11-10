@@ -9,21 +9,20 @@ import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.dart';
+import 'package:suhol_van_sales/presentation/widgets/my_app_bar.dart';
+import 'package:suhol_van_sales/presentation/widgets/user_info.dart';
 
-import '../../widgets/my_app_bar.dart';
-import '../../widgets/user_info.dart';
-import 'create_credit_order_screen_controller.dart';
+import 'create_preorder_screen_controller.dart';
 
-class CreateCreditOrderScreen extends StatefulWidget {
-  const CreateCreditOrderScreen({super.key});
+class CreatePreorderScreen extends StatefulWidget {
+  const CreatePreorderScreen({super.key});
 
   @override
-  State<CreateCreditOrderScreen> createState() =>
-      _CreateCreditOrderScreenState();
+  State<CreatePreorderScreen> createState() => _CreatePreorderScreenState();
 }
 
-class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
-  final controller = Get.find<CreateCreditOrderScreenController>();
+class _CreatePreorderScreenState extends State<CreatePreorderScreen> {
+  final controller = Get.find<CreatePreorderScreenController>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +36,6 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
           shopName: controller.shopName,
           back: controller.pop,
         ),
-        actions: [
-          IconButton(
-            onPressed: controller.print,
-            icon: const Icon(
-              Icons.print,
-              color: AppColors.buttonColorAlternate,
-              size: 45,
-            ),
-          ).paddings(right: 10)
-        ],
       ),
       body: SafeArea(
           child: SingleChildScrollView(
@@ -116,7 +105,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Obx(
                             () => MultiDropdown<LocationWithQuantityUiModel>(
-                              items: [],
+                              items: const [],
                               controller:
                                   controller.userLocationDropdownController,
                               enabled: true,
@@ -200,31 +189,103 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                             children: [
                               AppTextField(
                                 width: Get.width * .45,
-                                hint: "Vehicle Number",
-                                controller: controller.vehicleNumber!,
+                                hint: "Delivery Date",
+                                isReadOnly: true,
+                                controller: controller.deliveryDateUi,
                                 capitalization: TextCapitalization.words,
-                                inputAction: TextInputAction.next,
-                                keyboardType: TextInputType.streetAddress,
+                                inputAction: TextInputAction.done,
+                                keyboardType: TextInputType.datetime,
                                 prefixIcon: const Icon(
-                                  Icons.numbers,
+                                  Icons.date_range_sharp,
                                   color: Colors.grey,
                                 ),
+                                onTap: (focusNode) async {
+                                  var date = await showDatePicker(
+                                    context: context,
+                                    builder: (context, child) => Theme(
+                                      data: Theme.of(context).copyWith(
+                                        colorScheme: const ColorScheme.light(
+                                          primary: Colors.yellow,
+                                          // header background color
+                                          onPrimary: Colors.black,
+                                          // header text color
+                                          onSurface:
+                                              Colors.green, // body text color
+                                        ),
+                                        textButtonTheme: TextButtonThemeData(
+                                          style: TextButton.styleFrom(
+                                            foregroundColor:
+                                                Colors.red, // button text color
+                                          ),
+                                        ),
+                                      ),
+                                      child: child!,
+                                    ),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime(2050),
+                                    initialDate: DateTime.now(),
+                                    currentDate: DateTime.now(),
+                                    helpText: "Please select delivery date",
+                                    cancelText: "Close",
+                                    confirmText: "Select",
+                                  );
+                                  debugPrint(
+                                      "SELECTED DATE -- ${date?.toIso8601String()}");
+                                  controller.insertDeliveryDate(date);
+                                },
                               ),
                               SizedBox(
                                 width: Get.width * .03,
                               ),
                               AppTextField(
-                                hint: "Mobile Number",
+                                hint: "Delivery Time",
                                 width: Get.width * .45,
-                                controller: controller.mobileNumber!,
+                                isReadOnly: true,
+                                controller: controller.deliveryTimeUi,
                                 capitalization: TextCapitalization.words,
-                                inputAction: TextInputAction.next,
-                                keyboardType: TextInputType.visiblePassword,
+                                inputAction: TextInputAction.done,
+                                keyboardType: TextInputType.datetime,
                                 prefixIcon: const Icon(
-                                  Icons.phone_android,
+                                  Icons.timer,
                                   color: Colors.grey,
                                 ),
                                 autoFocus: false,
+                                onTap: (focusNode) async {
+                                  var time = await showTimePicker(
+                                    context: context,
+                                    builder: (context, child) => Theme(
+                                      data: Theme.of(context).copyWith(
+                                        colorScheme: const ColorScheme.light(
+                                          primary: Colors.yellow,
+                                          // header background color
+                                          onPrimary: Colors.black,
+                                          // header text color
+                                          onSurface:
+                                              Colors.green, // body text color
+                                        ),
+                                        textButtonTheme: TextButtonThemeData(
+                                          style: TextButton.styleFrom(
+                                            foregroundColor:
+                                                Colors.red, // button text color
+                                          ),
+                                        ),
+                                      ),
+                                      child: MediaQuery(
+                                          data: Get.mediaQuery.copyWith(
+                                            alwaysUse24HourFormat: true,
+                                          ),
+                                          child: child!),
+                                    ),
+                                    initialTime: TimeOfDay.now(),
+                                    helpText: "Please select delivery time",
+                                    cancelText: "Close",
+                                    confirmText: "Select",
+                                    orientation: Orientation.portrait,
+                                  );
+                                  debugPrint(
+                                      "SELECTED TIME -- ${time.toString()}");
+                                  controller.insertDeliveryTime(time);
+                                },
                               )
                             ],
                           ),
@@ -498,6 +559,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                             ),
                             const Divider(),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Expanded(
                                   child: Column(
@@ -561,7 +623,29 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Delivery",
+                                        style: Get.textTheme.bodySmall
+                                            ?.copyWith(
+                                                fontFamily: Fonts.poppinsBold),
+                                      ),
+                                      Text(
+                                        "${request.deliveryDate?.stdDate} | ${request.deliveryTime?.hour}:${request.deliveryTime?.minute}",
+                                        style: Get.textTheme.bodyMedium
+                                            ?.copyWith(
+                                                fontFamily: Fonts.poppinsBold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -578,7 +662,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
 
   @override
   void dispose() {
-    Get.delete<CreateCreditOrderScreenController>();
+    Get.delete<CreatePreorderScreenController>();
     super.dispose();
   }
 }

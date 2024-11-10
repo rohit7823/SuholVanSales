@@ -4,6 +4,10 @@ import 'package:suhol_van_sales/presentation/features/create_cash_order_screen/c
 import 'package:suhol_van_sales/presentation/features/create_cash_order_screen/create_cash_order_screen_view.dart';
 import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_screen_binding.dart';
 import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_screen_view.dart';
+import 'package:suhol_van_sales/presentation/features/create_mr_order_screen/create_mr_order_screen_binding.dart';
+import 'package:suhol_van_sales/presentation/features/create_mr_order_screen/create_mr_order_screen_view.dart';
+import 'package:suhol_van_sales/presentation/features/create_preorder_screen/create_preorder_screen_binding.dart';
+import 'package:suhol_van_sales/presentation/features/create_preorder_screen/create_preorder_screen_view.dart';
 import 'package:suhol_van_sales/presentation/features/home_screen/home_screen_binding.dart';
 import 'package:suhol_van_sales/presentation/features/home_screen/home_screen_view.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/auth_middleware.dart';
@@ -53,19 +57,38 @@ class MainGraph {
           participatesInRootNavigator: true,
         ),
         GetPage<Routes>(
-          name: Routes.signup.name,
-          page: () => const SignupScreen(),
-          binding: SignupScreenBinding(),
-          maintainState: false,
-          popGesture: false,
-          preventDuplicates: true,
-          fullscreenDialog: true,
-          transition: Transition.fade,
-          alignment: Alignment.center,
-          participatesInRootNavigator: true,
-          middlewares: [
-            AuthMiddleware()
-          ]
-        ),
+            name: Routes.signup.name,
+            page: () => const SignupScreen(),
+            binding: SignupScreenBinding(),
+            maintainState: false,
+            popGesture: false,
+            preventDuplicates: true,
+            fullscreenDialog: true,
+            transition: Transition.fade,
+            alignment: Alignment.center,
+            participatesInRootNavigator: true,
+            middlewares: [AuthMiddleware()]),
+        GetPage<Routes>(
+            name: Routes.createPreorder.name,
+            page: () => const CreatePreorderScreen(),
+            binding: CreatePreorderScreenBinding(),
+            maintainState: true,
+            popGesture: false,
+            fullscreenDialog: true,
+            preventDuplicates: true,
+            transition: Transition.topLevel,
+            transitionDuration: const Duration(milliseconds: 600),
+            participatesInRootNavigator: true),
+        GetPage<Routes>(
+            name: Routes.createMrorder.name,
+            page: () => const CreateMrOrderScreen(),
+            binding: CreateMrOrderScreenBinding(),
+            maintainState: true,
+            popGesture: false,
+            fullscreenDialog: true,
+            preventDuplicates: true,
+            transition: Transition.topLevel,
+            transitionDuration: const Duration(milliseconds: 600),
+            participatesInRootNavigator: true),
       ];
 }
