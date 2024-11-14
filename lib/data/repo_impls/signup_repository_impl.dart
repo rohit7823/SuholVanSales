@@ -31,6 +31,7 @@ class SignupRepositoryImpl extends SignupRepository
     var response = await login(data);
     if (response is Success) {
       httpClient.addAuthHeader(response.data?.token);
+      debugPrint("response.data?.token ${response.data?.token}");
       _session.registerAppToken(response.data?.token);
       return response.data;
     } else if (response is Error) {

@@ -3,8 +3,6 @@ import 'package:suhol_van_sales/domain/models/order.dart';
 
 
 class LastMaterialOrdersResponse {
-
-
   final bool? success;
   final String? message;
   final List<Order>? data;

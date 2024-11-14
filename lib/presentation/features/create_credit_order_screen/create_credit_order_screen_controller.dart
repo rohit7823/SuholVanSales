@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:esc_pos_bluetooth_updated/esc_pos_bluetooth_updated.dart';
+import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -9,7 +9,7 @@ import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/images.dart';
-import 'package:suhol_van_sales/data/repo_impls/create_credit_order_repository_impl.dart';
+import 'package:suhol_van_sales/data/repo_impls/create_order_repository_impl.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/order.dart';
@@ -29,7 +29,7 @@ import '../../../printer/bluetooh_utills.dart';
 import '../../widgets/app_button.dart';
 
 class CreateCreditOrderScreenController extends GetxController {
-  final _repo = Get.find<CreateCreditOrderRepositoryImpl>();
+  final _repo = Get.find<CreateOrderRepositoryImpl>();
   final _session = Get.find<SessionService>();
   final _printer = GenericPrinter();
 

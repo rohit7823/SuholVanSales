@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,7 @@ class StaticProducts {
           .loadString(StaticData.productsWithPackingAndUnitJSON);
       var productsJson = json.decode(jsonStr) as ProductsJson;
       if (productsJson.isNotEmpty) {
+        log("productsJson $productsJson");
         return await compute(deserializeProductsResponse, productsJson);
       }
       return null;

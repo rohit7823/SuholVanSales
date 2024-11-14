@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:suhol_van_sales/data/repo_impls/create_credit_order_repository_impl.dart';
+import 'package:suhol_van_sales/data/repo_impls/create_order_repository_impl.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/user_onboarding.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/signup_repository.dart';
@@ -11,7 +11,7 @@ import 'package:suhol_van_sales/presentation/utils/login_intent.dart';
 class SignupScreenController extends GetxController {
   final _repo = Get.find<SignupRepository>();
 
-  final _globalRepo = Get.find<CreateCreditOrderRepositoryImpl>();
+  final _globalRepo = Get.find<CreateOrderRepositoryImpl>();
 
   final _session = Get.find<SessionService>();
 

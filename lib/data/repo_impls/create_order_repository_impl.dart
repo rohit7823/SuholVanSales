@@ -6,14 +6,15 @@ import 'package:suhol_van_sales/domain/data_source/remote/customers/response/cus
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/create_material_requisition.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/last_material_orders_response.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/pre_order/response/pre_orders_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/products/response/products_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/web_service_pool.dart';
 import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/models/product.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
-import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_repository.dart';
+import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_order_repository.dart';
 
-class CreateCreditOrderRepositoryImpl extends CreateCreditOrderRepository
+class CreateOrderRepositoryImpl extends CreateOrderRepository
     with ProductDao, WebServicePool {
   static List<Customer> customersCache = [];
   static List<Product> productsCache = [];
@@ -189,4 +190,8 @@ class CreateCreditOrderRepositoryImpl extends CreateCreditOrderRepository
       cache.addAll(values);
     }
   }
+
+  @override
+  Future<RestResponse<PreOrdersResponse>> preOrders(String customerID) =>
+      fetchPreOrders(customerID);
 }

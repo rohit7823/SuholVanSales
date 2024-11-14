@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
-import 'package:suhol_van_sales/data/repo_impls/create_credit_order_repository_impl.dart';
+import 'package:suhol_van_sales/data/repo_impls/create_order_repository_impl.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/models/product.dart';
@@ -14,7 +14,7 @@ import '../../models/added_product_ui_model.dart';
 
 class CreateMrOrderScreenController extends GetxController {
   final _session = Get.find<SessionService>();
-  final _repo = Get.find<CreateCreditOrderRepositoryImpl>();
+  final _repo = Get.find<CreateOrderRepositoryImpl>();
   var userName = ''.obs;
   var shopName = ''.obs;
 

@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
-import 'package:suhol_van_sales/data/repo_impls/create_credit_order_repository_impl.dart';
+import 'package:suhol_van_sales/data/repo_impls/create_order_repository_impl.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/models/product.dart';
@@ -19,7 +19,7 @@ import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 
 class CreatePreorderScreenController extends GetxController {
-  final _repo = Get.find<CreateCreditOrderRepositoryImpl>();
+  final _repo = Get.find<CreateOrderRepositoryImpl>();
   final _session = Get.find<SessionService>();
   var userName = ''.obs;
 

@@ -1,5 +1,5 @@
-import 'package:esc_pos_bluetooth_updated/esc_pos_bluetooth_updated.dart';
-import 'package:esc_pos_utils_updated/esc_pos_utils_updated.dart';
+import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart';
 

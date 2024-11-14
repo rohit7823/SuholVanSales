@@ -1,12 +1,13 @@
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/create_material_requisition.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/last_material_orders_response.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/pre_order/response/pre_orders_response.dart';
 import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
 
 import '../../../domain/models/product.dart';
 
-abstract class CreateCreditOrderRepository {
+abstract class CreateOrderRepository {
   /*bool get isInMemoryCustomersAvailable => customersCache.isNotEmpty;
   bool get isInMemoryProductsAvailable => productsCache.isNotEmpty;*/
 
@@ -26,4 +27,7 @@ abstract class CreateCreditOrderRepository {
 
   Future<RestResponse<LastMaterialOrdersResponse>> lastPickupOrders(
       String customerID);
+
+
+  Future<RestResponse<PreOrdersResponse>> preOrders(String customerID);
 }
