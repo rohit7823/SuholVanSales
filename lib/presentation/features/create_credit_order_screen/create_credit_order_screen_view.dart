@@ -116,7 +116,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Obx(
                             () => MultiDropdown<LocationWithQuantityUiModel>(
-                              items: [],
+                              items: const [],
                               controller:
                                   controller.userLocationDropdownController,
                               enabled: true,

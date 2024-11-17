@@ -7,8 +7,12 @@ part 'material_requisition_request.g.dart';
 class MaterialRequisitionRequest {
   @JsonKey(name: "customer_id")
   final int? customerId;
+  @JsonKey(name: "division_id")
+  final int? divisionId;
   @JsonKey(name: "delivery_date")
   final DateTime? deliveryDate;
+  @JsonKey(name: "delivery_time")
+  final String? deliveryTime;
   @JsonKey(name: "vehicle_no")
   final String? vehicleNo;
   @JsonKey(name: "product_id")
@@ -24,7 +28,9 @@ class MaterialRequisitionRequest {
 
   const MaterialRequisitionRequest(
       {this.customerId,
+      this.divisionId,
       this.deliveryDate,
+      this.deliveryTime,
       this.vehicleNo,
       this.productId,
       this.unitOfMeasurementId,
@@ -34,7 +40,9 @@ class MaterialRequisitionRequest {
 
   MaterialRequisitionRequest copyWith(
       {int? customerId,
+      int? divisionId,
       DateTime? deliveryDate,
+      String? deliveryTime,
       String? vehicleNo,
       int? productId,
       int? unitOfMeasurementId,
@@ -43,6 +51,7 @@ class MaterialRequisitionRequest {
       List<LocationIDWithQuantity>? locationIdsWithQuantity}) {
     return MaterialRequisitionRequest(
         customerId: customerId ?? this.customerId,
+        divisionId: divisionId ?? this.divisionId,
         deliveryDate: deliveryDate ?? this.deliveryDate,
         vehicleNo: vehicleNo ?? this.vehicleNo,
         productId: productId ?? this.productId,
@@ -50,7 +59,8 @@ class MaterialRequisitionRequest {
         packingId: packingId ?? this.packingId,
         remarks: remarks ?? this.remarks,
         locationIdsWithQuantity:
-            locationIdsWithQuantity ?? this.locationIdsWithQuantity);
+            locationIdsWithQuantity ?? this.locationIdsWithQuantity,
+        deliveryTime: deliveryTime ?? this.deliveryTime);
   }
 
   factory MaterialRequisitionRequest.fromJson(Map<String, dynamic> json) =>
@@ -60,6 +70,7 @@ class MaterialRequisitionRequest {
     final formatter = DateFormat('yyyy-MM-dd');
     return <String, dynamic>{
       'customer_id': customerId,
+      'division_id': divisionId,
       'delivery_date': formatter.format(deliveryDate ?? DateTime.now()),
       'vehicle_no': vehicleNo,
       'product_id': productId,
@@ -70,13 +81,15 @@ class MaterialRequisitionRequest {
           ?.map(
             (e) => e.toJson(),
           )
-          .toList()
+          .toList(),
+      'delivery_time': deliveryTime
     };
   }
 
   bool get isValid =>
       customerId != null &&
       deliveryDate != null &&
+      deliveryTime != null &&
       vehicleNo != null &&
       productId != null &&
       unitOfMeasurementId != null &&

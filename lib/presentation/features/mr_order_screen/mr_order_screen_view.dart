@@ -59,7 +59,7 @@ class _MrOrderScreenState extends State<MrOrderScreen> {
                         color: icon?.color,
                         width: icon?.size,
                         height: icon?.size,
-                        //onClick: controller.onClickFeature,
+                        onClick: controller.onClickFeature,
                       );
                     },
                   ).toList(),

@@ -425,7 +425,7 @@ class _CustomAutocompleteOptionState<T extends Object>
           if (!isDisfunct) {
             Scrollable.ensureVisible(context, alignment: 0.5);
           }
-        } on Exception catch (ex) {}
+        } on Exception {}
       });
     }
   }

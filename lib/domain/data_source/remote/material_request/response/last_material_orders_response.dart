@@ -1,4 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:suhol_van_sales/domain/models/order.dart';
 
 

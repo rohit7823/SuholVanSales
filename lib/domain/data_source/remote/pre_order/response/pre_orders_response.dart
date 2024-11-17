@@ -1,12 +1,9 @@
-
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'pre_orders_response.g.dart';
 
 @JsonSerializable()
 class PreOrdersResponse {
-
   final bool? success;
   final String? message;
   final List<dynamic>? data;
@@ -18,7 +15,7 @@ class PreOrdersResponse {
   });
 
   factory PreOrdersResponse.fromJson(Map<String, dynamic> json) =>
-      _$PreOrderResponseFromJson(json);
+      _$PreOrdersResponseFromJson(json);
 
-  	Map<String, dynamic> toJson() => _$PreOrderResponseToJson(this);
+  Map<String, dynamic> toJson() => _$PreOrdersResponseToJson(this);
 }

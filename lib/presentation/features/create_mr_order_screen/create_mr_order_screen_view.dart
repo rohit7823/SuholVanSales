@@ -61,7 +61,7 @@ class _CreateMrOrderScreenState extends State<CreateMrOrderScreen> {
                           suggestionsBuilder: controller.finddivisionName,
                           onSelectResult: controller.onSelectdivisionName,
                           suggestionDisplayOption: (customer) =>
-                              customer.name ?? "",
+                              customer.divisionName ?? "",
                           prefixIcon: const Icon(
                             Icons.person_2,
                             color: Colors.grey,

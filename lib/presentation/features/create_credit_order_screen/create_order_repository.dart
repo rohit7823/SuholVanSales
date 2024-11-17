@@ -1,3 +1,4 @@
+import 'package:suhol_van_sales/domain/data_source/remote/division_management/response/division_list_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/create_material_requisition.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/response/last_material_orders_response.dart';
@@ -13,11 +14,15 @@ abstract class CreateOrderRepository {
 
   Future fetchData();
 
-  Future<List<Customer>?> findCustomerByName(String query);
+  Future<List<Customer>?> findCustomerByName(
+    String query,
+  );
 
   Future<List<Customer>?> findCustomerByLocation(String query);
 
   Future<List<Product>?> findProductByName(String query);
+
+  Future<List<Customer>?> findCustomersForPreorder(String query);
 
   Future<RestResponse<CreateMaterialRequisitionResponse>> createRequisition(
       MaterialRequisitionRequest request);
@@ -28,6 +33,9 @@ abstract class CreateOrderRepository {
   Future<RestResponse<LastMaterialOrdersResponse>> lastPickupOrders(
       String customerID);
 
-
   Future<RestResponse<PreOrdersResponse>> preOrders(String customerID);
+
+  Future<RestResponse<DivisionListResponse>> divisionList(String query);
+
+  Future<List<Division>?> findDivisions(String query);
 }

@@ -867,7 +867,7 @@ class CreateCreditOrderScreenController extends GetxController {
 
   void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
     selectedLocations.value = selectedItems;
-    log("selectedLocations.value ${selectedLocations}");
+    log("selectedLocations.value $selectedLocations");
   }
 
   void _onStartScanning(bool event) {
@@ -902,7 +902,7 @@ class CreateCreditOrderScreenController extends GetxController {
                                       height: 45,
                                       child: Center(
                                         child: Text(
-                                          "${device?.name}",
+                                          "${device.name}",
                                           style: Get
                                               .textTheme.labelLarge
                                               ?.copyWith(

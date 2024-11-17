@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:suhol_van_sales/data/repo_impls/create_order_repository_impl.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/division_management/response/division_list_response.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
-import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/models/product.dart';
+import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
 import 'package:suhol_van_sales/presentation/widgets/animated_progress.dart';
 
@@ -14,7 +16,9 @@ import '../../models/added_product_ui_model.dart';
 
 class CreateMrOrderScreenController extends GetxController {
   final _session = Get.find<SessionService>();
+
   final _repo = Get.find<CreateOrderRepositoryImpl>();
+
   var userName = ''.obs;
   var shopName = ''.obs;
 
@@ -43,7 +47,7 @@ class CreateMrOrderScreenController extends GetxController {
 
   SearchController? productName = SearchController();
 
-  Customer? _selecteddivisionName;
+  Division? _selecteddivisionName;
 
   var orderLoading = false.obs;
   var addItemLoading = false.obs;
@@ -121,34 +125,24 @@ class CreateMrOrderScreenController extends GetxController {
     selectedUnit = result;
   }
 
-  FutureOr<Iterable<Customer>> finddivisionName(
+  FutureOr<Iterable<Division>> finddivisionName(
       SearchController searchController) async {
     if (searchController.text.isBlank == true) {
       return [];
     }
 
     AnimatedProgress.showProgressIfNot();
-    var values = await _repo.findCustomerByName(searchController.text);
-    AnimatedProgress.closeProgressIfShowing();
+    var values = await _repo.findDivisions(searchController.text);
 
+    AnimatedProgress.closeProgressIfShowing();
     return values ?? [];
   }
 
-  void onSelectdivisionName(Customer result, SearchController controller) {
-    if (result.name == null) return;
-    controller.text = result.name!;
+  void onSelectdivisionName(Division result, SearchController controller) {
+    if (result.divisionName == null) return;
+    controller.text = result.divisionName!;
     _selecteddivisionName = result;
     //_addLocations(result.locations);
-    if (result.locations != null) {
-      userLocationDropdownController.addItems(result.locations!
-          .map((element) => LocationWithQuantityUiModel(location: element))
-          .toList()
-          .map(
-            (e) => DropdownItem(label: "${e.location?.location}", value: e),
-          )
-          .toList());
-      userLocationDropdownController.openDropdown();
-    }
   }
 
   void onClickSenddivisionName() {
@@ -164,16 +158,49 @@ class CreateMrOrderScreenController extends GetxController {
       return;
     }
 
+    var request = MaterialRequisitionRequest(
+        divisionId: _selecteddivisionName?.id,
+        productId: selectedProduct.value?.id,
+        packingId: selectedPacking?.id,
+        deliveryDate: DateTime.now(),
+        remarks: remarks?.text,
+        unitOfMeasurementId: selectedUnit?.id);
+
     orderLoading.value = true;
-
-    await Future.delayed(const Duration(seconds: 4));
-
+    var result = await _repo.createRequisition(request);
     orderLoading.value = false;
+    if (result is Success) {
+      switch (result.data?.success) {
+        case true:
+          await Future.delayed(const Duration(milliseconds: 500)).then(
+            (value) {
+              Get.back();
+            },
+          );
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message}",
+            duration: const Duration(seconds: 5),
+          ));
 
-    Get.showSnackbar(const GetSnackBar(
-      message: "Order submitted successfully",
-      duration: Duration(seconds: 3),
-    ));
+          break;
+        case false:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message ?? result.data?.error}",
+            duration: const Duration(seconds: 5),
+          ));
+        case null:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message ?? result.data?.error}",
+            duration: const Duration(seconds: 5),
+          ));
+          break;
+      }
+    } else if (result is Error) {
+      Get.showSnackbar(GetSnackBar(
+        message: "${result.message}",
+        duration: const Duration(seconds: 5),
+      ));
+    }
   }
 
   Future<void> onAddItem() async {
@@ -186,20 +213,51 @@ class CreateMrOrderScreenController extends GetxController {
     }
 
     addItemLoading.value = true;
-
-    await Future.delayed(const Duration(seconds: 4));
-
+    var request = MaterialRequisitionRequest(
+        divisionId: _selecteddivisionName?.id,
+        productId: selectedProduct.value?.id,
+        packingId: selectedPacking?.id,
+        deliveryDate: DateTime.now(),
+        remarks: remarks?.text,
+        unitOfMeasurementId: selectedUnit?.id);
+    var result = await _repo.createRequisitionOrder(request);
     addItemLoading.value = false;
-
-    Get.showSnackbar(const GetSnackBar(
-      message: "Order created successfully",
-      duration: Duration(seconds: 3),
-    ));
-
-    addedProducts.add(AddedProductUiModel(
-        productName: selectedProduct.value?.name,
-        unit: selectedUnit?.name?.name,
-        packing: selectedPacking?.packing));
+    if (result is Success) {
+      switch (result.data?.success) {
+        case true:
+          /*await Future.delayed(const Duration(milliseconds: 500)).then(
+            (value) {
+              Get.back();
+            },
+          );*/
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message}",
+            duration: const Duration(seconds: 5),
+          ));
+          addedProducts.add(AddedProductUiModel(
+              productName: selectedProduct.value?.name,
+              unit: selectedUnit?.name?.name,
+              packing: selectedPacking?.packing));
+          //_clearValues();
+          break;
+        case false:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message ?? result.data?.error}",
+            duration: const Duration(seconds: 5),
+          ));
+        case null:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message ?? result.data?.error}",
+            duration: const Duration(seconds: 5),
+          ));
+          break;
+      }
+    } else if (result is Error) {
+      Get.showSnackbar(GetSnackBar(
+        message: "${result.message}",
+        duration: const Duration(seconds: 5),
+      ));
+    }
   }
 
   void deleteAddedProduct(AddedProductUiModel request) {

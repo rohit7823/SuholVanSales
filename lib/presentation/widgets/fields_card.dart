@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
-import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 
 class FieldsCard extends StatelessWidget {
   const FieldsCard(

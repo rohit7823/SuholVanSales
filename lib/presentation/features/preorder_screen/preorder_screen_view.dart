@@ -59,7 +59,7 @@ class _PreorderScreenState extends State<PreorderScreen> {
                         color: icon?.color,
                         width: icon?.size,
                         height: icon?.size,
-                        //onClick: controller.onClickFeature,
+                        onClick: controller.onClickFeature,
                       );
                     },
                   ).toList(),

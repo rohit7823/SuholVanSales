@@ -18,6 +18,9 @@ import 'package:suhol_van_sales/presentation/widgets/animated_progress.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 
+import '../../../domain/data_source/remote/material_request/request/material_requisition_request.dart';
+import '../../../domain/utils/response.dart';
+
 class CreatePreorderScreenController extends GetxController {
   final _repo = Get.find<CreateOrderRepositoryImpl>();
   final _session = Get.find<SessionService>();
@@ -73,7 +76,7 @@ class CreatePreorderScreenController extends GetxController {
     }
 
     AnimatedProgress.showProgressIfNot();
-    var values = await _repo.findCustomerByName(searchController.text);
+    var values = await _repo.findCustomersForPreorder(searchController.text);
     AnimatedProgress.closeProgressIfShowing();
 
     return values ?? [];
@@ -102,7 +105,7 @@ class CreatePreorderScreenController extends GetxController {
 
   void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
     selectedLocations.value = selectedItems;
-    log("selectedLocations.value ${selectedLocations}");
+    log("selectedLocations.value $selectedLocations");
   }
 
   FutureOr<Iterable<Product>> findProductName(
@@ -175,7 +178,7 @@ class CreatePreorderScreenController extends GetxController {
   }
 
   Future<void> onSubmitOrder() async {
-    if (_deliveryDate != null) {
+    if (_deliveryDate == null) {
       Get.showSnackbar(const GetSnackBar(
         message: "Delivery date is not given",
         duration: Duration(seconds: 5),
@@ -183,7 +186,7 @@ class CreatePreorderScreenController extends GetxController {
       return;
     }
 
-    if (_deliveryTime != null) {
+    if (_deliveryTime == null) {
       Get.showSnackbar(const GetSnackBar(
         message: "Delivery time is not given",
         duration: Duration(seconds: 5),
@@ -191,16 +194,49 @@ class CreatePreorderScreenController extends GetxController {
       return;
     }
 
+    var request = MaterialRequisitionRequest(
+        customerId: _selectedCustomer?.id,
+        productId: selectedProduct.value?.id,
+        packingId: selectedPacking?.id,
+        deliveryTime: deliveryTimeUi?.text,
+        deliveryDate: _deliveryDate,
+        remarks: remarks?.text,
+        unitOfMeasurementId: selectedUnit?.id);
+
     orderLoading.value = true;
-
-    await Future.delayed(const Duration(seconds: 4));
-
+    var result = await _repo.createRequisition(request);
     orderLoading.value = false;
 
-    Get.showSnackbar(const GetSnackBar(
-      message: "Order submitted successfully",
-      duration: Duration(seconds: 3),
-    ));
+    if (result is Success) {
+      switch (result.data?.success) {
+        case true:
+          await Future.delayed(const Duration(milliseconds: 500)).then(
+            (value) => Get.back(),
+          );
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message}",
+            duration: const Duration(seconds: 5),
+          ));
+
+          break;
+        case false:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message ?? result.data?.error}",
+            duration: const Duration(seconds: 5),
+          ));
+        case null:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message ?? result.data?.error}",
+            duration: const Duration(seconds: 5),
+          ));
+          break;
+      }
+    } else if (result is Error) {
+      Get.showSnackbar(GetSnackBar(
+        message: "${result.message}",
+        duration: const Duration(seconds: 5),
+      ));
+    }
   }
 
   @override
@@ -218,27 +254,71 @@ class CreatePreorderScreenController extends GetxController {
 
   Future<void> onAddItem() async {
     addItemLoading.value = true;
-
-    await Future.delayed(const Duration(seconds: 4));
-
+    var request = MaterialRequisitionRequest(
+        customerId: _selectedCustomer?.id,
+        productId: selectedProduct.value?.id,
+        packingId: selectedPacking?.id,
+        deliveryDate: _deliveryDate,
+        remarks: remarks?.text,
+        unitOfMeasurementId: selectedUnit?.id,
+        locationIdsWithQuantity: selectedLocations
+            .map(
+              (element) => LocationIDWithQuantity(
+                  id: element.location?.id,
+                  qty: int.tryParse(element.qty.text)),
+            )
+            .toList());
+    var result = await _repo.createRequisitionOrder(request);
     addItemLoading.value = false;
+
+    if (result is Success) {
+      switch (result.data?.success) {
+        case true:
+          /*await Future.delayed(const Duration(milliseconds: 500)).then(
+            (value) {
+              Get.back();
+            },
+          );*/
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message}",
+            duration: const Duration(seconds: 5),
+          ));
+          addedProducts.add(AddedProductUiModel(
+              productName: selectedProduct.value?.name,
+              unit: selectedUnit?.name?.name,
+              packing: selectedPacking?.packing,
+              quantity: selectedLocations.fold(
+                0,
+                (previousValue, element) =>
+                    previousValue! + (int.tryParse(element.qty.text) ?? 0),
+              ),
+              deliveryTime: _deliveryTime,
+              deliveryDate: _deliveryDate));
+          //_clearValues();
+          break;
+        case false:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message ?? result.data?.error}",
+            duration: const Duration(seconds: 5),
+          ));
+        case null:
+          Get.showSnackbar(GetSnackBar(
+            message: "${result.data?.message ?? result.data?.error}",
+            duration: const Duration(seconds: 5),
+          ));
+          break;
+      }
+    } else if (result is Error) {
+      Get.showSnackbar(GetSnackBar(
+        message: "${result.message}",
+        duration: const Duration(seconds: 5),
+      ));
+    }
 
     Get.showSnackbar(const GetSnackBar(
       message: "Order created successfully",
       duration: Duration(seconds: 3),
     ));
-
-    addedProducts.add(AddedProductUiModel(
-        productName: selectedProduct.value?.name,
-        unit: selectedUnit?.name?.name,
-        packing: selectedPacking?.packing,
-        quantity: selectedLocations.fold(
-          0,
-          (previousValue, element) =>
-              previousValue! + (int.tryParse(element.qty.text) ?? 0),
-        ),
-        deliveryTime: _deliveryTime,
-        deliveryDate: _deliveryDate));
   }
 
   void insertDeliveryDate(DateTime? date) {

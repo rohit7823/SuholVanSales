@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_api.dart';
+part of 'division_list_api.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'login_api.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
 
-class _LoginApi implements LoginApi {
-  _LoginApi(
+class _DivisionListApi implements DivisionListApi {
+  _DivisionListApi(
     this._dio, {
     this.baseUrl,
     this.errorLogger,
@@ -22,20 +22,23 @@ class _LoginApi implements LoginApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<UserOnboardingResponse> signIn(UserOnboarding data) async {
+  Future<DivisionListResponse> divisionList(
+    String query,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'query': query,
+    };
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(data.toJson());
-    final _options = _setStreamType<UserOnboardingResponse>(Options(
-      method: 'POST',
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<DivisionListResponse>(Options(
+      method: 'GET',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/login',
+          '/material-requests/division-list',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -45,9 +48,9 @@ class _LoginApi implements LoginApi {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late UserOnboardingResponse _value;
+    late DivisionListResponse _value;
     try {
-      _value = UserOnboardingResponse.fromJson(_result.data!);
+      _value = await compute(deserializeDivisionListResponse, _result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

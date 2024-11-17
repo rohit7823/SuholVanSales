@@ -10,9 +10,11 @@ MaterialRequisitionRequest _$MaterialRequisitionRequestFromJson(
         Map<String, dynamic> json) =>
     MaterialRequisitionRequest(
       customerId: (json['customer_id'] as num?)?.toInt(),
+      divisionId: (json['division_id'] as num?)?.toInt(),
       deliveryDate: json['delivery_date'] == null
           ? null
           : DateTime.parse(json['delivery_date'] as String),
+      deliveryTime: json['delivery_time'] as String?,
       vehicleNo: json['vehicle_no'] as String?,
       productId: (json['product_id'] as num?)?.toInt(),
       unitOfMeasurementId: (json['unit_of_measurement_id'] as num?)?.toInt(),
@@ -29,6 +31,7 @@ Map<String, dynamic> _$MaterialRequisitionRequestToJson(
     <String, dynamic>{
       'customer_id': instance.customerId,
       'delivery_date': instance.deliveryDate?.toIso8601String(),
+      'delivery_time': instance.deliveryTime,
       'vehicle_no': instance.vehicleNo,
       'product_id': instance.productId,
       'unit_of_measurement_id': instance.unitOfMeasurementId,

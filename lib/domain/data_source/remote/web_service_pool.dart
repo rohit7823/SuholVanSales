@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/helpers/check_internet.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/customers/response/customers_with_locations_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/customers/service/customer_api.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/division_management/response/division_list_response.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/division_management/service/division_list_api.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/login/response/user_onboarding_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/login/service/login_api.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/logout/response/sign_out_user_response.dart';
@@ -21,6 +24,7 @@ import 'package:suhol_van_sales/domain/di/rest_service.dart';
 import 'package:suhol_van_sales/domain/models/user_onboarding.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
 
+import 'customers/response/customers_for_preorder.dart';
 import 'material_request/response/create_material_requisition.dart';
 
 mixin WebServicePool {
@@ -114,9 +118,14 @@ mixin WebServicePool {
     return await connectivityService.isConnected()
         ? MaterialRequestApi(httpClient.instance!)
             .createRequisitionOrder(request)
-            .then((value) => Success(value),
-                onError: (data) => Error<CustomersWithLocationResponse>(
-                    message: data.toString()))
+            .onError(
+            (error, stackTrace) {
+              debugPrint(
+                  "request ${request.toString()} response ${stackTrace.toString()}");
+              return Future.error(Error<CreateMaterialRequisitionResponse>(
+                  message: error.toString()));
+            },
+          ).then((value) => Success(value))
         : Error(message: _noConnectivity);
   }
 
@@ -151,7 +160,6 @@ mixin WebServicePool {
         : Error(message: _noConnectivity);
   }
 
-
   Future<RestResponse<PreOrdersResponse>> fetchPreOrders(
       String customerID) async {
     if (httpClient.instance == null) {
@@ -159,11 +167,43 @@ mixin WebServicePool {
           message: "httpClient.instance is not ready");
     }
     return await connectivityService.isConnected()
-        ? PreOrderListApi(httpClient.instance!)
-        .preOrderLists()
-        .then((value) => Success(value),
-        onError: (data) =>
-            Error<PreOrdersResponse>(message: data.toString()))
+        ? PreOrderListApi(httpClient.instance!).preOrderLists().then(
+            (value) => Success(value),
+            onError: (data) =>
+                Error<PreOrdersResponse>(message: data.toString()))
+        : Error(message: _noConnectivity);
+  }
+
+  Future<RestResponse<CustomersForPreorder>> customersPreorder() async {
+    if (httpClient.instance == null) {
+      return Error<CustomersForPreorder>(
+          message: "httpClient.instance is not ready");
+    }
+    return await connectivityService.isConnected()
+        ? CustomerApi(httpClient.instance!)
+            .customersInsPreorder("1", "1")
+            .then((value) => Success(value), onError: (data) {
+            log("customers in preorder $data");
+            return Error<CustomersForPreorder>(message: data.toString());
+          })
+        : Error(message: _noConnectivity);
+  }
+
+  Future<RestResponse<DivisionListResponse>> divisionListApi(
+      String query) async {
+    if (httpClient.instance == null) {
+      return Error<DivisionListResponse>(
+          message: "httpClient.instance is not ready");
+    }
+    return await connectivityService.isConnected()
+        ? DivisionListApi(httpClient.instance!).divisionList(query).then(
+            (value) {
+            log("DIVISION LIST RESPONSE ${value.toString()}");
+            return Success(value);
+          }, onError: (data) {
+            log("DIVISION LIST ERROR $data");
+            return Error<DivisionListResponse>(message: data.toString());
+          })
         : Error(message: _noConnectivity);
   }
 }

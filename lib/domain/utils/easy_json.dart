@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class EasyJson<M> {
   Map<String?, dynamic> _serializedJson;
@@ -43,7 +40,7 @@ class EasyJson<M> {
 
         return logic(tmp);
       }
-    } on TypeError catch (e) {
+    } on TypeError {
       //debugPrint("type-error ${e.stackTrace}");
       //logic(null);
     } catch (e) {
@@ -68,7 +65,7 @@ class EasyJson<M> {
               (value) => bool.tryParse("$value"),
         );
         if (value != null) {
-          _model = ifBoolean.call(value, _model!);
+          _model = ifBoolean.call(value, _model as M);
         }
       }
 
@@ -78,7 +75,7 @@ class EasyJson<M> {
               (value) => int.tryParse("$value"),
         );
         if (value1 != null) {
-          _model = ifInt.call(value1, _model!);
+          _model = ifInt.call(value1, _model as M);
         }
       }
 
@@ -88,7 +85,7 @@ class EasyJson<M> {
               (value) => double.tryParse("$value"),
         );
         if (value2 != null) {
-          _model = ifDouble.call(value2, _model!);
+          _model = ifDouble.call(value2, _model as M);
         }
       }
 
@@ -98,7 +95,7 @@ class EasyJson<M> {
           return value;
         });
         if (value3 != null) {
-          _model = ifList.call(value3, _model!);
+          _model = ifList.call(value3, _model as M);
         }
       }
 
@@ -107,14 +104,14 @@ class EasyJson<M> {
           return value;
         });
         if (value4 != null) {
-          _model = ifMap.call(value4, _model!);
+          _model = ifMap.call(value4, _model as M);
         }
       }
 
       if (ifString != null) {
         var value5 = _getValue<String>(path, (value) => value);
         if (value5 != null) {
-          _model = ifString.call(value5, _model!);
+          _model = ifString.call(value5, _model as M);
         }
       }
     } catch (e) {

@@ -7,7 +7,7 @@ class MySearchController {
   static String clearPredictions = "CLEAR";
 
   //Function(String)? callback;
-  StreamController<String> _inputsController = StreamController();
+  final StreamController<String> _inputsController = StreamController();
 
   StreamSubscription<String>? listen(void Function(String)? onData,
           {Duration duration = const Duration(milliseconds: 600)}) =>

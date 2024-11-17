@@ -1,5 +1,4 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:suhol_van_sales/domain/data_source/local/products/entities/unit_element_db.dart';
 
 
 @Entity()
@@ -19,9 +18,9 @@ class UnitPivotDB {
 
   Map<String, dynamic> toMap() {
     return {
-      'dbId': this.dbId,
-      'productId': this.productId,
-      'unitOfMeasurementId': this.unitOfMeasurementId,
+      'dbId': dbId,
+      'productId': productId,
+      'unitOfMeasurementId': unitOfMeasurementId,
     };
   }
 

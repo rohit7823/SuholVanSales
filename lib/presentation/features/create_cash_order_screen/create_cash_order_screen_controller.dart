@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:suhol_van_sales/domain/data_source/local/customers/database/dao/customer_dao.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/domain/models/customer.dart';
 import 'package:suhol_van_sales/domain/models/product.dart';

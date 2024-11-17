@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:suhol_van_sales/domain/di/session_service.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 class FeatureComponent extends StatelessWidget {

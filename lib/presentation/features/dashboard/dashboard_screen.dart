@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/images.dart';
-import 'package:suhol_van_sales/objectbox.g.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/utils/features.dart';
 import 'package:suhol_van_sales/presentation/utils/service_one.dart';

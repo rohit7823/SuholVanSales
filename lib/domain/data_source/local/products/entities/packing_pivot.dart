@@ -19,9 +19,9 @@ class PackingPivotDB {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': this.id,
-      'productId': this.productId,
-      'packingId': this.packingId,
+      'id': id,
+      'productId': productId,
+      'packingId': packingId,
     };
   }
 

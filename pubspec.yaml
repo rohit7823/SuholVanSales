@@ -36,6 +36,10 @@ dependencies:
   esc_pos_bluetooth: ^0.4.1
 
 
+  path: any
+  collection: any
+  esc_pos_utils: any
+  image: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
