@@ -12,6 +12,7 @@ import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.d
 import 'package:suhol_van_sales/presentation/widgets/my_app_bar.dart';
 import 'package:suhol_van_sales/presentation/widgets/user_info.dart';
 
+import '../../utils/number_text_input_formatter.dart';
 import 'create_preorder_screen_controller.dart';
 
 class CreatePreorderScreen extends StatefulWidget {
@@ -413,11 +414,14 @@ class _CreatePreorderScreenState extends State<CreatePreorderScreen> {
                                   hint: "Price",
                                   controller: controller.price!,
                                   inputAction: TextInputAction.next,
-                                  keyboardType: TextInputType.visiblePassword,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true, signed: true),
                                   prefixIcon: const Icon(
                                     Icons.price_change,
                                     color: Colors.grey,
                                   ),
+                                  inputFormatters: [NumberTextInputFormatter()],
                                 ),
                               ),
                               const SizedBox(width: 12),

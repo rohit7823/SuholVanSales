@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
+import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/my_app_bar.dart';
 import 'package:suhol_van_sales/presentation/widgets/user_info.dart';
@@ -199,11 +200,13 @@ class _CreateMrOrderScreenState extends State<CreateMrOrderScreen> {
                           hint: "Price",
                           controller: controller.price!,
                           inputAction: TextInputAction.next,
-                          keyboardType: TextInputType.visiblePassword,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true, signed: true),
                           prefixIcon: const Icon(
                             Icons.price_change,
                             color: Colors.grey,
                           ),
+                          inputFormatters: [NumberTextInputFormatter()],
                         ),
                       ),
                       const SizedBox(width: 12),

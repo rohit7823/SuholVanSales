@@ -6,6 +6,7 @@ import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
 import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
+import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.dart';
@@ -352,11 +353,14 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                   hint: "Price",
                                   controller: controller.price!,
                                   inputAction: TextInputAction.next,
-                                  keyboardType: TextInputType.visiblePassword,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true, signed: true),
                                   prefixIcon: const Icon(
                                     Icons.price_change,
                                     color: Colors.grey,
                                   ),
+                                  inputFormatters: [NumberTextInputFormatter()],
                                 ),
                               ),
                               const SizedBox(width: 12),
