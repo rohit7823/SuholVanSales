@@ -27,7 +27,7 @@ class _DivisionListApi implements DivisionListApi {
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'query': query,
+      r'division_name': query,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;

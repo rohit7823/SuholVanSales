@@ -2,7 +2,6 @@ class Images {
   Images._();
 
   static const _path = "assets/images";
-
   static const menu = "$_path/menu.png";
   static const user = "$_path/user.png";
   static const home = "$_path/home.png";

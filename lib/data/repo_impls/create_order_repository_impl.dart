@@ -193,7 +193,7 @@ class CreateOrderRepositoryImpl extends CreateOrderRepository
         if (value is Success) {
           return value.data?.data;
         } else if (value is Error) {
-          debugPrint("PRODUCTS ERROR ${value.message}");
+          log("PRODUCTS ERROR ${value.message}");
           return value.message;
         }
       }, onError: (error) => null);

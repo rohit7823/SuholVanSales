@@ -198,10 +198,11 @@ class CreatePreorderScreenController extends GetxController {
         customerId: _selectedCustomer?.id,
         productId: selectedProduct.value?.id,
         packingId: selectedPacking?.id,
-        deliveryTime: deliveryTimeUi?.text,
+        deliveryTime: _deliveryTime,
         deliveryDate: _deliveryDate,
         remarks: remarks?.text,
-        unitOfMeasurementId: selectedUnit?.id);
+        unitOfMeasurementId: selectedUnit?.id,
+        quantity: int.tryParse("${qty?.text}"));
 
     orderLoading.value = true;
     var result = await _repo.createRequisition(request);
@@ -259,6 +260,7 @@ class CreatePreorderScreenController extends GetxController {
         productId: selectedProduct.value?.id,
         packingId: selectedPacking?.id,
         deliveryDate: _deliveryDate,
+        deliveryTime: _deliveryTime,
         remarks: remarks?.text,
         unitOfMeasurementId: selectedUnit?.id,
         locationIdsWithQuantity: selectedLocations
@@ -267,7 +269,8 @@ class CreatePreorderScreenController extends GetxController {
                   id: element.location?.id,
                   qty: int.tryParse(element.qty.text)),
             )
-            .toList());
+            .toList(),
+        quantity: int.tryParse("${qty?.text}"));
     var result = await _repo.createRequisitionOrder(request);
     addItemLoading.value = false;
 
@@ -315,10 +318,10 @@ class CreatePreorderScreenController extends GetxController {
       ));
     }
 
-    Get.showSnackbar(const GetSnackBar(
+    /* Get.showSnackbar(const GetSnackBar(
       message: "Order created successfully",
       duration: Duration(seconds: 3),
-    ));
+    ));*/
   }
 
   void insertDeliveryDate(DateTime? date) {

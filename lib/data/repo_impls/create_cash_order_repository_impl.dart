@@ -90,4 +90,18 @@ class CreateCashOrderRepositoryImpl extends CreateCashOrderRepository
     }
     return null;
   }
+
+  @override
+  Future<CreateMaterialRequisitionResponse?> createMaterialRequestOrder(
+      MaterialRequisitionRequest request) async {
+    debugPrint("clicked!!");
+    var result = await createMaterialReq(request);
+    debugPrint("response ${result.toString()}");
+    if (result is Success) {
+      return result.data;
+    } else if (result is Error) {
+      return null;
+    }
+    return null;
+  }
 }

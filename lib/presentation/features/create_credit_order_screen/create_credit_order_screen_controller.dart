@@ -433,13 +433,15 @@ class CreateCreditOrderScreenController extends GetxController {
     }
 
     var request = MaterialRequisitionRequest(
-        customerId: _selectedCustomer?.id,
-        productId: selectedProduct.value?.id,
-        packingId: selectedPacking?.id,
-        vehicleNo: vehicleNumber?.text,
-        deliveryDate: DateTime.now(),
-        remarks: remarks?.text,
-        unitOfMeasurementId: selectedUnit?.id);
+      customerId: _selectedCustomer?.id,
+      productId: selectedProduct.value?.id,
+      packingId: selectedPacking?.id,
+      vehicleNo: vehicleNumber?.text,
+      deliveryDate: DateTime.now(),
+      remarks: remarks?.text,
+      unitOfMeasurementId: selectedUnit?.id,
+      quantity: int.tryParse("${qty?.text}"),
+    );
 
     orderLoading.value = true;
     var result = await _repo.createRequisition(request);
@@ -488,6 +490,7 @@ class CreateCreditOrderScreenController extends GetxController {
         deliveryDate: DateTime.now(),
         remarks: remarks?.text,
         unitOfMeasurementId: selectedUnit?.id,
+        quantity: int.tryParse("${qty?.text}"),
         locationIdsWithQuantity: selectedLocations
             .map(
               (element) => LocationIDWithQuantity(

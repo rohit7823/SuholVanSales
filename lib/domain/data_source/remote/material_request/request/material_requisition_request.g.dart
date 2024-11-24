@@ -6,26 +6,6 @@ part of 'material_requisition_request.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-MaterialRequisitionRequest _$MaterialRequisitionRequestFromJson(
-        Map<String, dynamic> json) =>
-    MaterialRequisitionRequest(
-      customerId: (json['customer_id'] as num?)?.toInt(),
-      divisionId: (json['division_id'] as num?)?.toInt(),
-      deliveryDate: json['delivery_date'] == null
-          ? null
-          : DateTime.parse(json['delivery_date'] as String),
-      deliveryTime: json['delivery_time'] as String?,
-      vehicleNo: json['vehicle_no'] as String?,
-      productId: (json['product_id'] as num?)?.toInt(),
-      unitOfMeasurementId: (json['unit_of_measurement_id'] as num?)?.toInt(),
-      packingId: (json['packing_id'] as num?)?.toInt(),
-      remarks: json['remarks'] as String?,
-      locationIdsWithQuantity: (json['parent_master_id_list'] as List<dynamic>?)
-          ?.map(
-              (e) => LocationIDWithQuantity.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
 Map<String, dynamic> _$MaterialRequisitionRequestToJson(
         MaterialRequisitionRequest instance) =>
     <String, dynamic>{

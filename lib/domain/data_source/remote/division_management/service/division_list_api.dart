@@ -10,5 +10,5 @@ abstract class DivisionListApi {
   factory DivisionListApi(Dio dio, {String? baseUrl}) = _DivisionListApi;
 
   @GET("/material-requests/division-list")
-  Future<DivisionListResponse> divisionList(@Query("query") String query);
+  Future<DivisionListResponse> divisionList(@Query("division_name") String query);
 }

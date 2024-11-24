@@ -100,8 +100,26 @@ mixin WebServicePool {
     }
 
     return await connectivityService.isConnected()
-        ? MaterialRequestApi(httpClient.instance!)
+        ? MaterialRequestApi(httpClient.instance!,
+                errorLogger: httpClient.logger)
             .createRequisition(request)
+            .then((value) => Success(value),
+                onError: (data) => Error<CustomersWithLocationResponse>(
+                    message: data.toString()))
+        : Error(message: _noConnectivity);
+  }
+
+  Future<RestResponse<CreateMaterialRequisitionResponse>> createMaterialReq(
+      MaterialRequisitionRequest request) async {
+    if (httpClient.instance == null) {
+      return Error<CreateMaterialRequisitionResponse>(
+          message: "httpClient.instance is not ready");
+    }
+
+    return await connectivityService.isConnected()
+        ? MaterialRequestApi(httpClient.instance!,
+                errorLogger: httpClient.logger)
+            .createMrOrder(request)
             .then((value) => Success(value),
                 onError: (data) => Error<CustomersWithLocationResponse>(
                     message: data.toString()))
@@ -116,7 +134,8 @@ mixin WebServicePool {
     }
 
     return await connectivityService.isConnected()
-        ? MaterialRequestApi(httpClient.instance!)
+        ? MaterialRequestApi(httpClient.instance!,
+                errorLogger: httpClient.logger)
             .createRequisitionOrder(request)
             .onError(
             (error, stackTrace) {

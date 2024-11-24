@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:suhol_van_sales/domain/utils/easy_json.dart';
 
 part 'create_material_requisition.g.dart';
 
@@ -13,18 +14,32 @@ class CreateMaterialRequisitionResponse {
   @JsonKey(name: "error")
   final String? error;
 
-  CreateMaterialRequisitionResponse({
-    this.success,
-    this.message,
-    this.data,
-    this.error
-  });
+  CreateMaterialRequisitionResponse(
+      {this.success, this.message, this.data, this.error});
 
+  factory CreateMaterialRequisitionResponse.fromJson(
+      Map<String, dynamic> json) {
+    return EasyJson(CreateMaterialRequisitionResponse(), json)
+        .retrieve(
+          'success',
+          ifBoolean: (value, model) => model.copyWith(success: value),
+        )
+        .retrieve(
+          'message',
+          ifString: (value, model) => model.copyWith(message: value),
+        )
+        .retrieve(
+          'data',
+          ifList: (value, model) => model.copyWith(
+              data: value.map((e) => e as Map<String, dynamic>).toList()),
+          ifMap: (value, model) =>
+              model.copyWith(data: [value as Map<String, dynamic>]),
+        )
+        .done();
+  }
 
-
-  factory CreateMaterialRequisitionResponse.fromJson(Map<String, dynamic> json) => _$CreateMaterialRequisitionResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CreateMaterialRequisitionResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$CreateMaterialRequisitionResponseToJson(this);
 
   CreateMaterialRequisitionResponse copyWith({
     bool? success,

@@ -164,10 +164,11 @@ class CreateMrOrderScreenController extends GetxController {
         packingId: selectedPacking?.id,
         deliveryDate: DateTime.now(),
         remarks: remarks?.text,
-        unitOfMeasurementId: selectedUnit?.id);
+        unitOfMeasurementId: selectedUnit?.id,
+        quantity: int.tryParse("${qty?.text}"));
 
     orderLoading.value = true;
-    var result = await _repo.createRequisition(request);
+    var result = await _repo.createMaterialReq(request);
     orderLoading.value = false;
     if (result is Success) {
       switch (result.data?.success) {
@@ -213,14 +214,16 @@ class CreateMrOrderScreenController extends GetxController {
     }
 
     addItemLoading.value = true;
+
     var request = MaterialRequisitionRequest(
         divisionId: _selecteddivisionName?.id,
         productId: selectedProduct.value?.id,
         packingId: selectedPacking?.id,
         deliveryDate: DateTime.now(),
         remarks: remarks?.text,
-        unitOfMeasurementId: selectedUnit?.id);
-    var result = await _repo.createRequisitionOrder(request);
+        unitOfMeasurementId: selectedUnit?.id,
+        quantity: int.tryParse("${qty?.text}"));
+    var result = await _repo.createMaterialReq(request);
     addItemLoading.value = false;
     if (result is Success) {
       switch (result.data?.success) {

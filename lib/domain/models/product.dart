@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'product.g.dart';
@@ -59,7 +58,8 @@ class Product {
         units: units ?? this.units,
       );
 
-  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
+  factory Product.fromJson(Map<String, dynamic> json) =>
+      _$ProductFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProductToJson(this);
 }
@@ -110,7 +110,8 @@ class Packing {
         pivot: pivot ?? this.pivot,
       );
 
-  factory Packing.fromJson(Map<String, dynamic> json) => _$PackingFromJson(json);
+  factory Packing.fromJson(Map<String, dynamic> json) =>
+      _$PackingFromJson(json);
 
   Map<String, dynamic> toJson() => _$PackingToJson(this);
 }
@@ -136,7 +137,8 @@ class PackingPivot {
         packingId: packingId ?? this.packingId,
       );
 
-  factory PackingPivot.fromJson(Map<String, dynamic> json) => _$PackingPivotFromJson(json);
+  factory PackingPivot.fromJson(Map<String, dynamic> json) =>
+      _$PackingPivotFromJson(json);
 
   Map<String, dynamic> toJson() => _$PackingPivotToJson(this);
 }
@@ -161,7 +163,6 @@ class UnitElement {
   final String? deletedAt;
   @JsonKey(name: "pivot")
   final UnitPivot? pivot;
-
 
   UnitElement({
     this.id,
@@ -198,7 +199,8 @@ class UnitElement {
         pivot: pivot ?? this.pivot,
       );
 
-  factory UnitElement.fromJson(Map<String, dynamic> json) => _$UnitElementFromJson(json);
+  factory UnitElement.fromJson(Map<String, dynamic> json) =>
+      _$UnitElementFromJson(json);
 
   Map<String, dynamic> toJson() => _$UnitElementToJson(this);
 }
@@ -221,7 +223,9 @@ enum Name {
   @JsonValue("Piece")
   PIECE,
   @JsonValue("Tray")
-  TRAY
+  TRAY,
+  @JsonValue("Set")
+  SET
 }
 
 final nameValues = EnumValues({
@@ -233,7 +237,8 @@ final nameValues = EnumValues({
   "Net": Name.NET,
   "Packet": Name.PACKET,
   "Piece": Name.PIECE,
-  "Tray": Name.TRAY
+  "Tray": Name.TRAY,
+  "Set": Name.SET
 });
 
 @JsonSerializable()
@@ -257,7 +262,8 @@ class UnitPivot {
         unitOfMeasurementId: unitOfMeasurementId ?? this.unitOfMeasurementId,
       );
 
-  factory UnitPivot.fromJson(Map<String, dynamic> json) => _$UnitPivotFromJson(json);
+  factory UnitPivot.fromJson(Map<String, dynamic> json) =>
+      _$UnitPivotFromJson(json);
 
   Map<String, dynamic> toJson() => _$UnitPivotToJson(this);
 }
@@ -280,7 +286,9 @@ enum UnitEnum {
   @JsonValue("PKT")
   PKT,
   @JsonValue("TRAY")
-  TRAY
+  TRAY,
+  @JsonValue("SET")
+  SET
 }
 
 final unitEnumValues = EnumValues({
@@ -292,7 +300,8 @@ final unitEnumValues = EnumValues({
   "NET": UnitEnum.NET,
   "PCS": UnitEnum.PCS,
   "PKT": UnitEnum.PKT,
-  "TRAY": UnitEnum.TRAY
+  "TRAY": UnitEnum.TRAY,
+  "SET": UnitEnum.SET
 });
 
 class EnumValues<T> {

@@ -112,6 +112,7 @@ const _$NameEnumMap = {
   Name.PACKET: 'Packet',
   Name.PIECE: 'Piece',
   Name.TRAY: 'Tray',
+  Name.SET: 'SET'
 };
 
 const _$UnitEnumEnumMap = {
@@ -124,6 +125,7 @@ const _$UnitEnumEnumMap = {
   UnitEnum.PCS: 'PCS',
   UnitEnum.PKT: 'PKT',
   UnitEnum.TRAY: 'TRAY',
+  UnitEnum.SET: 'SET'
 };
 
 UnitPivot _$UnitPivotFromJson(Map<String, dynamic> json) => UnitPivot(

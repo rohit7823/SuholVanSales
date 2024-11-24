@@ -5,7 +5,6 @@ import '../../../domain/data_source/remote/material_request/response/create_mate
 import '../../../domain/models/customer.dart';
 
 abstract class CreateCashOrderRepository {
-
   Future<List<Customer>?> findCustomerByName(String query);
 
   Future<List<Product>?> findProductByName(String query);
@@ -16,5 +15,8 @@ abstract class CreateCashOrderRepository {
       MaterialRequisitionRequest request);
 
   Future<CreateMaterialRequisitionResponse?> createRequisitionOrder(
+      MaterialRequisitionRequest request);
+
+  Future<CreateMaterialRequisitionResponse?> createMaterialRequestOrder(
       MaterialRequisitionRequest request);
 }
