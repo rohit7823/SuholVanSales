@@ -33,13 +33,12 @@ dependencies:
   multi_dropdown: ^3.0.1
   print_bluetooth_thermal: ^1.1.3
   app_settings: ^5.1.1
-  esc_pos_bluetooth: ^0.4.1
-
-
   path: any
   collection: any
-  esc_pos_utils: any
+  esc_pos_utils_plus: ^2.0.1+6
+  esc_pos_bluetooth_updated:
   image: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

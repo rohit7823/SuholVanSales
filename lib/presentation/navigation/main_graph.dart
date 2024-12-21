@@ -10,6 +10,8 @@ import 'package:suhol_van_sales/presentation/features/create_preorder_screen/cre
 import 'package:suhol_van_sales/presentation/features/create_preorder_screen/create_preorder_screen_view.dart';
 import 'package:suhol_van_sales/presentation/features/home_screen/home_screen_binding.dart';
 import 'package:suhol_van_sales/presentation/features/home_screen/home_screen_view.dart';
+import 'package:suhol_van_sales/presentation/features/print_invoice_screen/print_invoice_screen_binding.dart';
+import 'package:suhol_van_sales/presentation/features/print_invoice_screen/print_invoice_screen_view.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/auth_middleware.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/signup_screen_binding.dart';
 import 'package:suhol_van_sales/presentation/features/signup_screen/signup_screen_view.dart';
@@ -90,5 +92,16 @@ class MainGraph {
             transition: Transition.topLevel,
             transitionDuration: const Duration(milliseconds: 600),
             participatesInRootNavigator: true),
+        GetPage<Routes>(
+            name: Routes.printInvoice.name,
+            page: () => const PrintInvoiceScreen(),
+            binding: PrintInvoiceScreenBinding(),
+            maintainState: true,
+            popGesture: false,
+            fullscreenDialog: true,
+            preventDuplicates: true,
+            transition: Transition.topLevel,
+            transitionDuration: const Duration(milliseconds: 600),
+            participatesInRootNavigator: true)
       ];
 }

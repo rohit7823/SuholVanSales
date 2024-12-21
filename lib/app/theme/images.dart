@@ -37,5 +37,5 @@ class Images {
   static const packageSVG = "$_path/package.svg";
   static const purchaseSVG = "$_path/purchase.svg";
 
-  static const invoiceTemplate = "$_path/invoice_template.png";
+  static const invoiceTemplate = "$_path/sample_invoice.png";
 }

@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
+import 'package:esc_pos_bluetooth_updated/esc_pos_bluetooth_updated.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
-import 'package:suhol_van_sales/app/theme/images.dart';
 import 'package:suhol_van_sales/data/repo_impls/create_order_repository_impl.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
@@ -16,16 +14,16 @@ import 'package:suhol_van_sales/domain/models/order.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/models/added_product_ui_model.dart';
 import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
+import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/animated_progress.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
-import 'package:suhol_van_sales/printer/printer.dart';
+import 'package:suhol_van_sales/printer/printer_utils.dart';
 
 import '../../../app/theme/fonts.dart';
 import '../../../domain/models/customer.dart';
 import '../../../domain/models/product.dart';
-import '../../../printer/bluetooh_utills.dart';
 import '../../widgets/app_button.dart';
 
 class CreateCreditOrderScreenController extends GetxController {
@@ -93,14 +91,15 @@ class CreateCreditOrderScreenController extends GetxController {
   var userLocationDropdownController =
       MultiSelectController<LocationWithQuantityUiModel>();
 
-  StreamSubscription? _printerSubscription;
+  Stream<PosPrintResult?>? printingStatus;
+
+  MaterialRequisitionRequest? _requisitionRequest;
 
   @override
   void onReady() {
     super.onReady();
     qty?.addListener(_onQtyChange);
     price?.addListener(_calculatePrice);
-    _printer.setup();
     userName.value = _session.userDetails?.name ?? "Welcome";
 
     _pickupOrderWorker = ever(
@@ -146,109 +145,10 @@ class CreateCreditOrderScreenController extends GetxController {
         }
       },
     );
-
-    _printerSubscription = _printer.isScanStarted?.listen(_onStartScanning);
   }
 
-  void print() async {
-    var isGranted = await BluetoohUtills.instance.isPermissionGranted;
-    if (isGranted) {
-      var isBluetoothConnected =
-          await BluetoohUtills.instance.isBluetoothEnabled;
-      debugPrint("isBluetoothConnected $isBluetoothConnected");
-      if (isBluetoothConnected) {
-        //List<BluetoothInfo> pairedDevices = [];
-        AnimatedProgress.showProgressIfNot(msg: "Getting Devices...");
-        try {
-          //pairedDevices = await BluetoohUtills.instance.pairedBluetooth();
-          _printer.startScanForFiveMin;
-          Get.showSnackbar(const GetSnackBar(
-            message:
-                "Scanning started, if any printers are available will be visible in a pop.",
-            duration: Duration(seconds: 5),
-          ));
-          //debugPrint("pairedDevices.value ${pairedDevices.toString()}");
-        } on Object catch (ex) {
-          Get.showSnackbar(GetSnackBar(
-            message: ex.toString(),
-            duration: const Duration(seconds: 5),
-          ));
-        } finally {
-          AnimatedProgress.closeProgressIfShowing();
-        }
-      } else {
-        Get.showSnackbar(const GetSnackBar(
-          message: "Need to connect with bluetooth first.",
-          duration: Duration(seconds: 5),
-        ));
-      }
-    } else {
-      Get.defaultDialog(
-        content: Text(
-          "Need to give bluetooth permission manually for accessing available devices",
-          style: Get.textTheme.bodyMedium,
-          textAlign: TextAlign.center,
-        ),
-        textCancel: "No",
-        textConfirm: "Ok",
-        onCancel: () {},
-        onConfirm: () async {
-          if (Get.overlayContext != null) {
-            Navigator.of(Get.overlayContext!).pop();
-          }
-          await BluetoohUtills.instance.openBluetoothSettings().then(
-                (value) => print(),
-              );
-        },
-      );
-    }
-  }
-
-  void onDeviceConnection(PrinterBluetooth device) async {
-    if (selectedDevice.value == device) {
-      var isDisconnected = await BluetoohUtills.instance.disconnect();
-      if (isDisconnected) {
-        _printer.selectPrinter(null);
-        Get.showSnackbar(GetSnackBar(
-          message: "Disconnection Successful ${selectedDevice.value?.name}",
-          duration: const Duration(seconds: 3),
-        ));
-        selectedDevice.value = null;
-      }
-    } else {
-      selectedDevice.value = device;
-      _printer.selectPrinter(device);
-      Get.showSnackbar(GetSnackBar(
-        message: "Connection Successful with ${device.name}",
-        duration: const Duration(seconds: 5),
-      ));
-      /*if (device.address?.isNotEmpty == true) {
-        AnimatedProgress.showProgressIfNot(msg: "Connecting...");
-        var isConnected = await BluetoohUtills.instance
-            .connect(printerAddress: device.data!.macAdress);
-        AnimatedProgress.closeProgressIfShowing();
-        device.shouldShowPrint(isConnected);
-        if (isConnected) {
-          Get.showSnackbar(GetSnackBar(
-            message: "Connection Successful with ${device.data?.name}",
-            duration: const Duration(seconds: 5),
-          ));
-        } else {
-          Get.showSnackbar(GetSnackBar(
-            message:
-                "Unable to connect with ${device.data?.name.isNotEmpty == true ? device.data?.name : device.data?.macAdress}, Try again.",
-            duration: const Duration(seconds: 5),
-          ));
-        }
-      }*/
-    }
-  }
-
-  Stream<PosPrintResult?>? printingStatus;
-
-  void _printSample() async {
-    var imageData = await rootBundle.load(Images.invoiceTemplate);
-    printingStatus = _printer.printImageIfConnected(imageData)?.asStream();
+  void print() {
+    Get.toNamed(Routes.printInvoice.name, arguments: _requisitionRequest);
   }
 
   void _calculatePrice() {
@@ -281,8 +181,6 @@ class CreateCreditOrderScreenController extends GetxController {
     remarks?.dispose();
     _pickupOrderWorker?.dispose();
     _pairedDevicesWorker?.dispose();
-    _printerSubscription?.cancel();
-    _printerSubscription = null;
     _pairedDevicesWorker = null;
     _pickupOrderWorker = null;
     customerName = null;
@@ -432,7 +330,7 @@ class CreateCreditOrderScreenController extends GetxController {
       return;
     }
 
-    var request = MaterialRequisitionRequest(
+    _requisitionRequest = MaterialRequisitionRequest(
       customerId: _selectedCustomer?.id,
       productId: selectedProduct.value?.id,
       packingId: selectedPacking?.id,
@@ -444,7 +342,7 @@ class CreateCreditOrderScreenController extends GetxController {
     );
 
     orderLoading.value = true;
-    var result = await _repo.createRequisition(request);
+    var result = await _repo.createRequisition(_requisitionRequest!);
     orderLoading.value = false;
     if (result is Success) {
       switch (result.data?.success) {
@@ -482,7 +380,7 @@ class CreateCreditOrderScreenController extends GetxController {
 
   Future<void> onAddItem() async {
     addItemLoading.value = true;
-    var request = MaterialRequisitionRequest(
+    _requisitionRequest = MaterialRequisitionRequest(
         customerId: _selectedCustomer?.id,
         productId: selectedProduct.value?.id,
         packingId: selectedPacking?.id,
@@ -498,7 +396,7 @@ class CreateCreditOrderScreenController extends GetxController {
                   qty: int.tryParse(element.qty.text)),
             )
             .toList());
-    var result = await _repo.createRequisitionOrder(request);
+    var result = await _repo.createRequisitionOrder(_requisitionRequest!);
     addItemLoading.value = false;
     if (result is Success) {
       switch (result.data?.success) {
@@ -872,226 +770,4 @@ class CreateCreditOrderScreenController extends GetxController {
     selectedLocations.value = selectedItems;
     log("selectedLocations.value $selectedLocations");
   }
-
-  void _onStartScanning(bool event) {
-    debugPrint("_onStartScanning $event");
-    if (event) {
-      Get.dialog(AlertDialog(
-        title: const Text("Paired Devices"),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 12),
-        content: Obx(
-          () => StreamBuilder(
-              stream: _printer.printers,
-              builder: (context, printers) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: printers.data
-                          ?.map(
-                            (device) => InkWell(
-                              onTap: () => onDeviceConnection(
-                                device,
-                              ),
-                              child: Column(
-                                children: [
-                                  Card(
-                                    margin: const EdgeInsets.only(bottom: 8),
-                                    color: device == selectedDevice.value
-                                        ? AppColors.buttonColorAlternate
-                                        : Colors.white,
-                                    elevation: 5,
-                                    child: SizedBox(
-                                      width: Get.width * .85,
-                                      height: 45,
-                                      child: Center(
-                                        child: Text(
-                                          "${device.name}",
-                                          style: Get
-                                              .textTheme.labelLarge
-                                              ?.copyWith(
-                                                  fontFamily: device ==
-                                                          selectedDevice.value
-                                                      ? Fonts.dmSansBold
-                                                      : Fonts.dmSansSemiBold,
-                                                  color: device ==
-                                                          selectedDevice.value
-                                                      ? Colors.white
-                                                      : Colors.black),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Obx(() => device == selectedDevice.value
-                                      ? InkWell(
-                                          onTap: _printSample,
-                                          child: StreamBuilder(
-                                            stream: printingStatus,
-                                            builder:
-                                                (context, printingStatus) =>
-                                                    Card(
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 8),
-                                              color:
-                                                  device == selectedDevice.value
-                                                      ? AppColors.buttonColor
-                                                      : Colors.white,
-                                              elevation: 5,
-                                              child: SizedBox(
-                                                width: Get.width * .55,
-                                                height: 35,
-                                                child: Center(
-                                                  child: Text(
-                                                    printingStatus.data?.msg ??
-                                                        'PRINT SAMPLE',
-                                                    style: Get
-                                                        .textTheme.titleMedium
-                                                        ?.copyWith(
-                                                            fontFamily: device ==
-                                                                    selectedDevice
-                                                                        .value
-                                                                ? Fonts
-                                                                    .dmSansBold
-                                                                : Fonts
-                                                                    .dmSansSemiBold,
-                                                            color: device ==
-                                                                    selectedDevice
-                                                                        .value
-                                                                ? Colors.white
-                                                                : Colors.black),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : const SizedBox.shrink())
-                                ],
-                              ),
-                            ),
-                          )
-                          .toList() ??
-                      [],
-                );
-              }),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () {
-                if (Get.overlayContext != null) {
-                  Navigator.of(Get.overlayContext!).pop();
-                }
-              },
-              child: Text(
-                "CLOSE",
-                style: Get.textTheme.bodyMedium?.copyWith(
-                    fontFamily: Fonts.poppinsBold, color: Colors.redAccent),
-              )),
-        ],
-        actionsAlignment: MainAxisAlignment.center,
-      ));
-    }
-  }
-
-/*void showAvailableDevices(List<DeviceInfoWithState> pairedDevices) {
-    if (pairedDevices.isNotEmpty) {
-      Get.dialog(AlertDialog(
-        title: const Text("Paired Devices"),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 12),
-        content: Obx(
-          () => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: pairedDevices
-                .map(
-                  (device) => InkWell(
-                    onTap: () => onDeviceConnection(
-                      device,
-                    ),
-                    child: Column(
-                      children: [
-                        Card(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          color: device.data == selectedDevice.value
-                              ? AppColors.buttonColorAlternate
-                              : Colors.white,
-                          elevation: 5,
-                          child: SizedBox(
-                            width: Get.width * .85,
-                            height: 45,
-                            child: Center(
-                              child: Text(
-                                "${device.data?.name} ${device.state.value ? 'Printing Sample' : ''}",
-                                style: Get.textTheme.labelLarge?.copyWith(
-                                    fontFamily:
-                                        device.data == selectedDevice.value
-                                            ? Fonts.dmSansBold
-                                            : Fonts.dmSansSemiBold,
-                                    color: device.data == selectedDevice.value
-                                        ? Colors.white
-                                        : Colors.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Obx(() => device.showPrint.value
-                            ? InkWell(
-                                onTap: () => _printSample(
-                                  currentState: (state) {
-                                    device.updateState(state);
-                                  },
-                                ),
-                                child: Card(
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  color: device.data == selectedDevice.value
-                                      ? AppColors.buttonColor
-                                      : Colors.white,
-                                  elevation: 5,
-                                  child: SizedBox(
-                                    width: Get.width * .55,
-                                    height: 45,
-                                    child: Center(
-                                      child: Text(
-                                        "Print SAMPLE",
-                                        style: Get.textTheme.titleMedium
-                                            ?.copyWith(
-                                                fontFamily: device.data ==
-                                                        selectedDevice.value
-                                                    ? Fonts.dmSansBold
-                                                    : Fonts.dmSansSemiBold,
-                                                color: device.data ==
-                                                        selectedDevice.value
-                                                    ? Colors.white
-                                                    : Colors.black),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : const SizedBox.shrink())
-                      ],
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () {
-                if (Get.overlayContext != null) {
-                  Navigator.of(Get.overlayContext!).pop();
-                }
-              },
-              child: Text(
-                "CLOSE",
-                style: Get.textTheme.bodyMedium?.copyWith(
-                    fontFamily: Fonts.poppinsBold, color: Colors.redAccent),
-              )),
-        ],
-        actionsAlignment: MainAxisAlignment.center,
-      ));
-    }
-  }*/
 }

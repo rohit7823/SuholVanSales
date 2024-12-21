@@ -1,7 +1,10 @@
-import 'package:esc_pos_bluetooth/esc_pos_bluetooth.dart';
-import 'package:esc_pos_utils/esc_pos_utils.dart';
+import 'package:esc_pos_bluetooth_updated/esc_pos_bluetooth_updated.dart';
+import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart';
+import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
+import 'package:suhol_van_sales/printer/bluetooh_utills.dart';
 
 class GenericPrinter {
   CapabilityProfile? _profile;
@@ -12,18 +15,21 @@ class GenericPrinter {
   PrinterBluetooth? get selectedPrinter => _selectedPrinter;
 
   void get startScanForFiveMin =>
-      _printerBluetoothManager?.startScan(const Duration(minutes: 5));
+      _printerBluetoothManager?.startScan(const Duration(minutes: 1));
 
   void get stopScan => _printerBluetoothManager?.stopScan();
 
-  Stream<List<PrinterBluetooth>>? get printers =>
-      _printerBluetoothManager?.scanResults;
+  Stream<List<BluetoothInfo>>? get devices =>
+      BluetoohUtills.instance.pairedBluetooth().asStream();
 
   Stream<bool>? get isScanStarted => _printerBluetoothManager?.isScanningStream;
 
   Future<void> setup() async {
     _profile = await CapabilityProfile.load();
-    _generator = Generator(PaperSize.mm58, _profile!);
+
+    _generator = Generator(PaperSize.mm80, _profile!)
+      ..drawer(pin: PosDrawer.pin2);
+
     _printerBluetoothManager = PrinterBluetoothManager();
   }
 
@@ -41,14 +47,16 @@ class GenericPrinter {
 
     Uint8List bytes = imageData.buffer.asUint8List();
     var image = decodeImage(bytes);
+    debugPrint("DECODED_IMAGE ${image?.toString()}");
     List<int>? rawBytes = [];
 
     if (image != null) {
-      _generator?.beep(n: 1);
+      _generator?.beep(n: 5);
       rawBytes = _generator!.image(image);
       rawBytes += _generator!.cut();
       clearBuffer;
-      return await _printerBluetoothManager?.printTicket(rawBytes);
+      return await _printerBluetoothManager?.printTicket(rawBytes,
+          chunkSizeBytes: 100, queueSleepTimeMs: 5);
     }
     return null;
   }

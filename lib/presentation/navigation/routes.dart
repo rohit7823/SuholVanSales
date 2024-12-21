@@ -9,6 +9,7 @@ enum Routes {
   createPreorder("/create_pre_order"),
   mrorder("/mr_order"),
   createMrorder("/create_mr_order"),
+  printInvoice("/print_invoice"),
   signup("/sign_up");
 
   final String name;
