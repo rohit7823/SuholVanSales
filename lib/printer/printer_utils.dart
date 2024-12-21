@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:esc_pos_bluetooth_updated/esc_pos_bluetooth_updated.dart';
 import 'package:esc_pos_utils_plus/esc_pos_utils_plus.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,8 +57,11 @@ class GenericPrinter {
       rawBytes = _generator!.image(image);
       rawBytes += _generator!.cut();
       clearBuffer;
-      return await _printerBluetoothManager?.printTicket(rawBytes,
+      var status =  await _printerBluetoothManager?.printTicket(rawBytes,
           chunkSizeBytes: 100, queueSleepTimeMs: 5);
+      log("${status?.msg}", name: "PRINT_STATUS");
+
+      return status;
     }
     return null;
   }

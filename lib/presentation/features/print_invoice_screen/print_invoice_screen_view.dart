@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
+import 'package:suhol_van_sales/presentation/widgets/my_app_bar.dart';
 
 import 'print_invoice_screen_controller.dart';
 
@@ -19,15 +20,39 @@ class _PrintInvoiceScreenState extends State<PrintInvoiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Obx(() => FloatingActionButton(
+      appBar: MyAppBar(
+        isTitleCenter: true,
+        title: Obx(() => controller.selectedDevice.value == null
+            ? Text(
+                "Select your device",
+                style: Get.textTheme.headlineMedium,
+              )
+            : Text(
+                "${controller.selectedDevice.value?.name ?? controller.selectedDevice.value?.address}",
+                style: Get.textTheme.headlineMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              )),
+      ),
+      floatingActionButton: Obx(() => FloatingActionButton.extended(
             onPressed: controller.invoice.value != null
-                ? () => controller.print(invoiceKey)
+                ? () => controller.selectedDevice.value != null
+                    ? controller.print(invoiceKey)
+                    : controller.selectDevice()
                 : null,
             backgroundColor: AppColors.buttonColor,
-            child: const Icon(
-              Icons.print,
+            label: Text(
+              controller.selectedDevice.value != null
+                  ? "Print Invoice"
+                  : "Select Printer",
+              style: Get.textTheme.labelLarge!
+                  .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            icon: Icon(
+              controller.selectedDevice.value != null
+                  ? Icons.print
+                  : Icons.bluetooth_audio_outlined,
               color: Colors.white,
-              size: 40,
+              size: 30,
             ),
           )),
       body: Center(

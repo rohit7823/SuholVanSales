@@ -1,7 +1,10 @@
 import 'package:esc_pos_bluetooth_updated/esc_pos_bluetooth_updated.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/images.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/printer/bluetooh_utills.dart';
@@ -16,9 +19,11 @@ class PrintInvoiceScreenController extends GetxController {
 
   final _printer = GenericPrinter();
 
-  Stream<PosPrintResult?>? printingStatus;
+  Rx<PosPrintResult?> printingStatus = Rx(null);
 
   Rx<ByteData?> invoice = Rx(null);
+
+  Worker? _worker;
 
   @override
   void onInit() {
@@ -38,29 +43,49 @@ class PrintInvoiceScreenController extends GetxController {
     );
   }
 
-  void print(GlobalKey invoiceKey) {
-    PairedDevicesPopup.getInstance().show(
-      printer: _printer,
-      onDeviceConnect: onDeviceConnection,
-      selectedDevice: selectedDevice,
-      printStatus: printingStatus,
-      onPrint: () {
-        debugPrint("PRINT CLICKED !!!");
-        captureImage(invoiceKey).then(
-          (value) {
-            if (value != null) {
-              printingStatus =
-                  _printer.printImageIfConnected(value)?.asStream();
-            }
-          },
+  void selectDevice() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        PairedDevicesPopup.getInstance().show(
+          printer: _printer,
+          onDeviceConnect: onDeviceConnection,
+          selectedDevice: selectedDevice,
         );
       },
     );
   }
 
+  void print(GlobalKey invoiceKey) async {
+    var bytes = invoice.value;
+    if (bytes != null) {
+      Get.showSnackbar(const GetSnackBar(
+        message: "Starting......",
+        duration: Duration(seconds: 3),
+        overlayBlur: .5,
+        isDismissible: false,
+        showProgressIndicator: true,
+        progressIndicatorValueColor:
+            AlwaysStoppedAnimation(AppColors.secondary),
+      ));
+      printingStatus.value = await _printer.printImageIfConnected(bytes);
+      Get.showSnackbar(GetSnackBar(
+        message: "${printingStatus.value?.msg}",
+        duration: const Duration(seconds: 3),
+        overlayBlur: .5,
+        isDismissible: false,
+        showProgressIndicator: true,
+        progressIndicatorValueColor:
+            const AlwaysStoppedAnimation(AppColors.primary),
+      ));
+    }
+  }
+
   void _printSample() async {}
 
   void onDeviceConnection(PrinterBluetooth device) async {
+    if (Get.isOverlaysOpen) {
+      Navigator.of(Get.overlayContext!).pop();
+    }
     if (selectedDevice.value == device) {
       var isDisconnected = await BluetoohUtills.instance.disconnect();
       if (isDisconnected) {

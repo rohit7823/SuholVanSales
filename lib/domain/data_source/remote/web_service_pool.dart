@@ -34,6 +34,7 @@ mixin WebServicePool {
 
   Future<RestResponse<UserOnboardingResponse>> login(
       UserOnboarding data) async {
+
     if (httpClient.instance == null) {
       return Error(message: "httpClient.instance is not ready");
     }
@@ -94,6 +95,7 @@ mixin WebServicePool {
 
   Future<RestResponse<CreateMaterialRequisitionResponse>>
       createMaterialRequisition(MaterialRequisitionRequest request) async {
+
     if (httpClient.instance == null) {
       return Error<CreateMaterialRequisitionResponse>(
           message: "httpClient.instance is not ready");

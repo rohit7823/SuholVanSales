@@ -18,11 +18,11 @@ class PairedDevicesPopup {
     return _instance!;
   }
 
-  void show(
+  Future<void> show(
       {required GenericPrinter printer,
       required void Function(PrinterBluetooth device) onDeviceConnect,
       required Rx<PrinterBluetooth?> selectedDevice,
-      required void Function() onPrint,
+      void Function()? onPrint,
       Stream<PosPrintResult?>? printStatus}) async {
     var isGranted = await BluetoohUtills.instance.isPermissionGranted;
     if (isGranted) {
@@ -83,8 +83,7 @@ class PairedDevicesPopup {
                                                 onTap: onPrint,
                                                 child: StreamBuilder(
                                                   stream: printStatus,
-                                                  builder: (context,
-                                                          printingStatus) =>
+                                                  builder: (context, printingStatus) =>
                                                       Card(
                                                     margin:
                                                         const EdgeInsets.only(
@@ -153,7 +152,8 @@ class PairedDevicesPopup {
                                 ],
                               )
                             ],
-                    )),
+                    ),
+            ),
             actions: [
               TextButton(
                   onPressed: () {
