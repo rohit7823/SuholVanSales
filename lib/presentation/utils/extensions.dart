@@ -12,6 +12,16 @@ extension DateTimeUtils on DateTime {
   }
 
   String get stdDate => DateFormat('dd/MM/yyyy').format(this);
+
+  String formattedDateWithTime(TimeOfDay? timeOfDay) {
+    final formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final date = this;
+    final time = timeOfDay ?? TimeOfDay.now();
+    final withDate =
+        DateTime(date.year, date.month, date.day, time.hour, time.minute);
+
+    return formatter.format(withDate);
+  }
 }
 
 extension StringUtils on String {

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 part 'material_requisition_request.g.dart';
 
 @JsonSerializable()
 class MaterialRequisitionRequest {
+  final String? customerName;
+  final int? phoneNo;
+  final String? productName;
+  final String? productUnit;
+  final String? productPacking;
   @JsonKey(name: "customer_id")
   final int? customerId;
   @JsonKey(name: "division_id")
@@ -22,6 +27,8 @@ class MaterialRequisitionRequest {
   final int? unitOfMeasurementId;
   @JsonKey(name: "packing_id")
   final int? packingId;
+  @JsonKey(name: "price")
+  final double? price;
   @JsonKey(name: "remarks")
   final String? remarks;
   @JsonKey(name: "parent_master_id_list")
@@ -30,7 +37,12 @@ class MaterialRequisitionRequest {
   final int? quantity;
 
   const MaterialRequisitionRequest(
-      {this.customerId,
+      {this.customerName,
+      this.phoneNo,
+      this.productName,
+      this.productPacking,
+      this.productUnit,
+      this.customerId,
       this.divisionId,
       this.deliveryDate,
       this.deliveryTime,
@@ -38,12 +50,18 @@ class MaterialRequisitionRequest {
       this.productId,
       this.unitOfMeasurementId,
       this.packingId,
+      this.price,
       this.remarks,
       this.locationIdsWithQuantity,
       this.quantity});
 
   MaterialRequisitionRequest copyWith(
-      {int? customerId,
+      {String? customerName,
+      int? phoneNo,
+      String? productName,
+      String? productUnit,
+      String? productPacking,
+      int? customerId,
       int? divisionId,
       DateTime? deliveryDate,
       TimeOfDay? deliveryTime,
@@ -51,10 +69,16 @@ class MaterialRequisitionRequest {
       int? productId,
       int? unitOfMeasurementId,
       int? packingId,
+      double? price,
       String? remarks,
       List<LocationIDWithQuantity>? locationIdsWithQuantity,
       int? quantity}) {
     return MaterialRequisitionRequest(
+        customerName: customerName ?? this.customerName,
+        phoneNo: phoneNo ?? this.phoneNo,
+        productName: productName ?? this.productName,
+        productPacking: productPacking ?? this.productPacking,
+        productUnit: productUnit ?? this.productUnit,
         customerId: customerId ?? this.customerId,
         divisionId: divisionId ?? this.divisionId,
         deliveryDate: deliveryDate ?? this.deliveryDate,
@@ -62,6 +86,7 @@ class MaterialRequisitionRequest {
         productId: productId ?? this.productId,
         unitOfMeasurementId: unitOfMeasurementId ?? this.unitOfMeasurementId,
         packingId: packingId ?? this.packingId,
+        price: price ?? this.price,
         remarks: remarks ?? this.remarks,
         locationIdsWithQuantity:
             locationIdsWithQuantity ?? this.locationIdsWithQuantity,
@@ -81,6 +106,7 @@ class MaterialRequisitionRequest {
           unitOfMeasurementId:
               (json['unit_of_measurement_id'] as num?)?.toInt(),
           packingId: (json['packing_id'] as num?)?.toInt(),
+          price: double.tryParse(json['price'] as String? ?? '0.00'),
           remarks: json['remarks'] as String?,
           locationIdsWithQuantity: (json['parent_master_id_list']
                   as List<dynamic>?)
@@ -90,20 +116,17 @@ class MaterialRequisitionRequest {
           quantity: json['qty'] as int?);
 
   Map<String, dynamic> toJson() {
-    final formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
     final date = deliveryDate ?? DateTime.now();
     final time = deliveryTime ?? TimeOfDay.now();
-    final withDate =
-        DateTime(date.year, date.month, date.day, time.hour, time.minute);
-
     return <String, dynamic>{
       'customer_id': customerId,
       'division_id': divisionId,
-      'delivery_date': formatter.format(withDate),
+      'delivery_date': date.formattedDateWithTime(time),
       'vehicle_no': vehicleNo,
       'product_id': productId,
       'unit_of_measurement_id': unitOfMeasurementId,
       'packing_id': packingId,
+      'price': price,
       'remarks': remarks,
       'parent_master_id_list': locationIdsWithQuantity
           ?.map(

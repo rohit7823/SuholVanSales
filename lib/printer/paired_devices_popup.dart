@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:esc_pos_bluetooth_updated/esc_pos_bluetooth_updated.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,6 +27,7 @@ class PairedDevicesPopup {
       void Function()? onPrint,
       Stream<PosPrintResult?>? printStatus}) async {
     var isGranted = await BluetoohUtills.instance.isPermissionGranted;
+    log("$isGranted", name: "BLUETOOTH_PERMISSION");
     if (isGranted) {
       var isBluetoothConnected =
           await BluetoohUtills.instance.isBluetoothEnabled;
@@ -37,122 +40,119 @@ class PairedDevicesPopup {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             insetPadding: const EdgeInsets.symmetric(horizontal: 12),
             content: StreamBuilder(
-                stream: printer.devices,
-                builder: (context, printers) => Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: printers.data?.isNotEmpty == true
-                          ? printers.data?.map(
-                                (d) {
-                                  var device = d.convert;
-                                  return InkWell(
-                                    onTap: () => onDeviceConnect(device),
-                                    child: Column(
-                                      children: [
-                                        Card(
-                                          margin:
-                                              const EdgeInsets.only(bottom: 8),
-                                          color: device == selectedDevice.value
-                                              ? AppColors.buttonColorAlternate
-                                              : Colors.white,
-                                          elevation: 5,
-                                          child: SizedBox(
-                                            width: Get.width * .85,
-                                            height: 45,
-                                            child: Center(
-                                              child: Text(
-                                                "${device.name}",
-                                                style: Get.textTheme.labelLarge
-                                                    ?.copyWith(
-                                                        fontFamily: device ==
-                                                                selectedDevice
-                                                                    .value
-                                                            ? Fonts.dmSansBold
-                                                            : Fonts
-                                                                .dmSansSemiBold,
-                                                        color: device ==
-                                                                selectedDevice
-                                                                    .value
-                                                            ? Colors.white
-                                                            : Colors.black),
+              stream: printer.devices,
+              builder: (context, printers) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: printers.data?.isNotEmpty == true
+                    ? printers.data?.map(
+                          (d) {
+                            var device = d.convert;
+                            return InkWell(
+                              onTap: () => onDeviceConnect(device),
+                              child: Column(
+                                children: [
+                                  Card(
+                                    margin: const EdgeInsets.only(bottom: 8),
+                                    color: device == selectedDevice.value
+                                        ? AppColors.buttonColorAlternate
+                                        : Colors.white,
+                                    elevation: 5,
+                                    child: SizedBox(
+                                      width: Get.width * .85,
+                                      height: 45,
+                                      child: Center(
+                                        child: Text(
+                                          "${device.name}",
+                                          style: Get
+                                              .textTheme.labelLarge
+                                              ?.copyWith(
+                                                  fontFamily: device ==
+                                                          selectedDevice.value
+                                                      ? Fonts.dmSansBold
+                                                      : Fonts.dmSansSemiBold,
+                                                  color: device ==
+                                                          selectedDevice.value
+                                                      ? Colors.white
+                                                      : Colors.black),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Obx(() => device == selectedDevice.value
+                                      ? InkWell(
+                                          onTap: onPrint,
+                                          child: StreamBuilder(
+                                            stream: printStatus,
+                                            builder:
+                                                (context, printingStatus) =>
+                                                    Card(
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 8),
+                                              color:
+                                                  device == selectedDevice.value
+                                                      ? AppColors.buttonColor
+                                                      : Colors.white,
+                                              elevation: 5,
+                                              child: SizedBox(
+                                                width: Get.width * .55,
+                                                height: 35,
+                                                child: Center(
+                                                  child: Text(
+                                                    printingStatus.data?.msg ??
+                                                        'PRINT SAMPLE',
+                                                    style: Get
+                                                        .textTheme.titleMedium
+                                                        ?.copyWith(
+                                                            fontFamily: device ==
+                                                                    selectedDevice
+                                                                        .value
+                                                                ? Fonts
+                                                                    .dmSansBold
+                                                                : Fonts
+                                                                    .dmSansSemiBold,
+                                                            color: device ==
+                                                                    selectedDevice
+                                                                        .value
+                                                                ? Colors.white
+                                                                : Colors.black),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Obx(() => device == selectedDevice.value
-                                            ? InkWell(
-                                                onTap: onPrint,
-                                                child: StreamBuilder(
-                                                  stream: printStatus,
-                                                  builder: (context, printingStatus) =>
-                                                      Card(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            bottom: 8),
-                                                    color: device ==
-                                                            selectedDevice.value
-                                                        ? AppColors.buttonColor
-                                                        : Colors.white,
-                                                    elevation: 5,
-                                                    child: SizedBox(
-                                                      width: Get.width * .55,
-                                                      height: 35,
-                                                      child: Center(
-                                                        child: Text(
-                                                          printingStatus
-                                                                  .data?.msg ??
-                                                              'PRINT SAMPLE',
-                                                          style: Get.textTheme.titleMedium?.copyWith(
-                                                              fontFamily: device ==
-                                                                      selectedDevice
-                                                                          .value
-                                                                  ? Fonts
-                                                                      .dmSansBold
-                                                                  : Fonts
-                                                                      .dmSansSemiBold,
-                                                              color: device ==
-                                                                      selectedDevice
-                                                                          .value
-                                                                  ? Colors.white
-                                                                  : Colors
-                                                                      .black),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            : const SizedBox.shrink())
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ).toList() ??
-                              []
-                          : [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Getting Devices...",
-                                    style: Get.textTheme.titleMedium,
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.redAccent,
-                                      strokeCap: StrokeCap.round,
-                                    ),
-                                  )
+                                        )
+                                      : const SizedBox.shrink())
                                 ],
-                              )
-                            ],
-                    ),
+                              ),
+                            );
+                          },
+                        ).toList() ??
+                        []
+                    : [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Getting Devices...",
+                              style: Get.textTheme.titleMedium,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.redAccent,
+                                strokeCap: StrokeCap.round,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+              ),
             ),
             actions: [
               TextButton(

@@ -38,15 +38,15 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
           shopName: controller.shopName,
           back: controller.pop,
         ),
-        actions: [
-          IconButton(
-            onPressed: controller.print,
-            icon: const Icon(
-              Icons.print,
-              color: AppColors.buttonColorAlternate,
-              size: 45,
-            ),
-          ).paddings(right: 10)
+        actions: const [
+          // IconButton(
+          //   onPressed: controller.print,
+          //   icon: const Icon(
+          //     Icons.print,
+          //     color: AppColors.buttonColorAlternate,
+          //     size: 45,
+          //   ),
+          // ).paddings(right: 10)
         ],
       ),
       body: SafeArea(
@@ -220,11 +220,12 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 controller: controller.mobileNumber!,
                                 capitalization: TextCapitalization.words,
                                 inputAction: TextInputAction.next,
-                                keyboardType: TextInputType.visiblePassword,
+                                keyboardType: TextInputType.number,
                                 prefixIcon: const Icon(
                                   Icons.phone_android,
                                   color: Colors.grey,
                                 ),
+                                inputFormatters: [NumberTextInputFormatter()],
                                 autoFocus: false,
                               )
                             ],

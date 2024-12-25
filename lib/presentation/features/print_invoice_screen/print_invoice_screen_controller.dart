@@ -2,10 +2,8 @@ import 'package:esc_pos_bluetooth_updated/esc_pos_bluetooth_updated.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
-import 'package:suhol_van_sales/app/theme/images.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/printer/bluetooh_utills.dart';
 import 'package:suhol_van_sales/printer/exts.dart';
@@ -13,7 +11,7 @@ import 'package:suhol_van_sales/printer/paired_devices_popup.dart';
 import 'package:suhol_van_sales/printer/printer_utils.dart';
 
 class PrintInvoiceScreenController extends GetxController {
-  MaterialRequisitionRequest? _invoiceData;
+  Rx<MaterialRequisitionRequest?> invoiceData = Rx(null);
 
   Rx<PrinterBluetooth?> selectedDevice = Rx(null);
 
@@ -35,12 +33,12 @@ class PrintInvoiceScreenController extends GetxController {
   void onReady() {
     // TODO: implement onReady
     super.onReady();
-    _invoiceData = Get.arguments;
-    rootBundle.load(Images.invoiceTemplate).then(
+    invoiceData.value = Get.arguments;
+    /*rootBundle.load(Images.invoiceTemplate).then(
       (value) {
         invoice.value = value;
       },
-    );
+    );*/
   }
 
   void selectDevice() {
@@ -56,7 +54,7 @@ class PrintInvoiceScreenController extends GetxController {
   }
 
   void print(GlobalKey invoiceKey) async {
-    var bytes = invoice.value;
+    var bytes = await captureImage(invoiceKey);
     if (bytes != null) {
       Get.showSnackbar(const GetSnackBar(
         message: "Starting......",

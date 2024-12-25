@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
+import 'package:suhol_van_sales/presentation/widgets/invoice_widget.dart';
 import 'package:suhol_van_sales/presentation/widgets/my_app_bar.dart';
 
 import 'print_invoice_screen_controller.dart';
@@ -13,8 +14,7 @@ class PrintInvoiceScreen extends StatefulWidget {
 }
 
 class _PrintInvoiceScreenState extends State<PrintInvoiceScreen> {
-  final PrintInvoiceScreenController controller = Get.find();
-
+  final controller = Get.find<PrintInvoiceScreenController>();
   final invoiceKey = GlobalKey();
 
   @override
@@ -34,7 +34,7 @@ class _PrintInvoiceScreenState extends State<PrintInvoiceScreen> {
               )),
       ),
       floatingActionButton: Obx(() => FloatingActionButton.extended(
-            onPressed: controller.invoice.value != null
+            onPressed: controller.invoiceData.value != null
                 ? () => controller.selectedDevice.value != null
                     ? controller.print(invoiceKey)
                     : controller.selectDevice()
@@ -56,17 +56,14 @@ class _PrintInvoiceScreenState extends State<PrintInvoiceScreen> {
             ),
           )),
       body: Center(
-        child: Obx(() => controller.invoice.value != null
-            ? RepaintBoundary(
-                key: invoiceKey,
-                child: Image.memory(
-                  controller.invoice.value!.buffer.asUint8List(),
-                  width: context.width,
-                  fit: BoxFit.fill,
-                  height: context.height,
-                ),
-              )
-            : const Text("LOADING...")),
+        child: ObxValue(
+            (invoiceData) => invoiceData.value != null
+                ? InvoiceWidget(
+                    gKey: invoiceKey,
+                    data: invoiceData.value!,
+                  )
+                : const SizedBox.shrink(),
+            controller.invoiceData),
       ),
     );
   }

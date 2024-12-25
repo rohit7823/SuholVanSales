@@ -147,8 +147,10 @@ class CreateCreditOrderScreenController extends GetxController {
     );
   }
 
-  void print() {
-    Get.toNamed(Routes.printInvoice.name, arguments: _requisitionRequest);
+  Future<void> goToPrintInvoice() async {
+    var result = await Get.toNamed(Routes.printInvoice.name,
+        arguments: _requisitionRequest);
+    if (result != null) {}
   }
 
   void _calculatePrice() {
@@ -332,6 +334,12 @@ class CreateCreditOrderScreenController extends GetxController {
 
     _requisitionRequest = MaterialRequisitionRequest(
       customerId: _selectedCustomer?.id,
+      customerName: _selectedCustomer?.name,
+      productName: selectedProduct.value?.name,
+      phoneNo: int.tryParse(mobileNumber?.text ?? ""),
+      productUnit: selectedUnit?.name?.name,
+      productPacking: selectedPacking?.packing,
+      price: double.tryParse(price?.text ?? '0.00'),
       productId: selectedProduct.value?.id,
       packingId: selectedPacking?.id,
       vehicleNo: vehicleNumber?.text,
@@ -347,16 +355,16 @@ class CreateCreditOrderScreenController extends GetxController {
     if (result is Success) {
       switch (result.data?.success) {
         case true:
-          await Future.delayed(const Duration(milliseconds: 500)).then(
+          /*await Future.delayed(const Duration(milliseconds: 500)).then(
             (value) {
               Get.back();
             },
-          );
+          );*/
+          goToPrintInvoice();
           Get.showSnackbar(GetSnackBar(
             message: "${result.data?.message}",
             duration: const Duration(seconds: 5),
           ));
-
           break;
         case false:
           Get.showSnackbar(GetSnackBar(
@@ -380,12 +388,18 @@ class CreateCreditOrderScreenController extends GetxController {
 
   Future<void> onAddItem() async {
     addItemLoading.value = true;
+
     _requisitionRequest = MaterialRequisitionRequest(
+        customerName: _selectedCustomer?.name,
+        phoneNo: int.tryParse(mobileNumber?.text ?? ""),
+        productUnit: selectedUnit?.name?.name,
+        productPacking: selectedPacking?.packing,
         customerId: _selectedCustomer?.id,
         productId: selectedProduct.value?.id,
         packingId: selectedPacking?.id,
         vehicleNo: vehicleNumber?.text,
         deliveryDate: DateTime.now(),
+        price: double.tryParse(price?.text ?? '0.00'),
         remarks: remarks?.text,
         unitOfMeasurementId: selectedUnit?.id,
         quantity: int.tryParse("${qty?.text}"),
@@ -406,6 +420,7 @@ class CreateCreditOrderScreenController extends GetxController {
               Get.back();
             },
           );*/
+
           Get.showSnackbar(GetSnackBar(
             message: "${result.data?.message}",
             duration: const Duration(seconds: 5),

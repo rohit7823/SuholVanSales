@@ -57,7 +57,7 @@ class GenericPrinter {
       rawBytes = _generator!.image(image);
       rawBytes += _generator!.cut();
       clearBuffer;
-      var status =  await _printerBluetoothManager?.printTicket(rawBytes,
+      var status = await _printerBluetoothManager?.printTicket(rawBytes,
           chunkSizeBytes: 100, queueSleepTimeMs: 5);
       log("${status?.msg}", name: "PRINT_STATUS");
 
