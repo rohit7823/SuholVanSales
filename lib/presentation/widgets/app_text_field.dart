@@ -451,7 +451,7 @@ class _CustomAutocompleteOptionState<T extends Object>
               style: Theme.of(context)
                   .textTheme
                   .labelLarge
-                  ?.copyWith(color: Colors.black),
+                  ?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
         ),

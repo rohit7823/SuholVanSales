@@ -7,9 +7,9 @@ class BudgetWidget extends StatelessWidget {
   const BudgetWidget(
       {super.key, required this.items, required this.vat, required this.total});
 
-  final RxList items;
-  final RxString vat;
-  final RxString total;
+  final String items;
+  final String vat;
+  final String total;
 
   @override
   Widget build(BuildContext context) {
@@ -20,32 +20,26 @@ class BudgetWidget extends StatelessWidget {
         child: FittedBox(
           child: Row(
             children: [
-              Obx(
-                () => Text(
-                  "Item: ${items.length}",
-                  style: Get.textTheme.titleLarge?.copyWith(
-                      color: const Color(0xFF092058),
-                      fontFamily: Fonts.poppinsSemiBold),
-                ),
+              Text(
+                "Product: ${items.length}",
+                style: Get.textTheme.titleLarge?.copyWith(
+                    color: const Color(0xFF092058),
+                    fontFamily: Fonts.poppinsSemiBold),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: Get.width * .10),
-                child: Obx(
-                  () => Text(
-                    "VAT: ${vat.value}",
-                    style: Get.textTheme.titleLarge?.copyWith(
-                        color: const Color(0xFF092058),
-                        fontFamily: Fonts.poppinsSemiBold),
-                  ),
-                ),
-              ),
-              Obx(
-                () => Text(
-                  "Total: ${total.value}",
+                child: Text(
+                  "VAT: $vat",
                   style: Get.textTheme.titleLarge?.copyWith(
                       color: const Color(0xFF092058),
                       fontFamily: Fonts.poppinsSemiBold),
                 ),
+              ),
+              Text(
+                "Total: $total",
+                style: Get.textTheme.titleLarge?.copyWith(
+                    color: const Color(0xFF092058),
+                    fontFamily: Fonts.poppinsSemiBold),
               )
             ],
           ),

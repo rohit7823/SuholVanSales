@@ -19,7 +19,7 @@ class HomeNavObserver extends NavigatorObserver {
 
   static bool get condition =>
       currentRoute.value == Routes.creditSalesOrder.name ||
-      currentRoute.value == Routes.createCashOrder.name;
+      currentRoute.value == Routes.cashSalesOrder.name;
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {

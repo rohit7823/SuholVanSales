@@ -15,7 +15,6 @@ import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/models/added_product_ui_model.dart';
 import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
-import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/animated_progress.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
@@ -204,20 +203,6 @@ class CreateCreditOrderScreenController extends GetxController {
     customerName?.openView();
   }
 
-  void onClickSendCustomerLocation() {
-    //customerLocation?.openView();
-    lastPickupOrders(
-      "${_selectedCustomer?.id}",
-      loading: (state) {
-        if (state) {
-          AnimatedProgress.showProgressIfNot(msg: "Getting orders");
-        } else {
-          AnimatedProgress.closeProgressIfShowing();
-        }
-      },
-    );
-  }
-
   var orderLoading = false.obs;
   var addItemLoading = false.obs;
 
@@ -227,8 +212,8 @@ class CreateCreditOrderScreenController extends GetxController {
         selectedProduct.value == null ||
         selectedUnit == null ||
         selectedPacking == null ||
-        vehicleNumber?.text.isBlank == true ||
-        mobileNumber?.text.isNum == false) {
+        qty?.text.isBlank == true ||
+        price?.text.isNum == false) {
       Get.showSnackbar(const GetSnackBar(
           message: "Important values are not available",
           duration: Duration(seconds: 5),
@@ -606,154 +591,6 @@ class CreateCreditOrderScreenController extends GetxController {
     }
   }
 
-  void _addLocations(List<Location>? locations) {
-    selectedLocations.clear();
-    removedLocations.clear();
-    if (locations != null) {
-      for (var loc in locations) {
-        onLocationChanged("", location: loc);
-      }
-    }
-  }
-
-  void expandLocations() {
-    Get.dialog(Dialog(
-      insetPadding: EdgeInsets.symmetric(vertical: Get.height * .20),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Obx(() {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "Currently added",
-                    style: Get.textTheme.bodySmall
-                        ?.copyWith(fontFamily: Fonts.poppinsSemiBold),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  const Expanded(child: Divider()),
-                  IconButton(
-                      onPressed: () {
-                        if (Get.overlayContext != null) {
-                          Navigator.of(Get.overlayContext!).pop();
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ))
-                ],
-              ),
-              Wrap(
-                alignment: WrapAlignment.spaceEvenly,
-                runAlignment: WrapAlignment.spaceBetween,
-                direction: Axis.horizontal,
-                crossAxisAlignment: WrapCrossAlignment.start,
-                spacing: 8,
-                children: selectedLocations
-                    .map(
-                      (location) => Chip(
-                        label: Text(
-                          "${location.location?.location}",
-                        ),
-                        labelStyle: Get.textTheme.bodySmall?.copyWith(
-                            fontSize: 12, fontFamily: Fonts.poppinsSemiBold),
-                        avatar: const Icon(
-                          Icons.location_on_sharp,
-                          size: 18,
-                          color: Colors.blueAccent,
-                        ),
-                        padding: const EdgeInsets.all(5),
-                        labelPadding: const EdgeInsets.only(right: 5),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        deleteIcon: const Icon(
-                          Icons.close,
-                          size: 18,
-                        ),
-                        deleteButtonTooltipMessage: "Remove this location",
-                        deleteIconColor: Colors.grey,
-                        onDeleted: () {
-                          removeLocation(location);
-                        },
-                      ),
-                    )
-                    .toList(),
-              ),
-              removedLocations.isNotEmpty
-                  ? Row(
-                      children: [
-                        Text(
-                          "Removed by you",
-                          style: Get.textTheme.bodySmall
-                              ?.copyWith(fontFamily: Fonts.poppinsSemiBold),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Expanded(child: Divider())
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-              removedLocations.isNotEmpty
-                  ? Wrap(
-                      alignment: WrapAlignment.spaceEvenly,
-                      runAlignment: WrapAlignment.center,
-                      direction: Axis.horizontal,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 8,
-                      children: removedLocations
-                          .map(
-                            (location) => Chip(
-                              label: Text(
-                                "${location.location?.location}",
-                              ),
-                              labelStyle: Get.textTheme.bodySmall?.copyWith(
-                                  fontSize: 12,
-                                  fontFamily: Fonts.poppinsSemiBold),
-                              avatar: const Icon(
-                                Icons.location_off_sharp,
-                                size: 18,
-                                color: Colors.grey,
-                              ),
-                              padding: const EdgeInsets.all(5),
-                              labelPadding: const EdgeInsets.only(right: 5),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              deleteIcon: const Icon(
-                                Icons.add,
-                                size: 18,
-                              ),
-                              deleteButtonTooltipMessage: "Add this location",
-                              deleteIconColor: Colors.grey,
-                              onDeleted: () {
-                                reAdd(location);
-                              },
-                              backgroundColor: Colors.redAccent.withAlpha(30),
-                            ),
-                          )
-                          .toList(),
-                    )
-                  : const SizedBox.shrink(),
-            ],
-          );
-        }).paddings(all: 8),
-      ),
-    ));
-  }
-
-  void reAdd(LocationWithQuantityUiModel location) {
-    if (!selectedLocations.contains(location) &&
-        removedLocations.contains(location)) {
-      selectedLocations.insert(0, location);
-      removedLocations.remove(location);
-    }
-  }
-
   void deleteAddedProduct(AddedProductUiModel request) {
     addedProducts.remove(request);
   }
@@ -785,4 +622,6 @@ class CreateCreditOrderScreenController extends GetxController {
     selectedLocations.value = selectedItems;
     log("selectedLocations.value $selectedLocations");
   }
+
+  void editAddedProduct(AddedProductUiModel product) {}
 }

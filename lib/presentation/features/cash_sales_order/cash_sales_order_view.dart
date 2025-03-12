@@ -25,34 +25,8 @@ class _CashSalesOrderState extends State<CashSalesOrder> {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            sliver: SliverToBoxAdapter(
-              child: ColoredBox(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      InkWell(
-                          onTap: controller.pop,
-                          child: const Icon(
-                            Icons.arrow_back_sharp,
-                            color: Colors.grey,
-                          )),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Text(
-                        "Cash Sales Order",
-                        style: Get.textTheme.titleMedium?.copyWith(
-                            color: Colors.grey, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(vertical: 8),
           ),
           SliverPadding(
             padding: const EdgeInsets.only(bottom: 12),
@@ -101,10 +75,16 @@ class _CashSalesOrderState extends State<CashSalesOrder> {
                 mainAxisSpacing: 2),
             itemBuilder: (context, index, animation) {
               var type = CashOrderHistoryTypes.values[index];
+              var icon = controller.session.appIcons?.firstWhereOrNull(
+                (icon) => icon.id == type.name,
+              );
 
               return ServiceContainer(
                 name: type.name,
-                image: type.image,
+                image: icon != null && icon.icon?.isNotEmpty == true
+                    ? icon.icon
+                    : type.image,
+                color: icon?.color,
                 animation: animation.value,
                 onClick: () => controller.onTapCashHistory(type),
               );

@@ -9,7 +9,9 @@ import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
+import 'package:suhol_van_sales/presentation/widgets/budget_widget.dart';
 import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.dart';
+import 'package:suhol_van_sales/presentation/widgets/product_card.dart';
 
 import '../../widgets/my_app_bar.dart';
 import '../../widgets/user_info.dart';
@@ -33,6 +35,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
       backgroundColor: Colors.white,
       appBar: MyAppBar(
         leadingWidth: 12,
+        bgColor: Colors.lightGreen,
         title: UserInfo(
           userName: controller.userName,
           shopName: controller.shopName,
@@ -51,9 +54,8 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
       ),
       body: SafeArea(
           child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.only(top: context.height * .02),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             KeyboardAwareWidgetTwo(
                 child: (context, height, isHeightInfinite) => Column(
@@ -416,7 +418,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 child: Obx(() => AppButton(
                                       onClick: controller.addIdWiseQuantities,
                                       height:
-                                          isHeightInfinite ? 40 : height * .0,
+                                          isHeightInfinite ? 40 : height * .07,
                                       btnColor: AppColors.buttonColorAlternate,
                                       showLoading:
                                           controller.addItemLoading.value,
@@ -448,133 +450,27 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                   ),
                   itemCount: controller.addedProducts.length,
                   shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  reverse: true,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     var request = controller.addedProducts[index];
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      elevation: 6,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Product",
-                                        style: Get.textTheme.bodySmall
-                                            ?.copyWith(
-                                                fontFamily: Fonts.poppinsBold),
-                                      ),
-                                      Text(
-                                        "${request.productName}",
-                                        style: Get.textTheme.bodyMedium
-                                            ?.copyWith(
-                                                fontFamily: Fonts.poppinsBold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.redAccent.withAlpha(30),
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: IconButton(
-                                      onPressed: () => controller
-                                          .deleteAddedProduct(request),
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.redAccent,
-                                      )),
-                                )
-                              ],
-                            ),
-                            const Divider(),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Packing",
-                                        style: Get.textTheme.bodySmall
-                                            ?.copyWith(
-                                                fontFamily: Fonts.poppinsBold),
-                                      ),
-                                      Text(
-                                        "${request.packing}",
-                                        style: Get.textTheme.bodyMedium
-                                            ?.copyWith(
-                                                fontFamily: Fonts.poppinsBold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Unit",
-                                        style: Get.textTheme.bodySmall
-                                            ?.copyWith(
-                                                fontFamily: Fonts.poppinsBold),
-                                      ),
-                                      Text(
-                                        "${request.unit}",
-                                        style: Get.textTheme.bodyMedium
-                                            ?.copyWith(
-                                                fontFamily: Fonts.poppinsBold),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Quantity",
-                                        style: Get.textTheme.bodySmall
-                                            ?.copyWith(
-                                                fontFamily: Fonts.poppinsBold),
-                                      ),
-                                      Text(
-                                        "${request.quantity}",
-                                        style: Get.textTheme.bodyMedium
-                                            ?.copyWith(
-                                                fontFamily: Fonts.poppinsBold),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                    return ProductCard(
+                      product: request,
+                      editAddedProduct: controller.editAddedProduct,
+                      serialNo: '${index + 1}',
                     );
                   },
-                ))
+                )),
+            Flexible(
+                child: Obx(
+              () => BudgetWidget(
+                  items: '${controller.addedProducts.length + 1}',
+                  vat: '1.250',
+                  total: ((controller.addedProducts.length + 1) * 1.250)
+                      .toStringAsFixed(3)),
+            ))
           ],
         ),
       )),

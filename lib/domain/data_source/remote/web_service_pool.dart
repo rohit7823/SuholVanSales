@@ -34,7 +34,6 @@ mixin WebServicePool {
 
   Future<RestResponse<UserOnboardingResponse>> login(
       UserOnboarding data) async {
-
     if (httpClient.instance == null) {
       return Error(message: "httpClient.instance is not ready");
     }
@@ -86,7 +85,7 @@ mixin WebServicePool {
         ? CustomerApi(httpClient.instance!)
             .withLocations()
             .then((value) => Success(value), onError: (data) {
-            log("customers $data");
+            log(data.toString(), name: "CUSTOMERS_ERROR");
             return Error<CustomersWithLocationResponse>(
                 message: data.toString());
           })
@@ -95,7 +94,6 @@ mixin WebServicePool {
 
   Future<RestResponse<CreateMaterialRequisitionResponse>>
       createMaterialRequisition(MaterialRequisitionRequest request) async {
-
     if (httpClient.instance == null) {
       return Error<CreateMaterialRequisitionResponse>(
           message: "httpClient.instance is not ready");
@@ -160,7 +158,7 @@ mixin WebServicePool {
         ? ProductsApi(httpClient.instance!)
             .withPackingAndUnit()
             .then((value) => Success(value), onError: (data) {
-            log("products $data");
+            log("$data", name: "PRODUCTS_ERROR");
             return Error<ProductsResponse>(message: data.toString());
           })
         : Error(message: _noConnectivity);

@@ -35,6 +35,8 @@ class MaterialRequisitionRequest {
   final List<LocationIDWithQuantity>? locationIdsWithQuantity;
   @JsonKey(name: 'qty')
   final int? quantity;
+  @JsonKey(name: 'payment_mode_type')
+  final String? paymentModeType;
 
   const MaterialRequisitionRequest(
       {this.customerName,
@@ -53,7 +55,8 @@ class MaterialRequisitionRequest {
       this.price,
       this.remarks,
       this.locationIdsWithQuantity,
-      this.quantity});
+      this.quantity,
+      this.paymentModeType});
 
   MaterialRequisitionRequest copyWith(
       {String? customerName,
@@ -72,7 +75,8 @@ class MaterialRequisitionRequest {
       double? price,
       String? remarks,
       List<LocationIDWithQuantity>? locationIdsWithQuantity,
-      int? quantity}) {
+      int? quantity,
+      String? paymentModeType}) {
     return MaterialRequisitionRequest(
         customerName: customerName ?? this.customerName,
         phoneNo: phoneNo ?? this.phoneNo,
@@ -91,7 +95,8 @@ class MaterialRequisitionRequest {
         locationIdsWithQuantity:
             locationIdsWithQuantity ?? this.locationIdsWithQuantity,
         deliveryTime: deliveryTime ?? this.deliveryTime,
-        quantity: quantity ?? this.quantity);
+        quantity: quantity ?? this.quantity,
+        paymentModeType: paymentModeType ?? this.paymentModeType);
   }
 
   factory MaterialRequisitionRequest.fromJson(Map<String, dynamic> json) =>
@@ -113,7 +118,8 @@ class MaterialRequisitionRequest {
               ?.map((e) =>
                   LocationIDWithQuantity.fromJson(e as Map<String, dynamic>))
               .toList(),
-          quantity: json['qty'] as int?);
+          quantity: json['qty'] as int?,
+          paymentModeType: json['payment_mode_type'] as String?);
 
   Map<String, dynamic> toJson() {
     final date = deliveryDate ?? DateTime.now();
@@ -144,7 +150,8 @@ class MaterialRequisitionRequest {
           'quantity': quantity
         }
       ],
-      'qty': quantity
+      'qty': quantity,
+      'payment_mode_type': paymentModeType
     };
   }
 
