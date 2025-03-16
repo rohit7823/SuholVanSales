@@ -58,7 +58,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(vertical: 12),
               child: Column(
                 children: [
                   KeyboardAwareWidgetTwo(
@@ -237,7 +237,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                       width: Get.width * .03,
                                     ),
                                     AppTextField(
-                                      hint: "Mobile Number",
+                                      hint: "Aria",
                                       width: Get.width * .45,
                                       controller: controller.mobileNumber!,
                                       capitalization: TextCapitalization.words,
@@ -390,9 +390,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                           Icons.price_change,
                                           color: Colors.grey,
                                         ),
-                                        inputFormatters: [
-                                          NumberTextInputFormatter()
-                                        ],
+                                        inputFormatters: [],
                                       ),
                                     ),
                                     const SizedBox(width: 12),
@@ -447,8 +445,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Obx(() => AppButton(
-                                            onClick:
-                                                controller.addIdWiseQuantities,
+                                            onClick: controller.onAddItem,
                                             height: isHeightInfinite
                                                 ? 40
                                                 : height * .07,
@@ -504,10 +501,14 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
           ),
           Obx(
             () => BudgetWidget(
-                items: controller.addedProducts.isNotEmpty ? '${controller.addedProducts.length + 1}' : '0',
+                items: controller.addedProducts.isNotEmpty
+                    ? '${controller.addedProducts.length}'
+                    : '0',
                 vat: '1.250',
-                total: controller.addedProducts.isNotEmpty ? ((controller.addedProducts.length + 1) * 1.250)
-                    .toStringAsFixed(3) : '0.00'),
+                total: controller.addedProducts.isNotEmpty
+                    ? ((controller.addedProducts.length) * 1.250)
+                        .toStringAsFixed(3)
+                    : '0.00'),
           )
         ],
       )),

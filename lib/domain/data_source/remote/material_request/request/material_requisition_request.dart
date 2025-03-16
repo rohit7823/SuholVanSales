@@ -187,15 +187,13 @@ class MaterialRequisitionRequest {
 
 @JsonSerializable()
 class LocationIDWithQuantity {
+  final Location? loc;
   @JsonKey(name: "id")
   final int? id;
   @JsonKey(name: "quantity")
   final int? qty;
 
-  const LocationIDWithQuantity({
-    this.id,
-    this.qty,
-  });
+  const LocationIDWithQuantity({this.id, this.qty, this.loc});
 
   factory LocationIDWithQuantity.fromJson(Map<String, dynamic> json) =>
       _$LocationIDWithQuantityFromJson(json);

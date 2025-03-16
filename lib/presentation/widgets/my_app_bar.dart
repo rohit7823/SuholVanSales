@@ -6,12 +6,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       {super.key,
       this.onPop,
       this.isPop = false,
-      this.bgColor = Colors.white,
+      this.bgColor = Colors.green,
       this.title,
       this.actions = const [],
       this.isTitleCenter = true,
       this.leading,
-      this.icon, this.leadingWidth});
+      this.icon,
+      this.leadingWidth});
   final Function? onPop;
   final bool isPop;
   final Color bgColor;

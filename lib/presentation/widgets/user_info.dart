@@ -27,7 +27,7 @@ class UserInfo extends StatelessWidget {
                 onTap: back,
                 child: const Icon(
                   Icons.arrow_back_sharp,
-                  color: Colors.grey,
+                  color: Colors.black,
                 )).paddings(right: 8)
             : const SizedBox.shrink(),
         menu != null && back == null
@@ -35,7 +35,7 @@ class UserInfo extends StatelessWidget {
                 onTap: menu,
                 child: const Icon(
                   Icons.menu,
-                  color: Colors.grey,
+                  color: Colors.black,
                 )).paddings(right: 8)
             : const SizedBox.shrink(),
         const CircleAvatar(

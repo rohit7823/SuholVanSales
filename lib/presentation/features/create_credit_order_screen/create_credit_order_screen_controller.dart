@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
-import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/data/repo_impls/create_order_repository_impl.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
@@ -15,15 +14,11 @@ import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/models/added_product_ui_model.dart';
 import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
-import 'package:suhol_van_sales/presentation/utils/number_text_input_formatter.dart';
 import 'package:suhol_van_sales/presentation/widgets/animated_progress.dart';
-import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 import 'package:suhol_van_sales/printer/printer_utils.dart';
 
-import '../../../app/theme/fonts.dart';
 import '../../../domain/models/customer.dart';
 import '../../../domain/models/product.dart';
-import '../../widgets/app_button.dart';
 
 class CreateCreditOrderScreenController extends GetxController {
   final _repo = Get.find<CreateOrderRepositoryImpl>();
@@ -206,7 +201,7 @@ class CreateCreditOrderScreenController extends GetxController {
   var orderLoading = false.obs;
   var addItemLoading = false.obs;
 
-  void addIdWiseQuantities() {
+  /*void addIdWiseQuantities() {
     if (_selectedCustomer == null ||
         selectedLocations.every((element) => element.location?.id == null) ||
         selectedProduct.value == null ||
@@ -306,14 +301,15 @@ class CreateCreditOrderScreenController extends GetxController {
         ),
       ),
     ));
-  }
+  }*/
 
   void editAddedProduct(AddedProductUiModel product) {
-
     final productDetails = product.allDetails;
-    if(productDetails != null) {
+    if (productDetails != null) {
       customerName?.text = productDetails.customerName ?? '';
       productName?.text = productDetails.productName ?? '';
+      packing?.text = productDetails.packing?.packing ?? '';
+      unit?.text = productDetails.unit?.name?.name ?? '';
       _selectedCustomer = productDetails.customer;
       selectedProduct.value = productDetails.product;
       mobileNumber?.text = productDetails.phoneNo?.toString() ?? '';
@@ -322,11 +318,23 @@ class CreateCreditOrderScreenController extends GetxController {
       vehicleNumber?.text = productDetails.vehicleNo ?? '';
       remarks?.text = productDetails.remarks ?? '';
       qty?.text = productDetails.quantity?.toString() ?? '';
-      selectedLocations.value = [];
+
+      final items = productDetails.locationIdsWithQuantity?.map(
+            (e) => LocationWithQuantityUiModel(
+              location: e.loc,
+            ),
+          ) ??
+          [];
+
+      userLocationDropdownController.addItems(items
+          .map(
+            (e) => DropdownItem(label: e.location?.location ?? '', value: e),
+          )
+          .toList());
+      selectedLocations.value = items.toList();
 
       addedProducts.remove(product);
     }
-
   }
 
   Future<void> onSubmitOrder() async {
@@ -394,11 +402,35 @@ class CreateCreditOrderScreenController extends GetxController {
     }
   }
 
+  void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
+    selectedLocations.value = selectedItems;
+    log("selectedLocations.value $selectedLocations");
+  }
+
   Future<void> onAddItem() async {
+    if (_selectedCustomer == null ||
+        selectedLocations.every((element) => element.location?.id == null) ||
+        selectedProduct.value == null ||
+        selectedUnit == null ||
+        selectedPacking == null ||
+        qty?.text.isBlank == true ||
+        price?.text.isNum == false) {
+      Get.showSnackbar(const GetSnackBar(
+          message: "Important values are not available",
+          duration: Duration(seconds: 5),
+          progressIndicatorValueColor: AlwaysStoppedAnimation(Colors.white)));
+      return;
+    }
+
     addItemLoading.value = true;
 
     _requisitionRequest = MaterialRequisitionRequest(
+        customer: _selectedCustomer,
+        product: selectedProduct.value,
+        packing: selectedPacking,
+        unit: selectedUnit,
         customerName: _selectedCustomer?.name,
+        productName: selectedProduct.value?.name,
         phoneNo: int.tryParse(mobileNumber?.text ?? ""),
         productUnit: selectedUnit?.name?.name,
         productPacking: selectedPacking?.packing,
@@ -412,12 +444,12 @@ class CreateCreditOrderScreenController extends GetxController {
         unitOfMeasurementId: selectedUnit?.id,
         quantity: int.tryParse("${qty?.text}"),
         locationIdsWithQuantity: selectedLocations
-            .map(
-              (element) => LocationIDWithQuantity(
-                  id: element.location?.id,
-                  qty: int.tryParse(element.qty.text)),
-            )
+            .map((element) => LocationIDWithQuantity(
+                loc: element.location,
+                id: element.location?.id,
+                qty: int.tryParse(qty?.text ?? '')))
             .toList());
+
     var result = await _repo.createRequisitionOrder(_requisitionRequest!);
     addItemLoading.value = false;
     if (result is Success) {
@@ -438,11 +470,7 @@ class CreateCreditOrderScreenController extends GetxController {
               unit: selectedUnit?.name?.name,
               packing: selectedPacking?.packing,
               price: double.tryParse(price?.text ?? '0'),
-              quantity: selectedLocations.fold(
-                0,
-                (previousValue, element) =>
-                    previousValue! + (int.tryParse(element.qty.text) ?? 0),
-              ),
+              quantity: int.tryParse(qty?.text ?? ''),
               allDetails: _requisitionRequest));
           //_clearValues();
           break;
@@ -620,7 +648,7 @@ class CreateCreditOrderScreenController extends GetxController {
     addedProducts.remove(request);
   }
 
-  /*Future<void> lastPickupOrders(String customerID,
+/*Future<void> lastPickupOrders(String customerID,
       {void Function(bool state)? loading}) async {
     loading?.call(true);
     var response = await _repo.lastPickupOrders(customerID);
@@ -642,11 +670,4 @@ class CreateCreditOrderScreenController extends GetxController {
       ));
     }
   }*/
-
-  void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
-    selectedLocations.value = selectedItems;
-    log("selectedLocations.value $selectedLocations");
-  }
-
-
 }

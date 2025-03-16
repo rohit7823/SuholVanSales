@@ -10,15 +10,10 @@ import 'package:suhol_van_sales/domain/models/product.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
 import 'package:suhol_van_sales/presentation/models/location_with_quantity_ui_model.dart';
 
-import '../../../app/theme/colors.dart';
-import '../../../app/theme/fonts.dart';
 import '../../../data/repo_impls/create_order_repository_impl.dart';
 import '../../../domain/data_source/remote/material_request/request/material_requisition_request.dart';
 import '../../models/added_product_ui_model.dart';
-import '../../utils/number_text_input_formatter.dart';
 import '../../widgets/animated_progress.dart';
-import '../../widgets/app_button.dart';
-import '../../widgets/app_text_field.dart';
 
 class CreateCashOrderScreenController extends GetxController {
   final _repo = Get.find<CreateOrderRepositoryImpl>();
@@ -202,6 +197,20 @@ class CreateCashOrderScreenController extends GetxController {
   }
 
   Future<void> onAddItem() async {
+    if (_selectedCustomer == null ||
+        selectedLocations.every((element) => element.location?.id == null) ||
+        selectedProduct.value == null ||
+        selectedUnit == null ||
+        selectedPacking == null ||
+        vehicleNumber?.text.isBlank == true ||
+        mobileNumber?.text.isNum == false) {
+      Get.showSnackbar(const GetSnackBar(
+          message: "Important values are not available",
+          duration: Duration(seconds: 5),
+          progressIndicatorValueColor: AlwaysStoppedAnimation(Colors.white)));
+      return;
+    }
+
     addItemLoading.value = true;
     _requisitionRequest = MaterialRequisitionRequest(
         customerName: _selectedCustomer?.name,
@@ -220,8 +229,7 @@ class CreateCashOrderScreenController extends GetxController {
         locationIdsWithQuantity: selectedLocations
             .map(
               (element) => LocationIDWithQuantity(
-                  id: element.location?.id,
-                  qty: int.tryParse(element.qty.text)),
+                  id: element.location?.id, qty: int.tryParse(qty?.text ?? '')),
             )
             .toList());
     var result = await _repo.createRequisitionOrder(_requisitionRequest!);
@@ -247,7 +255,8 @@ class CreateCashOrderScreenController extends GetxController {
                 0,
                 (previousValue, element) =>
                     previousValue! + (int.tryParse(element.qty.text) ?? 0),
-              )));
+              ),
+              allDetails: _requisitionRequest));
           //_clearValues();
           break;
         case false:
@@ -322,20 +331,8 @@ class CreateCashOrderScreenController extends GetxController {
     addedProducts.remove(request);
   }
 
-  void addIdWiseQuantities() {
-    if (_selectedCustomer == null ||
-        selectedLocations.every((element) => element.location?.id == null) ||
-        selectedProduct.value == null ||
-        selectedUnit == null ||
-        selectedPacking == null ||
-        vehicleNumber?.text.isBlank == true ||
-        mobileNumber?.text.isNum == false) {
-      Get.showSnackbar(const GetSnackBar(
-          message: "Important values are not available",
-          duration: Duration(seconds: 5),
-          progressIndicatorValueColor: AlwaysStoppedAnimation(Colors.white)));
-      return;
-    }
+  /* void addIdWiseQuantities() {
+
 
     Get.dialog(Dialog(
       insetPadding: const EdgeInsets.all(8),
@@ -422,7 +419,7 @@ class CreateCashOrderScreenController extends GetxController {
         ),
       ),
     ));
-  }
+  }*/
 
   void onSelectCustomer(Customer result, SearchController controller) {
     if (result.name == null) return;
@@ -480,5 +477,39 @@ class CreateCashOrderScreenController extends GetxController {
   void clearSelectedUnit() {
     unit?.text = "";
     selectedUnit = null;
+  }
+
+  void editAddedProduct(AddedProductUiModel product) {
+    final productDetails = product.allDetails;
+    if (productDetails != null) {
+      customerName?.text = productDetails.customerName ?? '';
+      productName?.text = productDetails.productName ?? '';
+      packing?.text = productDetails.packing?.packing ?? '';
+      unit?.text = productDetails.unit?.name?.name ?? '';
+      _selectedCustomer = productDetails.customer;
+      selectedProduct.value = productDetails.product;
+      mobileNumber?.text = productDetails.phoneNo?.toString() ?? '';
+      selectedUnit = productDetails.unit;
+      selectedPacking = productDetails.packing;
+      vehicleNumber?.text = productDetails.vehicleNo ?? '';
+      remarks?.text = productDetails.remarks ?? '';
+      qty?.text = productDetails.quantity?.toString() ?? '';
+
+      final items = productDetails.locationIdsWithQuantity?.map(
+            (e) => LocationWithQuantityUiModel(
+              location: e.loc,
+            ),
+          ) ??
+          [];
+
+      userLocationDropdownController.addItems(items
+          .map(
+            (e) => DropdownItem(label: e.location?.location ?? '', value: e),
+          )
+          .toList());
+      selectedLocations.value = items.toList();
+
+      addedProducts.remove(product);
+    }
   }
 }
