@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/material_request/request/material_requisition_request.dart';
 
 class AddedProductUiModel {
   final String? productName;
@@ -8,15 +9,18 @@ class AddedProductUiModel {
   final DateTime? deliveryDate;
   final TimeOfDay? deliveryTime;
   final double? price;
+  final MaterialRequisitionRequest? allDetails;
 
-  const AddedProductUiModel(
-      {this.productName,
-      this.packing,
-      this.unit,
-      this.quantity,
-      this.deliveryDate,
-      this.deliveryTime,
-      this.price});
+  const AddedProductUiModel({
+    this.productName,
+    this.packing,
+    this.unit,
+    this.quantity,
+    this.deliveryDate,
+    this.deliveryTime,
+    this.price,
+    this.allDetails,
+  });
 
   AddedProductUiModel copyWith(
       {String? productName,
@@ -25,7 +29,8 @@ class AddedProductUiModel {
       int? quantity,
       DateTime? deliveryDate,
       TimeOfDay? deliveryTime,
-      double? price}) {
+      double? price,
+      MaterialRequisitionRequest? allDetails}) {
     return AddedProductUiModel(
         productName: productName ?? this.productName,
         packing: packing ?? this.packing,
@@ -33,6 +38,7 @@ class AddedProductUiModel {
         quantity: quantity ?? this.quantity,
         deliveryDate: deliveryDate ?? this.deliveryDate,
         deliveryTime: deliveryTime ?? this.deliveryTime,
-        price: price ?? this.price);
+        price: price ?? this.price,
+        allDetails: allDetails ?? this.allDetails);
   }
 }

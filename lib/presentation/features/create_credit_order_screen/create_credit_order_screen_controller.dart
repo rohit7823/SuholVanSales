@@ -308,6 +308,27 @@ class CreateCreditOrderScreenController extends GetxController {
     ));
   }
 
+  void editAddedProduct(AddedProductUiModel product) {
+
+    final productDetails = product.allDetails;
+    if(productDetails != null) {
+      customerName?.text = productDetails.customerName ?? '';
+      productName?.text = productDetails.productName ?? '';
+      _selectedCustomer = productDetails.customer;
+      selectedProduct.value = productDetails.product;
+      mobileNumber?.text = productDetails.phoneNo?.toString() ?? '';
+      selectedUnit = productDetails.unit;
+      selectedPacking = productDetails.packing;
+      vehicleNumber?.text = productDetails.vehicleNo ?? '';
+      remarks?.text = productDetails.remarks ?? '';
+      qty?.text = productDetails.quantity?.toString() ?? '';
+      selectedLocations.value = [];
+
+      addedProducts.remove(product);
+    }
+
+  }
+
   Future<void> onSubmitOrder() async {
     if (vehicleNumber?.text.isBlank == true) {
       Get.showSnackbar(const GetSnackBar(
@@ -318,6 +339,8 @@ class CreateCreditOrderScreenController extends GetxController {
     }
 
     _requisitionRequest = MaterialRequisitionRequest(
+      customer: _selectedCustomer,
+      product: selectedProduct.value,
       customerId: _selectedCustomer?.id,
       customerName: _selectedCustomer?.name,
       productName: selectedProduct.value?.name,
@@ -414,11 +437,13 @@ class CreateCreditOrderScreenController extends GetxController {
               productName: selectedProduct.value?.name,
               unit: selectedUnit?.name?.name,
               packing: selectedPacking?.packing,
+              price: double.tryParse(price?.text ?? '0'),
               quantity: selectedLocations.fold(
                 0,
                 (previousValue, element) =>
                     previousValue! + (int.tryParse(element.qty.text) ?? 0),
-              )));
+              ),
+              allDetails: _requisitionRequest));
           //_clearValues();
           break;
         case false:
@@ -595,7 +620,7 @@ class CreateCreditOrderScreenController extends GetxController {
     addedProducts.remove(request);
   }
 
-  Future<void> lastPickupOrders(String customerID,
+  /*Future<void> lastPickupOrders(String customerID,
       {void Function(bool state)? loading}) async {
     loading?.call(true);
     var response = await _repo.lastPickupOrders(customerID);
@@ -616,12 +641,12 @@ class CreateCreditOrderScreenController extends GetxController {
         duration: const Duration(seconds: 5),
       ));
     }
-  }
+  }*/
 
   void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
     selectedLocations.value = selectedItems;
     log("selectedLocations.value $selectedLocations");
   }
 
-  void editAddedProduct(AddedProductUiModel product) {}
+
 }

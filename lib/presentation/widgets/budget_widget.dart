@@ -16,12 +16,12 @@ class BudgetWidget extends StatelessWidget {
     return ColoredBox(
       color: Get.theme.colorScheme.primary,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
         child: FittedBox(
           child: Row(
             children: [
               Text(
-                "Product: ${items.length}",
+                "Product: $items",
                 style: Get.textTheme.titleLarge?.copyWith(
                     color: const Color(0xFF092058),
                     fontFamily: Fonts.poppinsSemiBold),

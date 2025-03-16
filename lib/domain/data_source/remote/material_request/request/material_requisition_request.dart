@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:suhol_van_sales/domain/models/customer.dart';
+import 'package:suhol_van_sales/domain/models/product.dart';
 import 'package:suhol_van_sales/presentation/utils/extensions.dart';
 
 part 'material_requisition_request.g.dart';
 
 @JsonSerializable()
 class MaterialRequisitionRequest {
+  final Customer? customer;
+  final Product? product;
+  final UnitElement? unit;
+  final Packing? packing;
   final String? customerName;
   final int? phoneNo;
   final String? productName;
@@ -39,7 +45,8 @@ class MaterialRequisitionRequest {
   final String? paymentModeType;
 
   const MaterialRequisitionRequest(
-      {this.customerName,
+      {this.customer,
+      this.customerName,
       this.phoneNo,
       this.productName,
       this.productPacking,
@@ -56,10 +63,14 @@ class MaterialRequisitionRequest {
       this.remarks,
       this.locationIdsWithQuantity,
       this.quantity,
-      this.paymentModeType});
+      this.paymentModeType,
+      this.product,
+      this.packing,
+      this.unit});
 
   MaterialRequisitionRequest copyWith(
-      {String? customerName,
+      {Customer? customer,
+      String? customerName,
       int? phoneNo,
       String? productName,
       String? productUnit,
@@ -76,8 +87,12 @@ class MaterialRequisitionRequest {
       String? remarks,
       List<LocationIDWithQuantity>? locationIdsWithQuantity,
       int? quantity,
-      String? paymentModeType}) {
+      String? paymentModeType,
+      Product? product,
+      UnitElement? unit,
+      Packing? packing}) {
     return MaterialRequisitionRequest(
+        customer: customer ?? this.customer,
         customerName: customerName ?? this.customerName,
         phoneNo: phoneNo ?? this.phoneNo,
         productName: productName ?? this.productName,
@@ -96,7 +111,10 @@ class MaterialRequisitionRequest {
             locationIdsWithQuantity ?? this.locationIdsWithQuantity,
         deliveryTime: deliveryTime ?? this.deliveryTime,
         quantity: quantity ?? this.quantity,
-        paymentModeType: paymentModeType ?? this.paymentModeType);
+        paymentModeType: paymentModeType ?? this.paymentModeType,
+        product: product ?? this.product,
+        packing: packing ?? this.packing,
+        unit: unit ?? this.unit);
   }
 
   factory MaterialRequisitionRequest.fromJson(Map<String, dynamic> json) =>

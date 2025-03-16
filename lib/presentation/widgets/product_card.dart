@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/app/theme/colors.dart';
 import 'package:suhol_van_sales/app/theme/fonts.dart';
 import 'package:suhol_van_sales/presentation/models/added_product_ui_model.dart';
 
@@ -35,8 +36,8 @@ class ProductCard extends StatelessWidget {
                     children: [
                       Text(
                         "$serialNo. ",
-                        style: Get.textTheme.bodySmall
-                            ?.copyWith(fontFamily: Fonts.poppinsBold),
+                        style: Get.textTheme.bodyLarge
+                            ?.copyWith(fontFamily: Fonts.poppinsMedium),
                       ),
                       Text(
                         "${product.productName}",
@@ -48,28 +49,35 @@ class ProductCard extends StatelessWidget {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.redAccent.withAlpha(30),
-                      borderRadius: BorderRadius.circular(12)),
-                  child: IconButton(
-                      onPressed: () => editAddedProduct(product),
-                      icon: const Icon(
+                      color: Colors.green.withAlpha(30),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: InkWell(
+                    onTap: () => editAddedProduct(product),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      child: Icon(
                         Icons.edit_note_sharp,
-                        color: Colors.redAccent,
-                      )),
+                        color: AppColors.buttonColorAlternate,
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),
+            const SizedBox(height: 8,),
+            Divider(height: 1, thickness: 1, color: Colors.grey.shade300,),
+            const SizedBox(height: 10,),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
+                Flexible(
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "P.",
-                        style: Get.textTheme.bodySmall
-                            ?.copyWith(fontFamily: Fonts.poppinsRegular),
+                        "P. ",
+                        style: Get.textTheme.bodyMedium
+                            ?.copyWith(fontFamily: Fonts.poppinsMedium),
                       ),
                       Text(
                         "${product.packing}",
@@ -79,14 +87,14 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                Flexible(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         "U. ",
-                        style: Get.textTheme.bodySmall
+                        style: Get.textTheme.bodyMedium
                             ?.copyWith(fontFamily: Fonts.poppinsRegular),
                       ),
                       Text(
@@ -97,14 +105,19 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                VerticalDivider(
+                  width: 1,
+                  color: Colors.grey,
+                  thickness: 1,
+                ),
+                Flexible(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         "Q. ",
-                        style: Get.textTheme.bodySmall
+                        style: Get.textTheme.bodyMedium
                             ?.copyWith(fontFamily: Fonts.poppinsRegular),
                       ),
                       Text(
@@ -115,14 +128,14 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                Flexible(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         "P. ",
-                        style: Get.textTheme.bodySmall
+                        style: Get.textTheme.bodyMedium
                             ?.copyWith(fontFamily: Fonts.poppinsRegular),
                       ),
                       Text(
@@ -133,14 +146,14 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                Flexible(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         "T. ",
-                        style: Get.textTheme.bodySmall
+                        style: Get.textTheme.bodyMedium
                             ?.copyWith(fontFamily: Fonts.poppinsRegular),
                       ),
                       Text(
