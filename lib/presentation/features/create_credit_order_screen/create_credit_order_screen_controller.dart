@@ -94,6 +94,7 @@ class CreateCreditOrderScreenController extends GetxController {
     super.onReady();
     qty?.addListener(_onQtyChange);
     price?.addListener(_calculatePrice);
+    mobileNumber?.addListener(_onMobileInput);
     userName.value = _session.userDetails?.name ?? "Welcome";
 
     _pickupOrderWorker = ever(
@@ -139,6 +140,20 @@ class CreateCreditOrderScreenController extends GetxController {
         }
       },
     );
+  }
+
+  void _onMobileInput() {
+    if (mobileNumber?.text.isBlank == false) {
+      final customer =
+          CreateOrderRepositoryImpl.customersCache.firstWhereOrNull(
+        (customer) {
+          return customer.mobileNumber == mobileNumber?.text;
+        },
+      );
+      if (customer != null) {
+        onSelectCustomer(customer, customerName!);
+      }
+    }
   }
 
   Future<void> goToPrintInvoice() async {
@@ -201,107 +216,10 @@ class CreateCreditOrderScreenController extends GetxController {
   var orderLoading = false.obs;
   var addItemLoading = false.obs;
 
-  /*void addIdWiseQuantities() {
-    if (_selectedCustomer == null ||
-        selectedLocations.every((element) => element.location?.id == null) ||
-        selectedProduct.value == null ||
-        selectedUnit == null ||
-        selectedPacking == null ||
-        qty?.text.isBlank == true ||
-        price?.text.isNum == false) {
-      Get.showSnackbar(const GetSnackBar(
-          message: "Important values are not available",
-          duration: Duration(seconds: 5),
-          progressIndicatorValueColor: AlwaysStoppedAnimation(Colors.white)));
-      return;
-    }
-
-    Get.dialog(Dialog(
-      insetPadding: const EdgeInsets.all(8),
-      alignment: Alignment.center,
-      backgroundColor: Colors.white,
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(12))),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                  onPressed: () => Navigator.of(Get.overlayContext!).pop(),
-                  icon: const Icon(
-                    Icons.close,
-                    color: Colors.redAccent,
-                  )),
-            ),
-            Flexible(
-                child: Obx(
-              () => ListView.separated(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    var model = selectedLocations[index];
-                    return Row(
-                      children: [
-                        Expanded(
-                            flex: 2,
-                            child: Text(
-                              "${model.location?.location}",
-                              style: Get.textTheme.bodyMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                            )),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          child: MyTextField(
-                              changeStyle: true,
-                              enabled: true,
-                              isObscure: false,
-                              controller: model.qty,
-                              hint: "Enter Qty",
-                              inputFormatters: [NumberTextInputFormatter()],
-                              keyboardType:
-                                  const TextInputType.numberWithOptions()),
-                        ),
-                      ],
-                    );
-                  },
-                  separatorBuilder: (context, index) => const SizedBox(
-                        height: 8,
-                      ),
-                  itemCount: selectedLocations.length,
-                  cacheExtent: 50),
-            )),
-            const SizedBox(
-              height: 8,
-            ),
-            AppButton(
-              onClick: () {
-                Navigator.of(Get.context!).pop();
-                onAddItem();
-              },
-              btnColor: AppColors.buttonColor,
-              border: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              height: 35,
-              child: Text(
-                "ADD",
-                style: Get.textTheme.titleLarge?.copyWith(
-                    color: Colors.white, fontFamily: Fonts.poppinsMedium),
-              ),
-            )
-          ],
-        ),
-      ),
-    ));
-  }*/
+  FocusNode? packingFocusNode = FocusNode();
+  FocusNode? unitFocusNode = FocusNode();
+  FocusNode? qtyFocusNode = FocusNode();
+  FocusNode? productFocusNode = FocusNode();
 
   void editAddedProduct(AddedProductUiModel product) {
     final productDetails = product.allDetails;
@@ -403,8 +321,12 @@ class CreateCreditOrderScreenController extends GetxController {
   }
 
   void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
-    selectedLocations.value = selectedItems;
-    log("selectedLocations.value $selectedLocations");
+    if(selectedItems.isNotEmpty) {
+      selectedLocations.value = selectedItems;
+      log("selectedLocations.value $selectedLocations");
+      //productFocusNode?.requestFocus();
+      productName?.openView();
+    }
   }
 
   Future<void> onAddItem() async {
@@ -471,8 +393,9 @@ class CreateCreditOrderScreenController extends GetxController {
               packing: selectedPacking?.packing,
               price: double.tryParse(price?.text ?? '0'),
               quantity: int.tryParse(qty?.text ?? ''),
-              allDetails: _requisitionRequest));
-          //_clearValues();
+              allDetails: _requisitionRequest
+          ));
+          _clearValues();
           break;
         case false:
           Get.showSnackbar(GetSnackBar(
@@ -510,6 +433,7 @@ class CreateCreditOrderScreenController extends GetxController {
     productName?.text = '';
     packing?.text = '';
     price?.text = '';
+    userLocationDropdownController.clearAll();
   }
 
   FutureOr<Iterable<Customer>> findCustomerName(
@@ -526,10 +450,10 @@ class CreateCreditOrderScreenController extends GetxController {
   }
 
   void onSelectCustomer(Customer result, SearchController controller) {
+    log('${result.mobileNumber}', name: 'CUSTOMER_NUMBER');
     if (result.name == null) return;
     controller.text = result.name!;
     _selectedCustomer = result;
-    //_addLocations(result.locations);
     if (result.locations != null) {
       userLocationDropdownController.addItems(result.locations!
           .map((element) => LocationWithQuantityUiModel(location: element))
@@ -576,13 +500,16 @@ class CreateCreditOrderScreenController extends GetxController {
 
   FutureOr<Iterable<Product>> findProductName(
       SearchController searchController) async {
-    if (searchController.text.isBlank == true) {
-      return [];
+    if(CreateOrderRepositoryImpl.productsCache.isEmpty) {
+      AnimatedProgress.showProgressIfNot();
     }
 
-    AnimatedProgress.showProgressIfNot();
     var values = await _repo.findProductByName(searchController.text);
-    AnimatedProgress.closeProgressIfShowing();
+
+    if(CreateOrderRepositoryImpl.productsCache.isEmpty) {
+      AnimatedProgress.closeProgressIfShowing();
+    }
+
     return values ?? [];
   }
 
@@ -608,13 +535,17 @@ class CreateCreditOrderScreenController extends GetxController {
     if (result.packing == null) return;
     controller.text = result.packing ?? "None";
     selectedPacking = result;
+    unit?.openView();
   }
 
   void onSelectProductUnit(UnitElement result, SearchController controller) {
     if (result.name?.name == null) return;
     controller.text = result.name?.name ?? "None";
     selectedUnit = result;
+    qtyFocusNode?.requestFocus();
   }
+
+  ///94367877
 
   void onSelectProduct(Product result, SearchController controller) {
     if (result.name == null) return;
@@ -622,6 +553,8 @@ class CreateCreditOrderScreenController extends GetxController {
     selectedProduct.value = result;
     clearSelectedPacking();
     clearSelectedUnit();
+    //productFocusNode?.nextFocus();
+    packing?.openView();
   }
 
   void clearSelectedPacking() {

@@ -67,6 +67,11 @@ class CreateCashOrderScreenController extends GetxController {
 
   RxList<AddedProductUiModel> addedProducts = RxList.empty();
 
+  FocusNode? packingFocusNode = FocusNode();
+  FocusNode? unitFocusNode = FocusNode();
+  FocusNode? qtyFocusNode = FocusNode();
+  FocusNode? productFocusNode = FocusNode();
+
   @override
   void onReady() {
     // TODO: implement onReady
@@ -74,8 +79,24 @@ class CreateCashOrderScreenController extends GetxController {
 
     qty?.addListener(_onQtyChange);
     price?.addListener(_calculatePrice);
+    mobileNumber?.addListener(_onMobileInput);
 
     userName.value = _session.userDetails?.name ?? 'Welcome';
+  }
+
+  void _onMobileInput() {
+    if (mobileNumber?.text.isBlank == false) {
+      log('${mobileNumber?.text}', name: 'MOBILE NUMBER');
+      final customer =
+          CreateOrderRepositoryImpl.customersCache.firstWhereOrNull(
+        (customer) {
+          return customer.mobileNumber == mobileNumber?.text;
+        },
+      );
+      if (customer != null) {
+        onSelectCustomer(customer, customerName!);
+      }
+    }
   }
 
   void _calculatePrice() {
@@ -93,8 +114,12 @@ class CreateCashOrderScreenController extends GetxController {
   }
 
   void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
-    selectedLocations.value = selectedItems;
-    log("selectedLocations.value $selectedLocations");
+    if(selectedItems.isNotEmpty) {
+      selectedLocations.value = selectedItems;
+      log("selectedLocations.value $selectedLocations");
+      //productFocusNode?.requestFocus();
+      productName?.openView();
+    }
   }
 
   @override
@@ -202,8 +227,10 @@ class CreateCashOrderScreenController extends GetxController {
         selectedProduct.value == null ||
         selectedUnit == null ||
         selectedPacking == null ||
-        vehicleNumber?.text.isBlank == true ||
-        mobileNumber?.text.isNum == false) {
+        //vehicleNumber?.text.isBlank == true ||
+        mobileNumber?.text.isNum == false ||
+        qty?.text.isBlank == true ||
+        price?.text.isNum == false) {
       Get.showSnackbar(const GetSnackBar(
           message: "Important values are not available",
           duration: Duration(seconds: 5),
@@ -229,7 +256,9 @@ class CreateCashOrderScreenController extends GetxController {
         locationIdsWithQuantity: selectedLocations
             .map(
               (element) => LocationIDWithQuantity(
-                  id: element.location?.id, qty: int.tryParse(qty?.text ?? '')),
+                  loc: element.location,
+                  id: element.location?.id,
+                  qty: int.tryParse(qty?.text ?? '')),
             )
             .toList());
     var result = await _repo.createRequisitionOrder(_requisitionRequest!);
@@ -251,13 +280,11 @@ class CreateCashOrderScreenController extends GetxController {
               productName: selectedProduct.value?.name,
               unit: selectedUnit?.name?.name,
               packing: selectedPacking?.packing,
-              quantity: selectedLocations.fold(
-                0,
-                (previousValue, element) =>
-                    previousValue! + (int.tryParse(element.qty.text) ?? 0),
-              ),
-              allDetails: _requisitionRequest));
-          //_clearValues();
+              price: double.tryParse(price?.text ?? '0'),
+              quantity: int.tryParse(qty?.text ?? ''),
+              allDetails: _requisitionRequest
+          ));
+          _clearValues();
           break;
         case false:
           Get.showSnackbar(GetSnackBar(
@@ -279,6 +306,24 @@ class CreateCashOrderScreenController extends GetxController {
     }
   }
 
+  void _clearValues() {
+    _selectedCustomer = null;
+    selectedProduct.value = null;
+    selectedPacking = null;
+    selectedUnit = null;
+    selectedLocations.clear();
+    remarks?.text = "";
+    customerName?.text = '';
+    qty?.text = '';
+    unit?.text = '';
+    mobileNumber?.text = '';
+    vehicleNumber?.text = '';
+    productName?.text = '';
+    packing?.text = '';
+    price?.text = '';
+    userLocationDropdownController.clearAll();
+  }
+
   FutureOr<Iterable<Customer>> findCustomerName(
       SearchController searchController) async {
     if (searchController.text.isBlank == true) {
@@ -295,7 +340,15 @@ class CreateCashOrderScreenController extends GetxController {
   FutureOr<Iterable<Product>> findProductName(
       SearchController searchController) async {
     debugPrint("query ${searchController.text}");
+    if (CreateOrderRepositoryImpl.productsCache.isEmpty) {
+      AnimatedProgress.showProgressIfNot();
+    }
     var values = await _repo.findProductByName(searchController.text);
+
+    if (CreateOrderRepositoryImpl.productsCache.isEmpty) {
+      AnimatedProgress.closeProgressIfShowing();
+    }
+
     return values ?? [];
   }
 
@@ -444,6 +497,7 @@ class CreateCashOrderScreenController extends GetxController {
     selectedProduct.value = result;
     clearSelectedPacking();
     clearSelectedUnit();
+    packing?.openView();
   }
 
   // FutureOr<Iterable<Customer>> findCustomerEmail(
@@ -461,12 +515,14 @@ class CreateCashOrderScreenController extends GetxController {
     if (result.packing == null) return;
     controller.text = result.packing ?? "None";
     selectedPacking = result;
+    unit?.openView();
   }
 
   void onSelectProductUnit(UnitElement result, SearchController controller) {
     if (result.name?.name == null) return;
     controller.text = result.name?.name ?? "None";
     selectedUnit = result;
+    qtyFocusNode?.requestFocus();
   }
 
   void clearSelectedPacking() {

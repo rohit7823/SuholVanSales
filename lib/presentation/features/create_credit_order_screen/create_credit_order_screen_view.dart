@@ -28,6 +28,17 @@ class CreateCreditOrderScreen extends StatefulWidget {
 class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
   final controller = Get.find<CreateCreditOrderScreenController>();
 
+  final FocusNode? mobileNumberFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      mobileNumberFocusNode?.requestFocus();
+    },);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +75,31 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                   KeyboardAwareWidgetTwo(
                       child: (context, height, isHeightInfinite) => Column(
                             children: [
+                              SizedBox(
+                                width: Get.width * .95,
+                                child: AppTextField(
+                                  hint: "Aria",
+                                  width: Get.width * .95,
+                                  controller: controller.mobileNumber!,
+                                  capitalization: TextCapitalization.words,
+                                  inputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.number,
+                                  prefixIcon: const Icon(
+                                    Icons.phone_android,
+                                    color: Colors.grey,
+                                  ),
+                                  inputFormatters: [
+                                    NumberTextInputFormatter()
+                                  ],
+                                  autoFocus: true,
+                                  focusNode: mobileNumberFocusNode,
+                                ),
+                              ),
+                              SizedBox(
+                                height: isHeightInfinite
+                                    ? Get.height * .02
+                                    : height * .02,
+                              ),
                               SizedBox(
                                 width: Get.width * .95,
                                 //height: isHeightInfinite ? null : height * .07,
@@ -222,7 +258,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 child: Row(
                                   children: [
                                     AppTextField(
-                                      width: Get.width * .45,
+                                      width: Get.width * .95,
                                       hint: "Vehicle Number",
                                       controller: controller.vehicleNumber!,
                                       capitalization: TextCapitalization.words,
@@ -233,25 +269,6 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         color: Colors.grey,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: Get.width * .03,
-                                    ),
-                                    AppTextField(
-                                      hint: "Aria",
-                                      width: Get.width * .45,
-                                      controller: controller.mobileNumber!,
-                                      capitalization: TextCapitalization.words,
-                                      inputAction: TextInputAction.next,
-                                      keyboardType: TextInputType.number,
-                                      prefixIcon: const Icon(
-                                        Icons.phone_android,
-                                        color: Colors.grey,
-                                      ),
-                                      inputFormatters: [
-                                        NumberTextInputFormatter()
-                                      ],
-                                      autoFocus: false,
-                                    )
                                   ],
                                 ),
                               ),
@@ -281,6 +298,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                   autoFocus: false,
                                   suggestionConstraints:
                                       AppTextField.fixedBoxConstraints(),
+                                  focusNode: controller.productFocusNode,
                                 ),
                               ),
                               SizedBox(
@@ -294,61 +312,65 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                 child: Row(
                                   children: [
                                     Expanded(
-                                      child: Obx(() => AppTextField(
-                                            hint: "Packing",
-                                            searchController:
-                                                controller.packing!,
-                                            capitalization:
-                                                TextCapitalization.words,
-                                            inputAction: TextInputAction.next,
-                                            prefixIcon: const Icon(
-                                              Icons.backpack,
-                                              color: Colors.grey,
-                                            ),
-                                            fieldType: controller
+                                      child: AppTextField(
+                                        hint: "Packing",
+                                        searchController:
+                                        controller.packing!,
+                                        capitalization:
+                                        TextCapitalization.words,
+                                        inputAction: TextInputAction.next,
+                                        prefixIcon: const Icon(
+                                          Icons.backpack,
+                                          color: Colors.grey,
+                                        ),
+                                        fieldType: FieldType.autocomplete /*controller
                                                         .selectedProduct
                                                         .value !=
                                                     null
                                                 ? FieldType.autocomplete
-                                                : FieldType.normal,
-                                            suggestionConstraints: AppTextField
-                                                .fixedBoxConstraints(),
-                                            suggestionsBuilder:
-                                                controller.findProductPacking,
-                                            onSelectResult: controller
-                                                .onSelectProductPacking,
-                                            suggestionDisplayOption: (p0) =>
-                                                p0.packing ?? "None",
-                                            autoFocus: false,
-                                          )),
+                                                : FieldType.normal*/,
+                                        suggestionConstraints: AppTextField
+                                            .fixedBoxConstraints(),
+                                        suggestionsBuilder:
+                                        controller.findProductPacking,
+                                        onSelectResult: controller
+                                            .onSelectProductPacking,
+                                        suggestionDisplayOption: (p0) =>
+                                        p0.packing ?? "None",
+                                        autoFocus: false,
+                                        focusNode: controller.packingFocusNode,
+
+                                      ),
                                     ),
                                     const SizedBox(
                                       width: 12,
                                     ),
                                     Expanded(
-                                      child: Obx(() => AppTextField(
-                                            hint: "Unit",
-                                            searchController: controller.unit!,
-                                            inputAction: TextInputAction.next,
-                                            prefixIcon: const Icon(
-                                              Icons.ad_units,
-                                              color: Colors.grey,
-                                            ),
-                                            suggestionsBuilder:
-                                                controller.findProductUnit,
-                                            onSelectResult:
-                                                controller.onSelectProductUnit,
-                                            suggestionDisplayOption: (p0) =>
-                                                p0.name?.name ?? "None",
-                                            fieldType: controller
+                                      child: AppTextField(
+                                        hint: "Unit",
+                                        searchController: controller.unit!,
+                                        inputAction: TextInputAction.next,
+                                        prefixIcon: const Icon(
+                                          Icons.ad_units,
+                                          color: Colors.grey,
+                                        ),
+                                        suggestionsBuilder:
+                                        controller.findProductUnit,
+                                        onSelectResult:
+                                        controller.onSelectProductUnit,
+                                        suggestionDisplayOption: (p0) =>
+                                        p0.name?.name ?? "None",
+                                        fieldType: FieldType.autocomplete /*controller
                                                         .selectedProduct
                                                         .value !=
                                                     null
                                                 ? FieldType.autocomplete
-                                                : FieldType.normal,
-                                            suggestionConstraints: AppTextField
-                                                .fixedBoxConstraints(),
-                                          )),
+                                                : FieldType.normal*/,
+                                        suggestionConstraints: AppTextField
+                                            .fixedBoxConstraints(),
+                                        focusNode: controller.unitFocusNode,
+                                        autoFocus: false,
+                                      ),
                                     ),
                                     const SizedBox(
                                       width: 12,
@@ -363,6 +385,8 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                           Icons.confirmation_number,
                                           color: Colors.grey,
                                         ),
+                                        focusNode: controller.qtyFocusNode,
+                                        autoFocus: false,
                                       ),
                                     )
                                   ],
@@ -381,8 +405,9 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                     Expanded(
                                       child: AppTextField(
                                         hint: "Price",
+                                        autoFocus: false,
                                         controller: controller.price!,
-                                        inputAction: TextInputAction.next,
+                                        inputAction: TextInputAction.done,
                                         keyboardType: const TextInputType
                                             .numberWithOptions(
                                             decimal: true, signed: true),
@@ -391,6 +416,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                           color: Colors.grey,
                                         ),
                                         inputFormatters: [],
+                                        onSubmitted: (value) {
+                                          controller.onAddItem();
+                                          mobileNumberFocusNode?.requestFocus();
+                                        },
                                       ),
                                     ),
                                     const SizedBox(width: 12),
@@ -406,6 +435,11 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                           Icons.note_alt_rounded,
                                           color: Colors.grey,
                                         ),
+                                        onSubmitted: (value) {
+                                          controller.onAddItem();
+                                          mobileNumberFocusNode?.requestFocus();
+                                        },
+                                        autoFocus: false,
                                       ),
                                     )
                                   ],
@@ -445,7 +479,10 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Obx(() => AppButton(
-                                            onClick: controller.onAddItem,
+                                            onClick: () {
+                                              controller.onAddItem();
+                                              mobileNumberFocusNode?.requestFocus();
+                                            },
                                             height: isHeightInfinite
                                                 ? 40
                                                 : height * .07,

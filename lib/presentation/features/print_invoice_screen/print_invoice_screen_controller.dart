@@ -75,6 +75,27 @@ class PrintInvoiceScreenController extends GetxController {
         progressIndicatorValueColor:
             const AlwaysStoppedAnimation(AppColors.primary),
       ));
+      await Future.delayed(const Duration(seconds: 2));
+      Get.dialog(AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        title: const Text('Customer Copy'),
+        content: const Text('Do you want a customer copy?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(Get.overlayContext!).pop(); // Close the dialog
+            },
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(Get.overlayContext!).pop(); // Close the dialog
+              print(invoiceKey);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ));
     }
   }
 
