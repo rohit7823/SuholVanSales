@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/theme/colors.dart';
@@ -9,10 +10,12 @@ class ProductCard extends StatelessWidget {
       {super.key,
       required this.product,
       required this.editAddedProduct,
+      this.deleteProduct,
       this.serialNo});
 
   final AddedProductUiModel product;
   final void Function(AddedProductUiModel) editAddedProduct;
+  final void Function(AddedProductUiModel)? deleteProduct;
   final String? serialNo;
 
   @override
@@ -27,9 +30,10 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  flex: 3,
+                Flexible(
+                  flex: 2,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,34 +43,70 @@ class ProductCard extends StatelessWidget {
                         style: Get.textTheme.bodyLarge
                             ?.copyWith(fontFamily: Fonts.poppinsMedium),
                       ),
-                      Text(
-                        "${product.productName}",
-                        style: Get.textTheme.bodyLarge
-                            ?.copyWith(fontFamily: Fonts.poppinsBold),
+                      Flexible(
+                        child: Text(
+                          "${product.productName}",
+                          style: Get.textTheme.bodyLarge
+                              ?.copyWith(fontFamily: Fonts.poppinsBold),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.green.withAlpha(30),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: InkWell(
-                    onTap: () => editAddedProduct(product),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      child: Icon(
-                        Icons.edit_note_sharp,
-                        color: AppColors.buttonColorAlternate,
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.green.withAlpha(30),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: InkWell(
+                        onTap: () => editAddedProduct.call(product),
+                        child: const Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          child: Icon(
+                            Icons.edit_note_sharp,
+                            color: AppColors.buttonColorAlternate,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.redAccent.withAlpha(30),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: InkWell(
+                        onTap: () => deleteProduct?.call(product),
+                        child: const Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          child: Icon(
+                            Icons.delete_forever_sharp,
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 )
               ],
             ),
-            const SizedBox(height: 8,),
-            Divider(height: 1, thickness: 1, color: Colors.grey.shade300,),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 8,
+            ),
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: Colors.grey.shade300,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -105,7 +145,7 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                VerticalDivider(
+                const VerticalDivider(
                   width: 1,
                   color: Colors.grey,
                   thickness: 1,

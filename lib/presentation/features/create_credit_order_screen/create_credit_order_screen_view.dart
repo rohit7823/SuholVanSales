@@ -11,6 +11,7 @@ import 'package:suhol_van_sales/presentation/widgets/app_button.dart';
 import 'package:suhol_van_sales/presentation/widgets/app_text_field.dart';
 import 'package:suhol_van_sales/presentation/widgets/budget_widget.dart';
 import 'package:suhol_van_sales/presentation/widgets/keyboard_aware_widget_two.dart';
+import 'package:suhol_van_sales/presentation/widgets/my_dropdown.dart';
 import 'package:suhol_van_sales/presentation/widgets/product_card.dart';
 
 import '../../widgets/my_app_bar.dart';
@@ -28,15 +29,17 @@ class CreateCreditOrderScreen extends StatefulWidget {
 class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
   final controller = Get.find<CreateCreditOrderScreenController>();
 
-  final FocusNode? mobileNumberFocusNode = FocusNode();
+  //final FocusNode? mobileNumberFocusNode = FocusNode();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      mobileNumberFocusNode?.requestFocus();
-    },);
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        //mobileNumberFocusNode?.requestFocus();
+      },
+    );
   }
 
   @override
@@ -75,31 +78,6 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                   KeyboardAwareWidgetTwo(
                       child: (context, height, isHeightInfinite) => Column(
                             children: [
-                              SizedBox(
-                                width: Get.width * .95,
-                                child: AppTextField(
-                                  hint: "Aria",
-                                  width: Get.width * .95,
-                                  controller: controller.mobileNumber!,
-                                  capitalization: TextCapitalization.words,
-                                  inputAction: TextInputAction.next,
-                                  keyboardType: TextInputType.number,
-                                  prefixIcon: const Icon(
-                                    Icons.phone_android,
-                                    color: Colors.grey,
-                                  ),
-                                  inputFormatters: [
-                                    NumberTextInputFormatter()
-                                  ],
-                                  autoFocus: true,
-                                  focusNode: mobileNumberFocusNode,
-                                ),
-                              ),
-                              SizedBox(
-                                height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
-                              ),
                               SizedBox(
                                 width: Get.width * .95,
                                 //height: isHeightInfinite ? null : height * .07,
@@ -158,7 +136,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                     ? Get.height * .02
                                     : height * .02,
                               ),
-                              Padding(
+                              /*Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: Obx(
@@ -246,19 +224,14 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                     singleSelect: true,
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
-                              ),
+                              ),*/
                               SizedBox(
                                 width: Get.width * .95,
                                 //height: isHeightInfinite ? null : height * .07,
                                 child: Row(
                                   children: [
                                     AppTextField(
-                                      width: Get.width * .95,
+                                      width: Get.width * .45,
                                       hint: "Vehicle Number",
                                       controller: controller.vehicleNumber!,
                                       capitalization: TextCapitalization.words,
@@ -269,6 +242,29 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         color: Colors.grey,
                                       ),
                                     ),
+                                    const SizedBox(
+                                      width: 12,
+                                    ),
+                                    AppTextField(
+                                      hint: "Mobile Number",
+                                      width: Get.width * .45,
+                                      controller: controller.mobileNumber!,
+                                      capitalization: TextCapitalization.words,
+                                      inputAction: TextInputAction.next,
+                                      keyboardType: TextInputType.number,
+                                      prefixIcon: const Icon(
+                                        Icons.phone_android,
+                                        color: Colors.grey,
+                                      ),
+                                      inputFormatters: [
+                                        NumberTextInputFormatter()
+                                      ],
+                                      autoFocus: false,
+                                      onSubmitted: (value) {
+                                        controller.productName?.openView();
+                                      },
+                                      //focusNode: mobileNumberFocusNode,
+                                    )
                                   ],
                                 ),
                               ),
@@ -319,6 +315,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         capitalization:
                                         TextCapitalization.words,
                                         inputAction: TextInputAction.next,
+                                        keyboardType: TextInputType.none,
                                         prefixIcon: const Icon(
                                           Icons.backpack,
                                           color: Colors.grey,
@@ -339,7 +336,6 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         p0.packing ?? "None",
                                         autoFocus: false,
                                         focusNode: controller.packingFocusNode,
-
                                       ),
                                     ),
                                     const SizedBox(
@@ -350,24 +346,27 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         hint: "Unit",
                                         searchController: controller.unit!,
                                         inputAction: TextInputAction.next,
+                                        keyboardType: TextInputType.none,
                                         prefixIcon: const Icon(
                                           Icons.ad_units,
                                           color: Colors.grey,
                                         ),
                                         suggestionsBuilder:
-                                        controller.findProductUnit,
+                                            controller.findProductUnit,
                                         onSelectResult:
-                                        controller.onSelectProductUnit,
+                                            controller.onSelectProductUnit,
                                         suggestionDisplayOption: (p0) =>
-                                        p0.name?.name ?? "None",
-                                        fieldType: FieldType.autocomplete /*controller
+                                            p0.name?.name ?? "None",
+                                        fieldType: FieldType
+                                            .autocomplete /*controller
                                                         .selectedProduct
                                                         .value !=
                                                     null
                                                 ? FieldType.autocomplete
-                                                : FieldType.normal*/,
-                                        suggestionConstraints: AppTextField
-                                            .fixedBoxConstraints(),
+                                                : FieldType.normal*/
+                                        ,
+                                        suggestionConstraints:
+                                            AppTextField.fixedBoxConstraints(),
                                         focusNode: controller.unitFocusNode,
                                         autoFocus: false,
                                       ),
@@ -418,7 +417,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         inputFormatters: [],
                                         onSubmitted: (value) {
                                           controller.onAddItem();
-                                          mobileNumberFocusNode?.requestFocus();
+                                          //mobileNumberFocusNode?.requestFocus();
                                         },
                                       ),
                                     ),
@@ -437,7 +436,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                         ),
                                         onSubmitted: (value) {
                                           controller.onAddItem();
-                                          mobileNumberFocusNode?.requestFocus();
+                                          //mobileNumberFocusNode?.requestFocus();
                                         },
                                         autoFocus: false,
                                       ),
@@ -481,7 +480,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                                       child: Obx(() => AppButton(
                                             onClick: () {
                                               controller.onAddItem();
-                                              mobileNumberFocusNode?.requestFocus();
+                                              //mobileNumberFocusNode?.requestFocus();
                                             },
                                             height: isHeightInfinite
                                                 ? 40
@@ -528,6 +527,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                           return ProductCard(
                             product: request,
                             editAddedProduct: controller.editAddedProduct,
+                            deleteProduct: controller.deleteAddedProduct,
                             serialNo: '${index + 1}',
                           );
                         },

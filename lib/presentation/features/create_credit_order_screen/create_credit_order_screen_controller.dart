@@ -19,6 +19,7 @@ import 'package:suhol_van_sales/printer/printer_utils.dart';
 
 import '../../../domain/models/customer.dart';
 import '../../../domain/models/product.dart';
+import 'package:suhol_van_sales/presentation/widgets/my_dropdown.dart';
 
 class CreateCreditOrderScreenController extends GetxController {
   final _repo = Get.find<CreateOrderRepositoryImpl>();
@@ -94,7 +95,7 @@ class CreateCreditOrderScreenController extends GetxController {
     super.onReady();
     qty?.addListener(_onQtyChange);
     price?.addListener(_calculatePrice);
-    mobileNumber?.addListener(_onMobileInput);
+    //mobileNumber?.addListener(_onMobileInput);
     userName.value = _session.userDetails?.name ?? "Welcome";
 
     _pickupOrderWorker = ever(
@@ -216,10 +217,12 @@ class CreateCreditOrderScreenController extends GetxController {
   var orderLoading = false.obs;
   var addItemLoading = false.obs;
 
-  FocusNode? packingFocusNode = FocusNode();
-  FocusNode? unitFocusNode = FocusNode();
+  FocusNode? packingFocusNode = FocusNode(canRequestFocus: false);
+
+  //final GlobalKey<MyDropdownState<Packing>> packingNode = GlobalKey();
+  FocusNode? unitFocusNode = FocusNode(canRequestFocus: false);
   FocusNode? qtyFocusNode = FocusNode();
-  FocusNode? productFocusNode = FocusNode();
+  FocusNode? productFocusNode = FocusNode(canRequestFocus: false);
 
   void editAddedProduct(AddedProductUiModel product) {
     final productDetails = product.allDetails;
@@ -252,6 +255,8 @@ class CreateCreditOrderScreenController extends GetxController {
       selectedLocations.value = items.toList();
 
       addedProducts.remove(product);
+      productName?.closeView(productDetails.productName);
+      userLocationDropdownController.closeDropdown();
     }
   }
 
@@ -321,22 +326,24 @@ class CreateCreditOrderScreenController extends GetxController {
   }
 
   void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
-    if(selectedItems.isNotEmpty) {
+    if (selectedItems.isNotEmpty) {
       selectedLocations.value = selectedItems;
       log("selectedLocations.value $selectedLocations");
       //productFocusNode?.requestFocus();
-      productName?.openView();
+      //productName?.openView();
     }
   }
 
   Future<void> onAddItem() async {
     if (_selectedCustomer == null ||
-        selectedLocations.every((element) => element.location?.id == null) ||
+        //selectedLocations.every((element) => element.location?.id == null) ||
         selectedProduct.value == null ||
         selectedUnit == null ||
         selectedPacking == null ||
         qty?.text.isBlank == true ||
         price?.text.isNum == false) {
+      log('CUSTOMER ${_selectedCustomer?.toJson()} -- PRODUCT ${selectedProduct.value} -- UNIT ${selectedUnit?.toJson()} -- ${selectedPacking?.toJson()} -- QTY ${qty?.text} -- PRICE ${price?.text}',
+          name: 'VALIDATION');
       Get.showSnackbar(const GetSnackBar(
           message: "Important values are not available",
           duration: Duration(seconds: 5),
@@ -393,16 +400,17 @@ class CreateCreditOrderScreenController extends GetxController {
               packing: selectedPacking?.packing,
               price: double.tryParse(price?.text ?? '0'),
               quantity: int.tryParse(qty?.text ?? ''),
-              allDetails: _requisitionRequest
-          ));
+              allDetails: _requisitionRequest));
           _clearValues();
           break;
         case false:
+          _clearValues();
           Get.showSnackbar(GetSnackBar(
             message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
           ));
         case null:
+          _clearValues();
           Get.showSnackbar(GetSnackBar(
             message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
@@ -410,6 +418,7 @@ class CreateCreditOrderScreenController extends GetxController {
           break;
       }
     } else if (result is Error) {
+      _clearValues();
       Get.showSnackbar(GetSnackBar(
         message: "${result.message}",
         duration: const Duration(seconds: 5),
@@ -418,22 +427,22 @@ class CreateCreditOrderScreenController extends GetxController {
   }
 
   void _clearValues() {
-    _selectedCustomer = null;
+    //_selectedCustomer = null;
     selectedProduct.value = null;
     selectedPacking = null;
     selectedUnit = null;
-    selectedLocations.clear();
-    remarks?.text = "";
-    customerName?.text = '';
-    customerLocation?.text = '';
+    //selectedLocations.clear();
+    //remarks?.text = "";
+    //customerName?.text = '';
+    //customerLocation?.text = '';
     qty?.text = '';
     unit?.text = '';
-    mobileNumber?.text = '';
-    vehicleNumber?.text = '';
+    //mobileNumber?.text = '';
+    //vehicleNumber?.text = '';
     productName?.text = '';
     packing?.text = '';
     price?.text = '';
-    userLocationDropdownController.clearAll();
+    //userLocationDropdownController.clearAll();
   }
 
   FutureOr<Iterable<Customer>> findCustomerName(
@@ -484,15 +493,11 @@ class CreateCreditOrderScreenController extends GetxController {
     return values ?? [];
   }*/
 
-  FutureOr<Iterable<Packing>> findProductPacking(
-      SearchController searchController) {
-    debugPrint("query ${searchController.text}");
+  Iterable<Packing> findProductPacking(SearchController controller) {
+    //debugPrint("query ${searchController.text}");
     var values = selectedProduct.value?.packings
         ?.where(
-          (element) =>
-              element.packing
-                  ?.isCaseInsensitiveContains(searchController.text) ??
-              false,
+          (element) => element.packing?.isCaseInsensitiveContains("") ?? false,
         )
         .toList();
     return values ?? [];
@@ -500,13 +505,13 @@ class CreateCreditOrderScreenController extends GetxController {
 
   FutureOr<Iterable<Product>> findProductName(
       SearchController searchController) async {
-    if(CreateOrderRepositoryImpl.productsCache.isEmpty) {
+    if (CreateOrderRepositoryImpl.productsCache.isEmpty) {
       AnimatedProgress.showProgressIfNot();
     }
 
     var values = await _repo.findProductByName(searchController.text);
 
-    if(CreateOrderRepositoryImpl.productsCache.isEmpty) {
+    if (CreateOrderRepositoryImpl.productsCache.isEmpty) {
       AnimatedProgress.closeProgressIfShowing();
     }
 
@@ -531,11 +536,12 @@ class CreateCreditOrderScreenController extends GetxController {
     controller.text = result.location!;
   }
 
-  void onSelectProductPacking(Packing result, SearchController controller) {
-    if (result.packing == null) return;
-    controller.text = result.packing ?? "None";
+  void onSelectProductPacking(Packing? result, SearchController controller) {
+    if (result?.packing == null) return;
+    controller.text = result?.packing ?? "None";
     selectedPacking = result;
     unit?.openView();
+    unitFocusNode?.unfocus();
   }
 
   void onSelectProductUnit(UnitElement result, SearchController controller) {
@@ -553,8 +559,8 @@ class CreateCreditOrderScreenController extends GetxController {
     selectedProduct.value = result;
     clearSelectedPacking();
     clearSelectedUnit();
-    //productFocusNode?.nextFocus();
     packing?.openView();
+    //packingNode.currentState?.toggleDropdown();
   }
 
   void clearSelectedPacking() {

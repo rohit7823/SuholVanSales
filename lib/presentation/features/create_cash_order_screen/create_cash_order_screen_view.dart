@@ -56,7 +56,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.only(top: context.height * .02),
+              padding: EdgeInsets.only(top: context.height * .01),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -66,7 +66,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               SizedBox(
                                 width: Get.width * .95,
                                 child: AppTextField(
-                                  hint: "Aria",
+                                  hint: "Mobile Number",
                                   width: Get.width * .95,
                                   controller: controller.mobileNumber!,
                                   capitalization: TextCapitalization.words,
@@ -85,8 +85,8 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               SizedBox(
                                 width: Get.width * .95,
@@ -143,8 +143,8 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               Padding(
                                 padding:
@@ -237,34 +237,50 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               SizedBox(
                                 width: Get.width * .95,
                                 //height: isHeightInfinite ? null : height * .07,
-                                child: Row(
-                                  children: [
-                                    AppTextField(
-                                      width: Get.width * .95,
-                                      hint: "Vehicle Number",
-                                      controller: controller.vehicleNumber!,
-                                      capitalization: TextCapitalization.words,
-                                      inputAction: TextInputAction.next,
-                                      keyboardType: TextInputType.streetAddress,
-                                      prefixIcon: const Icon(
-                                        Icons.numbers,
-                                        color: Colors.grey,
+                                child: FittedBox(
+                                  child: Row(
+                                    children: [
+                                      AppTextField(
+                                        width: Get.width * .46,
+                                        hint: "Vehicle Number",
+                                        controller: controller.vehicleNumber!,
+                                        capitalization: TextCapitalization.words,
+                                        inputAction: TextInputAction.next,
+                                        keyboardType: TextInputType.streetAddress,
+                                        prefixIcon: const Icon(
+                                          Icons.numbers,
+                                          color: Colors.grey,
+                                        ),
+                                        autoFocus: false,
                                       ),
-                                      autoFocus: false,
-                                    ),
-                                  ],
+                                      const SizedBox(width: 12),
+                                      AppTextField(
+                                        width: Get.width * .46,
+                                        hint: "Aria",
+                                        controller: controller.aria!,
+                                        capitalization: TextCapitalization.words,
+                                        inputAction: TextInputAction.next,
+                                        keyboardType: TextInputType.streetAddress,
+                                        prefixIcon: const Icon(
+                                          Icons.gps_fixed,
+                                          color: Colors.grey,
+                                        ),
+                                        autoFocus: false,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               SizedBox(
                                 width: Get.width * .95,
@@ -292,8 +308,8 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               SizedBox(
                                 width: Get.width * .95,
@@ -307,6 +323,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                         controller.packing!,
                                         capitalization:
                                         TextCapitalization.words,
+                                        keyboardType: TextInputType.none,
                                         inputAction: TextInputAction.next,
                                         prefixIcon: const Icon(
                                           Icons.backpack,
@@ -337,6 +354,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                       child: AppTextField(
                                         hint: "Unit",
                                         searchController: controller.unit!,
+                                        keyboardType: TextInputType.none,
                                         inputAction: TextInputAction.next,
                                         prefixIcon: const Icon(
                                           Icons.ad_units,
@@ -382,8 +400,8 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               SizedBox(
                                 width: Get.width * .95,
@@ -404,7 +422,8 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                         ),
                                         onSubmitted: (value) {
                                           controller.onAddItem();
-                                          mobileNumberFocusNode?.requestFocus();
+                                          controller.productFocusNode?.requestFocus();
+                                          controller.productName?.openView();
                                         },
                                       ),
                                     ),
@@ -423,18 +442,19 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                         ),
                                         onSubmitted: (value) {
                                           controller.onAddItem();
-                                          mobileNumberFocusNode?.requestFocus();
+                                          controller.productFocusNode?.requestFocus();
+                                          controller.productName?.openView();
                                         },
                                       ),
                                     )
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              /*SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
-                              ),
+                                    ? Get.height * .01
+                                    : height * .01,
+                              ),*/
                               SizedBox(
                                 width: Get.width * .95,
                                 child: Row(
@@ -514,6 +534,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                             product: request,
                             editAddedProduct: controller.editAddedProduct,
                             serialNo: '${index + 1}',
+                            deleteProduct: controller.deleteAddedProduct,
                           );
                         },
                       ))

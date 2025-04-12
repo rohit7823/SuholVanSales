@@ -30,6 +30,6 @@ LocationIDWithQuantity _$LocationIDWithQuantityFromJson(
 Map<String, dynamic> _$LocationIDWithQuantityToJson(
         LocationIDWithQuantity instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'quantity': instance.qty,
+      'id': instance.id ?? 0,
+      'quantity': instance.qty ?? 0,
     };

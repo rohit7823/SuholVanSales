@@ -114,7 +114,7 @@ class CreateCashOrderScreenController extends GetxController {
   }
 
   void onSelectionLocation(List<LocationWithQuantityUiModel> selectedItems) {
-    if(selectedItems.isNotEmpty) {
+    if (selectedItems.isNotEmpty) {
       selectedLocations.value = selectedItems;
       log("selectedLocations.value $selectedLocations");
       //productFocusNode?.requestFocus();
@@ -158,6 +158,8 @@ class CreateCashOrderScreenController extends GetxController {
 
   var addItemLoading = false.obs;
 
+  SearchController? aria = SearchController();
+
   Future<void> onSubmitOrder() async {
     if (vehicleNumber?.text.isBlank == true) {
       Get.showSnackbar(const GetSnackBar(
@@ -182,7 +184,8 @@ class CreateCashOrderScreenController extends GetxController {
         remarks: remarks?.text,
         unitOfMeasurementId: selectedUnit?.id,
         quantity: int.tryParse("${qty?.text}"),
-        paymentModeType: 'cash');
+        paymentModeType: 'cash',
+        aria: aria?.text);
 
     orderLoading.value = true;
     var result = await _repo.createRequisition(_requisitionRequest!);
@@ -282,16 +285,17 @@ class CreateCashOrderScreenController extends GetxController {
               packing: selectedPacking?.packing,
               price: double.tryParse(price?.text ?? '0'),
               quantity: int.tryParse(qty?.text ?? ''),
-              allDetails: _requisitionRequest
-          ));
+              allDetails: _requisitionRequest));
           _clearValues();
           break;
         case false:
+          _clearValues();
           Get.showSnackbar(GetSnackBar(
             message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
           ));
         case null:
+          _clearValues();
           Get.showSnackbar(GetSnackBar(
             message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
@@ -299,6 +303,7 @@ class CreateCashOrderScreenController extends GetxController {
           break;
       }
     } else if (result is Error) {
+      _clearValues();
       Get.showSnackbar(GetSnackBar(
         message: "${result.message}",
         duration: const Duration(seconds: 5),
@@ -307,21 +312,22 @@ class CreateCashOrderScreenController extends GetxController {
   }
 
   void _clearValues() {
-    _selectedCustomer = null;
+    //_selectedCustomer = null;
     selectedProduct.value = null;
     selectedPacking = null;
     selectedUnit = null;
-    selectedLocations.clear();
-    remarks?.text = "";
-    customerName?.text = '';
+    //selectedLocations.clear();
+    //remarks?.text = "";
+    //customerName?.text = '';
+    //customerLocation?.text = '';
     qty?.text = '';
     unit?.text = '';
-    mobileNumber?.text = '';
-    vehicleNumber?.text = '';
+    //mobileNumber?.text = '';
+    //vehicleNumber?.text = '';
     productName?.text = '';
     packing?.text = '';
     price?.text = '';
-    userLocationDropdownController.clearAll();
+    //userLocationDropdownController.clearAll();
   }
 
   FutureOr<Iterable<Customer>> findCustomerName(
@@ -381,7 +387,8 @@ class CreateCashOrderScreenController extends GetxController {
   }
 
   void deleteAddedProduct(AddedProductUiModel request) {
-    addedProducts.remove(request);
+    var idx = addedProducts.indexOf(request);
+    addedProducts.removeAt(idx);
   }
 
   /* void addIdWiseQuantities() {
@@ -550,6 +557,7 @@ class CreateCashOrderScreenController extends GetxController {
       vehicleNumber?.text = productDetails.vehicleNo ?? '';
       remarks?.text = productDetails.remarks ?? '';
       qty?.text = productDetails.quantity?.toString() ?? '';
+      aria?.text = productDetails.aria ?? '';
 
       final items = productDetails.locationIdsWithQuantity?.map(
             (e) => LocationWithQuantityUiModel(
@@ -566,6 +574,8 @@ class CreateCashOrderScreenController extends GetxController {
       selectedLocations.value = items.toList();
 
       addedProducts.remove(product);
+      productName?.closeView(productDetails.productName);
+      userLocationDropdownController.closeDropdown();
     }
   }
 }

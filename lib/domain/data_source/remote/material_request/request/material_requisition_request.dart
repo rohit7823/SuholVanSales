@@ -43,9 +43,12 @@ class MaterialRequisitionRequest {
   final int? quantity;
   @JsonKey(name: 'payment_mode_type')
   final String? paymentModeType;
+  @JsonKey(name: 'aria')
+  final String? aria;
 
   const MaterialRequisitionRequest(
       {this.customer,
+      this.aria,
       this.customerName,
       this.phoneNo,
       this.productName,
@@ -70,6 +73,7 @@ class MaterialRequisitionRequest {
 
   MaterialRequisitionRequest copyWith(
       {Customer? customer,
+      String? aria,
       String? customerName,
       int? phoneNo,
       String? productName,
@@ -93,6 +97,7 @@ class MaterialRequisitionRequest {
       Packing? packing}) {
     return MaterialRequisitionRequest(
         customer: customer ?? this.customer,
+        aria: aria ?? this.aria,
         customerName: customerName ?? this.customerName,
         phoneNo: phoneNo ?? this.phoneNo,
         productName: productName ?? this.productName,
@@ -143,6 +148,7 @@ class MaterialRequisitionRequest {
     final date = deliveryDate ?? DateTime.now();
     final time = deliveryTime ?? TimeOfDay.now();
     return <String, dynamic>{
+      'aria': aria,
       'customer_id': customerId,
       'division_id': divisionId,
       'delivery_date': date.formattedDateWithTime(time),
@@ -152,11 +158,15 @@ class MaterialRequisitionRequest {
       'packing_id': packingId,
       'price': price,
       'remarks': remarks,
-      'parent_master_id_list': locationIdsWithQuantity
-          ?.map(
-            (e) => e.toJson(),
-          )
-          .toList(),
+      'parent_master_id_list': locationIdsWithQuantity?.isNotEmpty == true
+          ? locationIdsWithQuantity
+              ?.map(
+                (e) => e.toJson(),
+              )
+              .toList()
+          : [
+              const LocationIDWithQuantity().toJson(),
+            ],
       'delivery_time': deliveryTime == null
           ? null
           : "${deliveryTime?.hour}${deliveryTime?.minute}",

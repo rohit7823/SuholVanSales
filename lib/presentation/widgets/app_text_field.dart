@@ -115,8 +115,7 @@ class AppTextField<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     return fieldType == FieldType.autocomplete
         ? SearchAnchor(
-            builder: (BuildContext context, SearchController controller) =>
-                MyTextField(
+            builder: (BuildContext context, SearchController controller) => MyTextField(
               controller: controller,
               changeStyle: changeStyle,
               enabled: enabled,
@@ -130,7 +129,9 @@ class AppTextField<T extends Object> extends StatelessWidget {
               inputAction: inputAction,
               inputFormatters: inputFormatters,
               isReadOnly: isReadOnly,
-              onTap: (focusNode) => searchController?.openView(),
+              onTap: (focusNode) {
+                searchController?.openView();
+              },
               keyboardType: keyboardType,
               label: label,
               labelStyle: labelStyle,
@@ -189,6 +190,7 @@ class AppTextField<T extends Object> extends StatelessWidget {
             viewBackgroundColor: Colors.white,
             viewSurfaceTintColor: Colors.white,
             headerHeight: 40,
+
           )
         : MyTextField(
             controller: textFieldDisplayOption != null
@@ -372,9 +374,10 @@ class MyTextField extends StatelessWidget {
       textInputAction: inputAction,
       readOnly: isReadOnly ?? false,
       enabled: enabled,
-      enableIMEPersonalizedLearning: enabled,
+      enableIMEPersonalizedLearning: isReadOnly ?? false,
       textAlign: textAlign ?? TextAlign.start,
       obscureText: isObscure,
+
     );
   }
 }
@@ -392,15 +395,17 @@ class CustomAutocompleteOption<T extends Object> extends StatefulWidget {
   const CustomAutocompleteOption(
       {super.key,
       required this.displayStringForOption,
-      required this.onSelected,
+      this.onSelected,
       required this.option,
-      required this.index});
+      required this.index, this.ignorePointer = true});
 
   final AutocompleteOptionToString<T> displayStringForOption;
 
-  final AutocompleteOnSelected<T> onSelected;
+  final AutocompleteOnSelected<T>? onSelected;
 
   final T option;
+
+  final bool ignorePointer;
 
   final int index;
 
@@ -437,9 +442,9 @@ class _CustomAutocompleteOptionState<T extends Object>
       child: Material(
         elevation: 4.0,
         child: InkWell(
-          onTap: () {
-            widget.onSelected(widget.option);
-          },
+          onTap: widget.ignorePointer ? () {
+            widget.onSelected?.call(widget.option);
+          } : null,
           child: Container(
             width: context.width,
             padding: const EdgeInsets.all(7.0),
