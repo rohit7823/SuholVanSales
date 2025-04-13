@@ -303,7 +303,7 @@ class MyTextField extends StatelessWidget {
       focusNode: focusNode,
       enableSuggestions: true,
       decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
           border: changeStyle
               ? UnderlineInputBorder(
                   borderRadius: BorderRadius.circular(8),

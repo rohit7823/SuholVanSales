@@ -65,6 +65,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                             children: [
                               SizedBox(
                                 width: Get.width * .95,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: AppTextField(
                                   hint: "Mobile Number",
                                   width: Get.width * .95,
@@ -90,7 +91,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               ),
                               SizedBox(
                                 width: Get.width * .95,
-                                //height: isHeightInfinite ? null : height * .07,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -146,7 +147,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                     ? Get.height * .01
                                     : height * .01,
                               ),
-                              Padding(
+                              /*Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: Obx(
@@ -234,47 +235,45 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                     singleSelect: true,
                                   ),
                                 ),
-                              ),
-                              SizedBox(
+                              ),*/
+                              /*SizedBox(
                                 height: isHeightInfinite
                                     ? Get.height * .01
                                     : height * .01,
-                              ),
+                              ),*/
                               SizedBox(
                                 width: Get.width * .95,
-                                //height: isHeightInfinite ? null : height * .07,
-                                child: FittedBox(
-                                  child: Row(
-                                    children: [
-                                      AppTextField(
-                                        width: Get.width * .46,
-                                        hint: "Vehicle Number",
-                                        controller: controller.vehicleNumber!,
-                                        capitalization: TextCapitalization.words,
-                                        inputAction: TextInputAction.next,
-                                        keyboardType: TextInputType.streetAddress,
-                                        prefixIcon: const Icon(
-                                          Icons.numbers,
-                                          color: Colors.grey,
-                                        ),
-                                        autoFocus: false,
+                                height: isHeightInfinite ? null : height * .07,
+                                child: Row(
+                                  children: [
+                                    AppTextField(
+                                      width: Get.width * .45,
+                                      hint: "Vehicle Number",
+                                      controller: controller.vehicleNumber!,
+                                      capitalization: TextCapitalization.words,
+                                      inputAction: TextInputAction.next,
+                                      keyboardType: TextInputType.streetAddress,
+                                      prefixIcon: const Icon(
+                                        Icons.numbers,
+                                        color: Colors.grey,
                                       ),
-                                      const SizedBox(width: 12),
-                                      AppTextField(
-                                        width: Get.width * .46,
-                                        hint: "Aria",
-                                        controller: controller.aria!,
-                                        capitalization: TextCapitalization.words,
-                                        inputAction: TextInputAction.next,
-                                        keyboardType: TextInputType.streetAddress,
-                                        prefixIcon: const Icon(
-                                          Icons.gps_fixed,
-                                          color: Colors.grey,
-                                        ),
-                                        autoFocus: false,
+                                      autoFocus: false,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    AppTextField(
+                                      width: Get.width * .45,
+                                      hint: "Aria",
+                                      controller: controller.aria!,
+                                      capitalization: TextCapitalization.words,
+                                      inputAction: TextInputAction.next,
+                                      keyboardType: TextInputType.streetAddress,
+                                      prefixIcon: const Icon(
+                                        Icons.gps_fixed,
+                                        color: Colors.grey,
                                       ),
-                                    ],
-                                  ),
+                                      autoFocus: false,
+                                    ),
+                                  ],
                                 ),
                               ),
                               SizedBox(
@@ -284,7 +283,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               ),
                               SizedBox(
                                 width: Get.width * .95,
-                                //height: isHeightInfinite ? null : height * .07,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: AppTextField(
                                   hint: "Product Name",
                                   inputAction: TextInputAction.next,
@@ -313,7 +312,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               ),
                               SizedBox(
                                 width: Get.width * .95,
-                                //height: isHeightInfinite ? null : height * .07,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -405,7 +404,7 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                               ),
                               SizedBox(
                                 width: Get.width * .95,
-                                // height: isHeightInfinite ? null : height * .07,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: Row(
                                   children: [
                                     Expanded(

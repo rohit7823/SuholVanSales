@@ -118,7 +118,7 @@ class CreateCashOrderScreenController extends GetxController {
       selectedLocations.value = selectedItems;
       log("selectedLocations.value $selectedLocations");
       //productFocusNode?.requestFocus();
-      productName?.openView();
+
     }
   }
 
@@ -226,7 +226,7 @@ class CreateCashOrderScreenController extends GetxController {
 
   Future<void> onAddItem() async {
     if (_selectedCustomer == null ||
-        selectedLocations.every((element) => element.location?.id == null) ||
+        // selectedLocations.every((element) => element.location?.id == null) ||
         selectedProduct.value == null ||
         selectedUnit == null ||
         selectedPacking == null ||
@@ -485,6 +485,7 @@ class CreateCashOrderScreenController extends GetxController {
     if (result.name == null) return;
     controller.text = result.name!;
     _selectedCustomer = result;
+    productName?.openView();
     //_addLocations(result.locations);
     if (result.locations != null) {
       userLocationDropdownController.addItems(result.locations!

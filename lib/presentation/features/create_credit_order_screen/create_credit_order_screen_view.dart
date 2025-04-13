@@ -80,7 +80,7 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                             children: [
                               SizedBox(
                                 width: Get.width * .95,
-                                //height: isHeightInfinite ? null : height * .07,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -133,101 +133,109 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
-                              /*Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                child: Obx(
-                                  () => MultiDropdown<
-                                      LocationWithQuantityUiModel>(
-                                    items: const [],
-                                    controller: controller
-                                        .userLocationDropdownController,
-                                    enabled: true,
-                                    searchEnabled: false,
-                                    chipDecoration: ChipDecoration(
-                                        backgroundColor: Colors.blueAccent,
-                                        wrap: controller
-                                                .selectedLocations.length !=
-                                            1,
-                                        runSpacing: 2,
-                                        spacing: 10,
-                                        labelStyle: Get.textTheme.bodyMedium
+                              SizedBox(
+                                height: isHeightInfinite ? null : height * .07,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: Obx(
+                                    () => MultiDropdown<
+                                        LocationWithQuantityUiModel>(
+                                      items: const [],
+                                      controller: controller
+                                          .userLocationDropdownController,
+                                      enabled: true,
+                                      searchEnabled: false,
+                                      chipDecoration: ChipDecoration(
+                                          backgroundColor: Colors.blueAccent,
+                                          wrap: controller
+                                                  .selectedLocations.length !=
+                                              1,
+                                          runSpacing: 2,
+                                          spacing: 10,
+                                          labelStyle: Get.textTheme.bodyMedium
+                                              ?.copyWith(
+                                                  fontFamily: Fonts.dmSansBold,
+                                                  color: Colors.white)),
+                                      fieldDecoration: FieldDecoration(
+                                        hintText: 'Location',
+                                        hintStyle: Get.textTheme.titleMedium
                                             ?.copyWith(
-                                                fontFamily: Fonts.dmSansBold,
-                                                color: Colors.white)),
-                                    fieldDecoration: FieldDecoration(
-                                      hintText: 'Location',
-                                      hintStyle: Get.textTheme.titleMedium
-                                          ?.copyWith(
-                                              color: Colors.grey.shade400,
-                                              fontFamily: Fonts.dmSansSemiBold),
-                                      prefixIcon: const Icon(
-                                        CupertinoIcons.location_fill,
-                                        color: Colors.grey,
+                                                color: Colors.grey.shade400,
+                                                fontFamily: Fonts.dmSansSemiBold),
+                                        prefixIcon: const Icon(
+                                          CupertinoIcons.location_fill,
+                                          color: Colors.grey,
+                                        ),
+                                        showClearIcon: false,
+                                        backgroundColor: Colors.grey.shade200,
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            borderSide: BorderSide(
+                                                color: Colors.grey.shade200)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            borderSide: const BorderSide(
+                                                color: Colors.lightBlueAccent)),
                                       ),
-                                      showClearIcon: false,
-                                      backgroundColor: Colors.grey.shade200,
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          borderSide: BorderSide(
-                                              color: Colors.grey.shade200)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          borderSide: const BorderSide(
-                                              color: Colors.lightBlueAccent)),
-                                    ),
-                                    dropdownDecoration:
-                                        const DropdownDecoration(
-                                      marginTop: 2,
-                                      maxHeight: 500,
-                                      header: Padding(
-                                        padding: EdgeInsets.all(8),
-                                        child: Text(
-                                          'Select locations from the list',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                      dropdownDecoration:
+                                          const DropdownDecoration(
+                                        marginTop: 2,
+                                        maxHeight: 500,
+                                        header: Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: Text(
+                                            'Select locations from the list',
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    dropdownItemDecoration:
-                                        DropdownItemDecoration(
-                                      selectedIcon: const Icon(Icons.check_box,
-                                          color: Colors.green),
-                                      disabledIcon: Icon(Icons.lock,
-                                          color: Colors.grey.shade300),
-                                    ),
-                                    onSelectionChange:
-                                        controller.onSelectionLocation,
-                                    itemBuilder: (item, index, onTap) =>
-                                        ListTile(
-                                      onTap: onTap,
-                                      style: ListTileStyle.drawer,
-                                      minTileHeight: 30,
-                                      title: Text(
-                                        item.label,
-                                        style: Get.textTheme.bodyMedium
-                                            ?.copyWith(
-                                                fontFamily:
-                                                    Fonts.dmSansSemiBold,
-                                                overflow:
-                                                    TextOverflow.ellipsis),
+                                      dropdownItemDecoration:
+                                          DropdownItemDecoration(
+                                        selectedIcon: const Icon(Icons.check_box,
+                                            color: Colors.green),
+                                        disabledIcon: Icon(Icons.lock,
+                                            color: Colors.grey.shade300),
                                       ),
+                                      onSelectionChange:
+                                          controller.onSelectionLocation,
+                                      itemBuilder: (item, index, onTap) =>
+                                          ListTile(
+                                        onTap: onTap,
+                                        style: ListTileStyle.drawer,
+                                        minTileHeight: 30,
+                                        title: Text(
+                                          item.label,
+                                          style: Get.textTheme.bodyMedium
+                                              ?.copyWith(
+                                                  fontFamily:
+                                                      Fonts.dmSansSemiBold,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
+                                        ),
+                                      ),
+                                      singleSelect: true,
                                     ),
-                                    singleSelect: true,
                                   ),
                                 ),
-                              ),*/
+                              ),
+                              SizedBox(
+                                height: isHeightInfinite
+                                    ? Get.height * .01
+                                    : height * .01,
+                              ),
                               SizedBox(
                                 width: Get.width * .95,
-                                //height: isHeightInfinite ? null : height * .07,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: Row(
                                   children: [
                                     AppTextField(
@@ -270,12 +278,12 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               SizedBox(
                                 width: Get.width * .95,
-                                //height: isHeightInfinite ? null : height * .07,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: AppTextField(
                                   hint: "Product Name",
                                   inputAction: TextInputAction.next,
@@ -299,12 +307,12 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               SizedBox(
                                 width: Get.width * .95,
-                                //height: isHeightInfinite ? null : height * .07,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -393,12 +401,12 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               SizedBox(
                                 width: Get.width * .95,
-                                // height: isHeightInfinite ? null : height * .07,
+                                height: isHeightInfinite ? null : height * .07,
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -446,8 +454,8 @@ class _CreateCreditOrderScreenState extends State<CreateCreditOrderScreen> {
                               ),
                               SizedBox(
                                 height: isHeightInfinite
-                                    ? Get.height * .02
-                                    : height * .02,
+                                    ? Get.height * .01
+                                    : height * .01,
                               ),
                               SizedBox(
                                 width: Get.width * .95,

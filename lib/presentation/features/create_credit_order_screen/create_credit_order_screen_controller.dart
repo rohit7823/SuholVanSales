@@ -336,7 +336,7 @@ class CreateCreditOrderScreenController extends GetxController {
 
   Future<void> onAddItem() async {
     if (_selectedCustomer == null ||
-        //selectedLocations.every((element) => element.location?.id == null) ||
+        selectedLocations.every((element) => element.location?.id == null) ||
         selectedProduct.value == null ||
         selectedUnit == null ||
         selectedPacking == null ||
