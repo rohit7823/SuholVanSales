@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/domain/di/session_service.dart';
+import 'package:suhol_van_sales/presentation/features/approved_orders/approved_orders_logic.dart';
 import 'package:suhol_van_sales/presentation/navigation/home_graph.dart';
 import 'package:suhol_van_sales/presentation/navigation/routes.dart';
 import 'package:suhol_van_sales/presentation/utils/cash_order_history_types.dart';
 
 class CashSalesOrderController extends GetxController {
-
   final session = Get.find<SessionService>();
 
   @override
@@ -31,7 +31,8 @@ class CashSalesOrderController extends GetxController {
       case CashOrderHistoryTypes.cashSalesOrderList:
       // TODO: Handle this case.
       case CashOrderHistoryTypes.cashApprovedOrder:
-      // TODO: Handle this case.
+        Get.toNamed(Routes.approvedOrders.name,
+            arguments: OrderType.cashSalesOrder);
     }
   }
 }

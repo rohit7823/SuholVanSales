@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suhol_van_sales/presentation/features/approved_orders/approved_orders_binding.dart';
+import 'package:suhol_van_sales/presentation/features/approved_orders/approved_orders_view.dart';
 import 'package:suhol_van_sales/presentation/features/create_cash_order_screen/create_cash_order_screen_binding.dart';
 import 'package:suhol_van_sales/presentation/features/create_cash_order_screen/create_cash_order_screen_view.dart';
 import 'package:suhol_van_sales/presentation/features/create_credit_order_screen/create_credit_order_screen_binding.dart';
@@ -96,6 +98,17 @@ class MainGraph {
             name: Routes.printInvoice.name,
             page: () => const PrintInvoiceScreen(),
             binding: PrintInvoiceScreenBinding(),
+            maintainState: true,
+            popGesture: false,
+            fullscreenDialog: true,
+            preventDuplicates: true,
+            transition: Transition.topLevel,
+            transitionDuration: const Duration(milliseconds: 600),
+            participatesInRootNavigator: true),
+        GetPage<Routes>(
+            name: Routes.approvedOrders.name,
+            page: () => const ApprovedOrdersScreen(),
+            binding: ApprovedOrdersBinding(),
             maintainState: true,
             popGesture: false,
             fullscreenDialog: true,

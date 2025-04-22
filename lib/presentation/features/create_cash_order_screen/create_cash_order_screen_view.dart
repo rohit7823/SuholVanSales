@@ -101,17 +101,12 @@ class _CreateCashOrderScreenState extends State<CreateCashOrderScreen> {
                                         hint: "Customer Name",
                                         width: Get.width * .45,
                                         fieldType: FieldType.autocomplete,
-                                        searchController:
-                                            controller.customerName!,
-                                        capitalization:
-                                            TextCapitalization.words,
+                                        searchController: controller.customerName!,
+                                        capitalization: TextCapitalization.words,
                                         inputAction: TextInputAction.next,
-                                        suggestionsBuilder:
-                                            controller.findCustomerName,
-                                        onSelectResult:
-                                            controller.onSelectCustomer,
-                                        suggestionDisplayOption: (customer) =>
-                                            customer.name ?? "",
+                                        suggestionsBuilder: controller.findCustomerName,
+                                        onSelectResult: controller.onSelectCustomer,
+                                        suggestionDisplayOption: (customer) => customer.name ?? "",
                                         prefixIcon: const Icon(
                                           Icons.person_2,
                                           color: Colors.grey,

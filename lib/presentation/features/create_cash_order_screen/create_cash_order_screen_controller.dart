@@ -118,7 +118,6 @@ class CreateCashOrderScreenController extends GetxController {
       selectedLocations.value = selectedItems;
       log("selectedLocations.value $selectedLocations");
       //productFocusNode?.requestFocus();
-
     }
   }
 
@@ -169,7 +168,7 @@ class CreateCashOrderScreenController extends GetxController {
       return;
     }
 
-    _requisitionRequest = MaterialRequisitionRequest(
+    _requisitionRequest = _requisitionRequest?.copyWith(
         customerId: _selectedCustomer?.id,
         customerName: _selectedCustomer?.name,
         productName: selectedProduct.value?.name,
@@ -225,7 +224,7 @@ class CreateCashOrderScreenController extends GetxController {
   }
 
   Future<void> onAddItem() async {
-    if (_selectedCustomer == null ||
+    if ((_selectedCustomer == null && customerName?.text.isBlank == true) ||
         // selectedLocations.every((element) => element.location?.id == null) ||
         selectedProduct.value == null ||
         selectedUnit == null ||
@@ -243,11 +242,11 @@ class CreateCashOrderScreenController extends GetxController {
 
     addItemLoading.value = true;
     _requisitionRequest = MaterialRequisitionRequest(
-        customerName: _selectedCustomer?.name,
+        customerName: _selectedCustomer?.name ?? customerName?.text,
         phoneNo: int.tryParse(mobileNumber?.text ?? ""),
         productUnit: selectedUnit?.name?.name,
         productPacking: selectedPacking?.packing,
-        customerId: _selectedCustomer?.id,
+        customerId: _selectedCustomer?.id ?? 0,
         productId: selectedProduct.value?.id,
         packingId: selectedPacking?.id,
         vehicleNo: vehicleNumber?.text,
@@ -267,6 +266,13 @@ class CreateCashOrderScreenController extends GetxController {
     var result = await _repo.createRequisitionOrder(_requisitionRequest!);
     addItemLoading.value = false;
     if (result is Success) {
+      addedProducts.add(AddedProductUiModel(
+          productName: selectedProduct.value?.name,
+          unit: selectedUnit?.name?.name,
+          packing: selectedPacking?.packing,
+          price: double.tryParse(price?.text ?? '0'),
+          quantity: int.tryParse(qty?.text ?? ''),
+          allDetails: _requisitionRequest));
       switch (result.data?.success) {
         case true:
           /*await Future.delayed(const Duration(milliseconds: 500)).then(
@@ -279,35 +285,28 @@ class CreateCashOrderScreenController extends GetxController {
             message: "${result.data?.message}",
             duration: const Duration(seconds: 5),
           ));
-          addedProducts.add(AddedProductUiModel(
-              productName: selectedProduct.value?.name,
-              unit: selectedUnit?.name?.name,
-              packing: selectedPacking?.packing,
-              price: double.tryParse(price?.text ?? '0'),
-              quantity: int.tryParse(qty?.text ?? ''),
-              allDetails: _requisitionRequest));
           _clearValues();
           break;
         case false:
           _clearValues();
-          Get.showSnackbar(GetSnackBar(
+        /*Get.showSnackbar(GetSnackBar(
             message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
-          ));
+          ));*/
         case null:
           _clearValues();
-          Get.showSnackbar(GetSnackBar(
+          /*Get.showSnackbar(GetSnackBar(
             message: "${result.data?.message ?? result.data?.error}",
             duration: const Duration(seconds: 5),
-          ));
+          ));*/
           break;
       }
     } else if (result is Error) {
       _clearValues();
-      Get.showSnackbar(GetSnackBar(
+      /*Get.showSnackbar(GetSnackBar(
         message: "${result.message}",
         duration: const Duration(seconds: 5),
-      ));
+      ));*/
     }
   }
 
@@ -332,13 +331,14 @@ class CreateCashOrderScreenController extends GetxController {
 
   FutureOr<Iterable<Customer>> findCustomerName(
       SearchController searchController) async {
-    if (searchController.text.isBlank == true) {
-      return [];
+    if (CreateOrderRepositoryImpl.customersCache.isEmpty) {
+      AnimatedProgress.showProgressIfNot();
     }
-
-    AnimatedProgress.showProgressIfNot();
     var values = await _repo.findCustomerByName(searchController.text);
-    AnimatedProgress.closeProgressIfShowing();
+
+    if (CreateOrderRepositoryImpl.customersCache.isNotEmpty) {
+      AnimatedProgress.closeProgressIfShowing();
+    }
 
     return values ?? [];
   }
@@ -351,7 +351,7 @@ class CreateCashOrderScreenController extends GetxController {
     }
     var values = await _repo.findProductByName(searchController.text);
 
-    if (CreateOrderRepositoryImpl.productsCache.isEmpty) {
+    if (CreateOrderRepositoryImpl.productsCache.isNotEmpty) {
       AnimatedProgress.closeProgressIfShowing();
     }
 

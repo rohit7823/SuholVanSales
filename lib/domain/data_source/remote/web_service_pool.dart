@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:suhol_van_sales/app/helpers/check_internet.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/approved_orders/response/approved_orders_response.dart';
+import 'package:suhol_van_sales/domain/data_source/remote/approved_orders/service/approved_orders_api.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/customers/response/customers_with_locations_response.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/customers/service/customer_api.dart';
 import 'package:suhol_van_sales/domain/data_source/remote/division_management/response/division_list_response.dart';
@@ -23,6 +25,7 @@ import 'package:suhol_van_sales/domain/data_source/remote/user_details/service/u
 import 'package:suhol_van_sales/domain/di/rest_service.dart';
 import 'package:suhol_van_sales/domain/models/user_onboarding.dart';
 import 'package:suhol_van_sales/domain/utils/response.dart';
+import 'package:suhol_van_sales/presentation/features/approved_orders/approved_orders_logic.dart';
 
 import 'customers/response/customers_for_preorder.dart';
 import 'material_request/response/create_material_requisition.dart';
@@ -223,6 +226,32 @@ mixin WebServicePool {
             log("DIVISION LIST ERROR $data");
             return Error<DivisionListResponse>(message: data.toString());
           })
+        : Error(message: _noConnectivity);
+  }
+
+  Future<RestResponse<ApprovedOrdersResponse>> approvedOrders(
+      String token, OrderType type) async {
+    if (httpClient.instance == null) {
+      return Error<ApprovedOrdersResponse>(
+          message: "httpClient.instance is not ready");
+    }
+
+    final api = ApprovedOrdersApi(httpClient.instance!);
+
+    return await connectivityService.isConnected()
+        ? type == OrderType.cashSalesOrder
+            ? api.cashSalesApprovedOrders(token).then((value) {
+                return Success(value);
+              }, onError: (data) {
+                log("CASH SALE ORDER LIST ERROR $data");
+                return Error<ApprovedOrdersResponse>(message: data.toString());
+              })
+            : api.creditSalesApprovedOrders(token).then((value) {
+                return Success(value);
+              }, onError: (data) {
+                log("CREDIT SALE ORDER LIST ERROR $data");
+                return Error<ApprovedOrdersResponse>(message: data.toString());
+              })
         : Error(message: _noConnectivity);
   }
 }
